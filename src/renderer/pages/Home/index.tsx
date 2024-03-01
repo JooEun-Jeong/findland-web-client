@@ -4,8 +4,9 @@ import SearchIcon from '@mui/icons-material/Search';
 import { Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
-import { SearchTextField, SearchButton } from '@components';
 import { UseSearchApi } from '@apis/hooks/useSearchApi';
+import { SearchTextField, SearchButton } from '@components';
+
 import { MainBox, SearchBox, SearchWrapperBox } from './styled';
 
 export const Home: React.FC = () => {

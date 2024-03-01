@@ -1,5 +1,5 @@
-import { AxiosHeaderOptions, ResponseLandData } from '@interfaces/apis';
 import { axiosCreateInstance } from '@apis/defaultSetting';
+import { AxiosHeaderOptions, ResponseLandData } from '@interfaces/apis';
 
 export interface AxiosSearchReturn {
   getLandOwners: (name: string) => Promise<ResponseLandData>;
