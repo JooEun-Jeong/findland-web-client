@@ -1,8 +1,8 @@
-import { baseUrl } from '@/interfaces/apis';
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import axiosBetterStacktrace from 'axios-better-stacktrace';
-
 import _ from 'lodash';
+
+import { baseUrl } from '@/interfaces/apis';
 
 export const axiosCreateInstance = (customConfig: AxiosRequestConfig): AxiosInstance => {
   const { url = '' } = customConfig;

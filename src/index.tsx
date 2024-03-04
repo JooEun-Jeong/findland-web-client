@@ -1,8 +1,6 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-
 import { RecoilRoot } from 'recoil';
-
+import ReactDOM from 'react-dom/client';
 import AppRenderer from '@pages';
 
 localStorage.setItem('debug', '*');

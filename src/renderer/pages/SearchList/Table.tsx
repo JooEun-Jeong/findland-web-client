@@ -5,8 +5,9 @@ import { Checkbox } from '@mui/material';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import _, { every } from 'lodash';
 
-import { countProps } from '.';
 import { LandRowData } from '@interfaces';
+
+import { countProps } from '.';
 
 export type checkboxProps = {
   id: number;

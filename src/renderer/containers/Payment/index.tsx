@@ -5,11 +5,11 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { Box, Button, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 
+import { LandRowData } from '@interfaces';
 import { landOwnerAtom, productCountAtomFamily } from '@states/user';
 
 import { PayButton, PayResultBox, PayResultRootBox } from './styled';
 import { ResultColumn, ResultRow } from './TableInterface';
-import { LandRowData } from '@interfaces';
 
 export const PaymentResult: React.FC = () => {
   const [cNameCount, setCNameCount] = useRecoilState(productCountAtomFamily('cNameCount'));

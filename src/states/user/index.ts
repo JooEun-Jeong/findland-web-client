@@ -1,5 +1,6 @@
-import { LandRowData } from '@interfaces';
 import { atomFamily, atom } from 'recoil';
+
+import { LandRowData } from '@interfaces';
 
 // interface & type
 

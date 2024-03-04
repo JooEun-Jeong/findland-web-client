@@ -11,6 +11,7 @@
       "@interfaces": ["src/interfaces/index.ts"],
       "@interfaces*": ["src/interfaces*"],
       "@assets*": ["src/assets*"],
+      "@theme*": ["./src/theme*"],
       "@apis": ["src/apis/index.ts"],
       "@apis*": ["src/apis*"],
       "@utils": ["src/utils/index.ts"],
