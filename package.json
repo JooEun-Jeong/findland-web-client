@@ -4,7 +4,8 @@
   "description": "findLand's web client project",
   "main": "index.js",
   "scripts": {
-    "start": "webpack server -c ./webpack.dev.config.js",
+    "start": "webpack server -c ./webpack.dev.config.js --mode development",
+    "build": "webpack --mode production -c ./webpack.common.config.js",
     "lint": "prettier --write \"src/**/*.{ts,tsx,js,jsx}\" && eslint --fix \"src/**/*.{ts,tsx,js,jsx}\"",
     "prepare": "husky"
   },
