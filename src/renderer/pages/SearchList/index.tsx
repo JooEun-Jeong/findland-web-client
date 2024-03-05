@@ -16,7 +16,7 @@ import { keywordAtom } from '@states';
 import { landOwnerAtom, productCountAtomFamily } from '@states/user';
 import { makeLandowenersRow } from '@utils';
 
-import { MainBox, PaymentBox, SearchBox, SearchWrapperBox } from './styled';
+import { MainBox, PaymentBox, SearchBox, SearchBarWrapper } from './styled';
 import { ResultColumn, checkboxProps } from './Table';
 
 export interface countProps {
@@ -242,7 +242,7 @@ export const Search: React.FC = () => {
   return (
     <>
       <MainBox>
-        <SearchWrapperBox>
+        <SearchBarWrapper>
           <SearchBox>
             <SearchTextField
               sx={{ width: '400px' }}
@@ -262,7 +262,7 @@ export const Search: React.FC = () => {
               <SearchIcon sx={{ color: 'rgb(255, 140, 68)' }} />
             </SearchButton>
           </SearchBox>
-        </SearchWrapperBox>
+        </SearchBarWrapper>
         <Box sx={{ marginTop: '20px', display: 'flex' }}>
           {GridRender}
 

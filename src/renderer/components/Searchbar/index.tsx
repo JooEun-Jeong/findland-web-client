@@ -1,4 +1,9 @@
-import { styled, TextField } from '@mui/material';
+import React from 'react';
+
+import SearchIcon from '@mui/icons-material/Search';
+import { Box, styled, TextField } from '@mui/material';
+
+import { SearchButton } from '../Button';
 
 export const SearchTextField = styled(TextField)(() => ({
   backgroundColor: 'transparent',
@@ -24,3 +29,31 @@ export const SearchTextField = styled(TextField)(() => ({
     },
   },
 }));
+
+const SearchBox = styled(Box)(() => ({
+  border: '1px solid rgb(255, 140, 68)',
+  borderRadius: '5px',
+  '&:focus': {
+    border: '1px solid rgb(235, 127, 56)',
+    boxShadow: '1px 2px 9px #F4AAB9',
+  },
+}));
+
+export const SearchField = (props: {
+  setText: React.Dispatch<React.SetStateAction<string>>;
+  handleSubmit: () => Promise<void>;
+}) => {
+  return (
+    <>
+      <SearchBox>
+        <SearchTextField
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => props.setText(e.target.value)}
+          sx={{ marginRight: '1px' }}
+        />
+        <SearchButton type="submit" onClick={props.handleSubmit}>
+          <SearchIcon sx={{ color: 'rgb(255, 140, 68)' }} />
+        </SearchButton>
+      </SearchBox>
+    </>
+  );
+};

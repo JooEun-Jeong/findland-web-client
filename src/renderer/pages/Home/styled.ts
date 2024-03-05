@@ -1,4 +1,4 @@
-import { styled, Button, Box } from '@mui/material';
+import { styled, Box } from '@mui/material';
 
 export const MainBox = styled(Box)(() => ({
   display: 'flex',
@@ -8,7 +8,7 @@ export const MainBox = styled(Box)(() => ({
   width: '100%',
 }));
 
-export const SearchWrapperBox = styled(Box)(() => ({
+export const SearchBarWrapper = styled(Box)(() => ({
   display: 'flex',
   width: '100%',
   justifyContent: 'center',

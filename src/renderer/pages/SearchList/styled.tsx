@@ -1,6 +1,6 @@
 import { styled, Box } from '@mui/material';
 
-export const SearchWrapperBox = styled(Box)(() => ({
+export const SearchBarWrapper = styled(Box)(() => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
