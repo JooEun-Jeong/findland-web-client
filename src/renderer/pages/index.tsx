@@ -11,7 +11,7 @@ import { Search } from './SearchList';
 
 const AppRenderer: React.FC = () => {
   const themeMode = useMemo(() => createTheme(themeSelector('light')), []);
-  const b = 0;
+
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={themeMode}>

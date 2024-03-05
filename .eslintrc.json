@@ -10,7 +10,7 @@
     "es6": true,
     "node": true
   },
-  "ignorePatterns": [".eslintrc.json"],
+  "ignorePatterns": ["*.config.js", "webpack.**"],
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",

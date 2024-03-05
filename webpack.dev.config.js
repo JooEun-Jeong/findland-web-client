@@ -18,7 +18,7 @@ module.exports = merge(commonConfig, {
   devServer: {
     // 개발 서버 설정
     port: 8082, // 포트 설정
-    hot: true, // 핫 모듈 교체(HMR) 활성화
+    // hot: true, // 핫 모듈 교체(HMR) 활성화
     compress: true, // 압축 유무
     historyApiFallback: true,
   },
