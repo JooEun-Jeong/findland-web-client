@@ -1,43 +1,57 @@
 import React from 'react';
 
+import { useRecoilValue } from 'recoil';
+
 import SearchIcon from '@mui/icons-material/Search';
 import { Box, styled, TextField } from '@mui/material';
 
+import { isMobileAtom } from '@states';
+
 import { SearchButton } from '../Button';
 
-export const SearchTextField = styled(TextField)(() => ({
-  backgroundColor: 'transparent',
-  height: '45px',
-  width: '350px',
-  '& > .MuiInputBase-root': {
-    fontSize: '14px',
-    lineHeight: '30px',
-    height: '100%',
-    color: '#000',
-    letterSpacing: '0.15px',
-    '& > input': {
-      padding: '0 0 0 10px',
+export const SearchTextField = styled(TextField)(({ theme }) => {
+  const isMobile = useRecoilValue(isMobileAtom);
+  return {
+    backgroundColor: 'transparent',
+    height: isMobile ? '5vh' : '45px',
+    width: theme.breakpoints.down('sm') ? '100%' : '350px',
+    '& > .MuiInputBase-root': {
+      fontSize: isMobile ? '2rem' : '14px',
+      lineHeight: '30px',
       height: '100%',
-      borderRadius: 5,
-      backgroundColor: '#fff',
-      color: '#dd5515',
-      fontWeight: 600,
-      // border: '1px solid rgb(239, 192, 114)',
+      color: '#000',
+      letterSpacing: '0.15px',
+      '& > input': {
+        padding: '0 0 0 10px',
+        height: '100%',
+        borderRadius: 5,
+        backgroundColor: '#fff',
+        color: '#dd5515',
+        fontWeight: 600,
+        // border: '1px solid rgb(239, 192, 114)',
+      },
+      '& > fieldset': {
+        border: 'none',
+      },
     },
-    '& > fieldset': {
-      border: 'none',
-    },
-  },
-}));
+  };
+});
 
-const SearchBox = styled(Box)(() => ({
-  border: '1px solid rgb(255, 140, 68)',
-  borderRadius: '5px',
-  '&:focus': {
-    border: '1px solid rgb(235, 127, 56)',
-    boxShadow: '1px 2px 9px #F4AAB9',
-  },
-}));
+const SearchBox = styled(Box)(({ theme }) => {
+  const isMobile = useRecoilValue(isMobileAtom);
+  return {
+    border: '1px solid rgb(255, 140, 68)',
+    borderRadius: '5px',
+    width: theme.breakpoints.down('sm') ? '80%' : '100%',
+    height: isMobile ? '20%' : 'auto',
+    display: 'flex',
+    alignItems: 'center',
+    '&:focus': {
+      border: '1px solid rgb(235, 127, 56)',
+      boxShadow: '1px 2px 9px #F4AAB9',
+    },
+  };
+});
 
 export const SearchField = (props: {
   setText: React.Dispatch<React.SetStateAction<string>>;

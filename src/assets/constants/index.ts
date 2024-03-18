@@ -20,3 +20,5 @@ export const FindMethods = [
 
 export const OpenImDetail =
   '해당 데이터는 1910년대 일제강점 초기, 토지 조사 사업의 결과물로서 한문으로 제작된 토지조사부 및 임야조사부 등의 자료 원문을 한글로 번역한 것입니다. 자료원문은 국가기록원에서 확인하실 수 있습니다.';
+
+export const TempPatentDetail = '특허 가출원 번호: 10-2023-0076900';
