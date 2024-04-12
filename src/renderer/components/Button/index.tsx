@@ -5,6 +5,10 @@ export const SearchButton = styled(Button)(({ theme }) => ({
   height: theme.breakpoints.down('sm') ? '10%' : '45px',
   // border: '1px solid rgb(255, 140, 68)',
   borderRadius: '50%',
+  '& .mobile': {
+    width: '8vw',
+    height: '6vh',
+  },
   color: '#fff',
   '&:hover': {
     '& > svg': {

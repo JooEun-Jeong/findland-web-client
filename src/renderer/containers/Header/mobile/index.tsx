@@ -1,11 +1,21 @@
 import React from 'react';
 
+import { Box } from '@mui/material';
+
 import { HomeIcon, IconButton, MainWrapper, MessageIcon, UserIcon } from './styled';
 
 export const HeaderM = () => {
   return (
     <>
-      <MainWrapper>
+      <Box
+        sx={{
+          width: '100vw',
+          backgroundColor: '#FFF',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-evenly',
+        }}
+      >
         <IconButton>
           <HomeIcon />홈
         </IconButton>
@@ -17,7 +27,7 @@ export const HeaderM = () => {
           <MessageIcon />
           문의
         </IconButton>
-      </MainWrapper>
+      </Box>
     </>
   );
 };

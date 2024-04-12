@@ -1,6 +1,6 @@
 import { atomFamily, atom } from 'recoil';
 
-import { LandRowData } from '@interfaces';
+import { LotRowData } from '@interfaces';
 
 // interface & type
 
@@ -10,7 +10,7 @@ export const productCountAtomFamily = atomFamily<number, string>({
   default: 0,
 });
 
-export const landOwnerAtom = atom<LandRowData>({
-  key: 'landOwnerAtom',
+export const lotsAtom = atom<LotRowData>({
+  key: 'lotsAtom',
   default: [],
 });

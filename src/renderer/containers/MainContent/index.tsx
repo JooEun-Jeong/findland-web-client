@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 
 import { useRecoilValue } from 'recoil';
 
@@ -13,9 +13,7 @@ import { AdvertiseMentWrapper, MainContentWrapper } from './styled';
 
 export const MainContent = () => {
   const theme = useTheme();
-
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-
   const isMobile = useRecoilValue(isMobileAtom);
 
   return (

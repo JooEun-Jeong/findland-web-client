@@ -1,20 +1,22 @@
 import React, { useCallback, useMemo, useState, useEffect } from 'react';
 
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 import SearchIcon from '@mui/icons-material/Search';
 import { Box, Checkbox } from '@mui/material';
-import { DataGrid, GridRowParams } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import _ from 'lodash';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { UseSearchApi } from '@apis/hooks/useSearchApi';
+import logoImg from '@assets/png/logoImg.png';
+import logoTypoImg from '@assets/png/logoTypo.png';
 import { CheckedIcon, SearchButton, SearchTextField, UnCheckedIcon } from '@components';
-import { PaymentResult } from '@containers';
-import { LandRowData, LandRowDatum, ResponseLandData } from '@interfaces';
-import { keywordAtom } from '@states';
-import { landOwnerAtom, productCountAtomFamily } from '@states/user';
-import { makeLandowenersRow } from '@utils';
+import { HeaderM, PaymentResult, PaymentResultMobile } from '@containers';
+import { LotRowData, LotRowDatum, Lot, Lots, ResponseLandData } from '@interfaces';
+import { isMobileAtom } from '@states';
+import { lotsAtom } from '@states/user';
+import { doesNullExist, makeLandowenersRow } from '@utils';
 
 import { MainBox, PaymentBox, SearchBox, SearchBarWrapper } from './styled';
 import { ResultColumn, checkboxProps } from './Table';
@@ -25,61 +27,18 @@ export interface countProps {
 }
 
 export const Search: React.FC = () => {
-  // const [keyword, setKeyword] = useRecoilState(keywordAtom);
+  const isMobile = useRecoilValue(isMobileAtom);
+
   const location = useLocation();
   const navigate = useNavigate();
   const searchApi = UseSearchApi();
 
   const { name } = useParams();
-  // const [keyword, setKeyword] = useState(location.state.keyword || '정재형');
   const [keyword, setKeyword] = useState(name || '정재형');
-  const [data, setData] = useState<ResponseLandData>(location.state.data || []);
 
-  const [landOwners, setLandOwners] = useRecoilState<LandRowData>(landOwnerAtom);
-
-  // only once
-  useEffect(() => {
-    const newLandOwners = makeLandowenersRow(data);
-    setLandOwners(newLandOwners);
-  }, []);
+  const [lots, setLots] = useRecoilState<LotRowData>(lotsAtom);
 
   const [text, setText] = useState('');
-  const [cNameCount, setCNameCount] = useRecoilState(productCountAtomFamily('cNameCount'));
-  const [jibunCount, setJibunCount] = useRecoilState(productCountAtomFamily('jibunCount'));
-  const [areaCount, setAreaCount] = useRecoilState(productCountAtomFamily('areaCount'));
-  const [addrCount, setAddrCount] = useRecoilState(productCountAtomFamily('addrCount'));
-
-  const countProducts = useCallback(
-    ({ idx, compute }: countProps) => {
-      if (idx === 0) {
-        // cname
-        compute === 'plus' ? setCNameCount((prev) => prev + 1) : setCNameCount((prev) => prev - 1);
-      } else if (idx === 1) {
-        // jibun
-        compute === 'plus' ? setJibunCount((prev) => prev + 1) : setJibunCount((prev) => prev - 1);
-      } else if (idx === 2) {
-        // jibun
-        compute === 'plus' ? setAreaCount((prev) => prev + 1) : setAreaCount((prev) => prev - 1);
-      } else if (idx === 3) {
-        // jibun
-        compute === 'plus' ? setAddrCount((prev) => prev + 1) : setAddrCount((prev) => prev - 1);
-      } else if (idx === 4) {
-        // jibun
-        if (compute === 'plus') {
-          setCNameCount((prev) => prev + 1);
-          setJibunCount((prev) => prev + 1);
-          setAreaCount((prev) => prev + 1);
-          setAddrCount((prev) => prev + 1);
-        } else {
-          setCNameCount((prev) => prev - 1);
-          setJibunCount((prev) => prev - 1);
-          setAreaCount((prev) => prev - 1);
-          setAddrCount((prev) => prev - 1);
-        }
-      }
-    },
-    [setAddrCount, setAreaCount, setCNameCount, setJibunCount],
-  );
 
   // const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
 
@@ -99,20 +58,19 @@ export const Search: React.FC = () => {
 
   const [rootCheckBox, setRootCheckBox] = useState<boolean>(false);
   const [checkBoxes, setCheckBoxes] = useState<Array<checkboxProps>>(
-    data.map((item) => {
+    lots.map((item) => {
       return {
         id: item.id,
-        checkBoxState: false,
+        checkBoxState: !doesNullExist(item) ? true : false,
       };
     }),
   );
 
   useEffect(() => {
-    const newCheckBoxState = data.map((item) => {
+    const newCheckBoxState = lots.map((item) => {
       return {
         id: item.id,
-        checkBoxState: false,
-        // checkBoxState: item.isSelected,
+        checkBoxState: !doesNullExist(item) ? true : false,
       };
     }) as Array<checkboxProps>;
     setCheckBoxes(newCheckBoxState);
@@ -121,7 +79,7 @@ export const Search: React.FC = () => {
       return data.checkBoxState === true;
     });
     setRootCheckBox(newRootCheckBoxState);
-  }, [data]);
+  }, [lots]);
 
   // 개별 항목이 전체 체크되어있다면 루트 체크됨
   useEffect(() => {
@@ -166,14 +124,13 @@ export const Search: React.FC = () => {
 
   const getResult = useCallback(async () => {
     if (searchApi) {
-      const newData: LandRowData = await searchApi.getLandOwners(keyword);
-      setLandOwners(newData);
+      searchApi.getLandOwners(keyword);
     } else {
-      setLandOwners([]);
+      setLots([]);
     }
-  }, [keyword, setLandOwners]);
+  }, [keyword, searchApi, setLots]);
 
-  const getRowId = (data: LandRowDatum) => data.id;
+  const getRowId = (data: LotRowDatum) => data.id;
 
   const NoRowRender = useCallback(() => {
     return (
@@ -201,12 +158,11 @@ export const Search: React.FC = () => {
           setRootCheckBox,
           checkBoxes,
           setCheckBoxes,
-          landowners: landOwners,
-          setLandowners: setLandOwners,
-          countProducts: countProducts,
+          lots,
+          setLots,
         })}
-        rows={landOwners}
-        rowHeight={30}
+        rows={lots}
+        rowHeight={isMobile ? 50 : 30}
         slots={{
           noRowsOverlay: NoRowRender,
           baseCheckbox: () => (
@@ -237,9 +193,125 @@ export const Search: React.FC = () => {
         }}
       />
     );
-  }, [NoRowRender, checkBoxes, countProducts, landOwners, rootCheckBox, setLandOwners]);
+  }, [NoRowRender, checkBoxes, lots, rootCheckBox, setLots]);
 
-  return (
+  return isMobile ? (
+    <>
+      <Box
+        sx={{
+          width: '100vw',
+          height: '78vh',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        <Box sx={{ padding: '5% 3% 0 3%' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <img src={logoImg} width="12%" style={{ marginRight: '20px' }} />
+            <img src={logoTypoImg} width="15%" />
+          </Box>
+          <Box sx={{ display: 'flex', marginTop: '5%', width: '100%' }}>
+            <SearchBox>
+              <SearchTextField
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setKeyword(e.target.value)}
+                defaultValue={keyword}
+              />
+              <SearchButton
+                type="submit"
+                onClick={async () => {
+                  const data = await getResult();
+                  navigate(`/search/${keyword}`, { state: { keyword: keyword, data: data } });
+                }}
+                className="mobile"
+                sx={{
+                  marginLeft: '10px',
+                }}
+              >
+                <SearchIcon sx={{ color: 'rgb(255, 140, 68)', height: '5vh', width: '5vw' }} />
+              </SearchButton>
+            </SearchBox>
+          </Box>
+        </Box>
+        <Box
+          sx={{
+            // marginTop: '20px',
+            display: 'flex',
+            // justifyContent: 'flex-start',
+            // alignItems: 'center',
+            flexDirection: 'column',
+            height: '75%',
+            width: '100%',
+            '& .MuiDataGrid-columnHeaders': {
+              height: 'auto',
+              backgroundColor: '#fff',
+              border: 'none',
+              borderBottom: '1px solid #B1B2B5',
+              '& .MuiDataGrid-columnHeaderTitle': {
+                fontSize: '1.4rem',
+              },
+            },
+            '& .MuiDataGrid-virtualScrollerRenderZone': {
+              fontSize: '1.5rem',
+              backgroundColor: '#fff',
+            },
+            '& .MuiDataGrid-virtualScrollerContent': {
+              backgroundColor: '#fff',
+              borderBottom: '1px solid #B1B2B5',
+            },
+            marginTop: '3%',
+          }}
+        >
+          <Box sx={{ width: '100%', height: '7%', display: 'flex', justifyContent: 'flex-end' }}>
+            <Box
+              sx={{
+                width: '10%',
+                display: 'flex',
+                backgroundColor: '#F4F4F4',
+
+                justifyContent: 'center',
+                alignItems: 'center',
+                fontSize: '1.5rem',
+                fontWeight: 700,
+              }}
+            ></Box>
+            <Box
+              sx={{
+                width: '52%',
+                display: 'flex',
+                backgroundColor: '#FFC900',
+                justifyContent: 'center',
+                alignItems: 'center',
+                fontSize: '1.5rem',
+                fontWeight: 700,
+              }}
+            >
+              토지 정보
+            </Box>
+            <Box
+              sx={{
+                width: '38%',
+                backgroundColor: '#ffeeca',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                fontSize: '1.5rem',
+                fontWeight: 700,
+              }}
+            >
+              소유자 정보
+            </Box>
+          </Box>
+          {GridRender}
+        </Box>
+      </Box>
+      <Box sx={{ padding: '3% 3% 0 3%' }}>
+        <PaymentResultMobile />
+      </Box>
+      <Box sx={{ position: 'sticky', marginTop: '2%', borderTop: '1px solid #BBB' }}>
+        <HeaderM />
+      </Box>
+    </>
+  ) : (
     <>
       <MainBox>
         <SearchBarWrapper>
@@ -265,7 +337,6 @@ export const Search: React.FC = () => {
         </SearchBarWrapper>
         <Box sx={{ marginTop: '20px', display: 'flex' }}>
           {GridRender}
-
           <PaymentBox className="shadow">
             <PaymentResult />
           </PaymentBox>

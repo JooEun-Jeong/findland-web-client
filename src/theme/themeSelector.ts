@@ -8,6 +8,7 @@ export const themeSelector = (mode: string) => ({
       styleOverrides: {
         html: {
           margin: '0',
+          position: 'relative',
           width: '100%',
           height: '100%',
         },

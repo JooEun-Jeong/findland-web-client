@@ -8,7 +8,10 @@ export const SearchBarWrapper = styled(Box)(() => ({
 }));
 
 export const SearchBox = styled(Box)(() => ({
+  display: 'flex',
+  alignItems: 'center',
   border: '1px solid rgb(255, 140, 68)',
+  width: '100%',
   borderRadius: '5px',
   '&:focus': {
     border: '1px solid rgb(235, 127, 56)',
@@ -30,5 +33,9 @@ export const PaymentBox = styled(Box)(() => ({
   borderRadius: '5px',
   '& .shadow': {
     boxShadow: 2,
+  },
+  '& .mobile': {
+    width: '100%',
+    // height: '8%',
   },
 }));

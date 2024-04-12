@@ -14,7 +14,7 @@ export const SearchTextField = styled(TextField)(({ theme }) => {
   return {
     backgroundColor: 'transparent',
     height: isMobile ? '5vh' : '45px',
-    width: theme.breakpoints.down('sm') ? '100%' : '350px',
+    width: isMobile || theme.breakpoints.down('sm') ? '95%' : '350px',
     '& > .MuiInputBase-root': {
       fontSize: isMobile ? '2rem' : '14px',
       lineHeight: '30px',
@@ -28,6 +28,7 @@ export const SearchTextField = styled(TextField)(({ theme }) => {
         backgroundColor: '#fff',
         color: '#dd5515',
         fontWeight: 600,
+        width: isMobile ? '100%' : 'auto',
         // border: '1px solid rgb(239, 192, 114)',
       },
       '& > fieldset': {
@@ -57,6 +58,7 @@ export const SearchField = (props: {
   setText: React.Dispatch<React.SetStateAction<string>>;
   handleSubmit: () => Promise<void>;
 }) => {
+  const isMobile = useRecoilValue(isMobileAtom);
   return (
     <>
       <SearchBox>
@@ -65,7 +67,9 @@ export const SearchField = (props: {
           sx={{ marginRight: '1px' }}
         />
         <SearchButton type="submit" onClick={props.handleSubmit}>
-          <SearchIcon sx={{ color: 'rgb(255, 140, 68)' }} />
+          <SearchIcon
+            sx={{ height: isMobile ? '50px' : 'auto', width: isMobile ? '50px' : 'auto', color: 'rgb(255, 140, 68)' }}
+          />
         </SearchButton>
       </SearchBox>
     </>

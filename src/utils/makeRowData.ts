@@ -1,22 +1,16 @@
-import { LandRowData, ResponseLandData } from '@interfaces/apis';
+import { LotRowData, Lots } from '@interfaces/apis';
 
-export const makeLandowenersRow = (landOwners: ResponseLandData): LandRowData => {
-  return landOwners.map((landOwner) => {
+export const makeLandowenersRow = (lots: Lots): LotRowData => {
+  return lots.map((lot) => {
     return {
-      id: landOwner.id,
-      name: landOwner.name,
-      chineseName: landOwner.chineseName,
-      goon: landOwner.goon,
-      meon: landOwner.meon,
-      li: landOwner.li,
-      jibun: landOwner.jibun,
-      area: landOwner.squareMeter,
-      buyerAddress:
-        landOwner.buyerAddress === 'x' || landOwner.buyerAddress === '×'
-          ? landOwner.goon + landOwner.meon + landOwner.li
-          : landOwner.buyerAddress,
-      isSelected: [false, false, false, false],
-      isPaid: [false, false, false, false],
+      id: lot.id,
+      koreanName: lot.koreanName,
+      chineseName: lot.chineseName,
+      buyerAddress: lot.buyerAddress,
+      purchasedGoonDong: lot.purchasedGoon + ' ' + lot.purchasedDong,
+      purchasedJibun: lot.purchasedJibun,
+      purchasedArea: lot.purchasedArea,
+      isSelected: false,
     };
-  }) as LandRowData;
+  }) as LotRowData;
 };

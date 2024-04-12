@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
+
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import { CheckBox as CheckBoxIcon, CheckBoxOutlineBlank as CheckBoxBlankIcon, CheckBox } from '@mui/icons-material';
 import { Checkbox } from '@mui/material';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import _, { every } from 'lodash';
+import _ from 'lodash';
 
-import { LandRowData } from '@interfaces';
-
-import { countProps } from '.';
+import { LotRowData, LotRowDatum } from '@interfaces';
+import { productCountAtomFamily } from '@states/user';
+import { doesNullExist } from '@utils';
 
 export type checkboxProps = {
   id: number;
@@ -19,9 +21,68 @@ interface ColumnProps {
   setRootCheckBox: React.Dispatch<React.SetStateAction<boolean>>;
   checkBoxes: checkboxProps[];
   setCheckBoxes: React.Dispatch<React.SetStateAction<checkboxProps[]>>;
-  landowners: LandRowData;
-  setLandowners: React.Dispatch<React.SetStateAction<LandRowData>>;
-  countProducts: ({ idx, compute }: countProps) => void;
+  lots: LotRowData;
+  setLots: React.Dispatch<React.SetStateAction<LotRowData>>;
+}
+
+interface countProps {
+  idx: number;
+  compute: string; // plus, minus
+}
+
+interface computeProps {
+  product: string;
+  compute: string; // plus, minus
+}
+
+// 이중으로 하면 hook이 된다..??!!!
+function countProducts({ idx, compute }: countProps) {
+  () => {
+    const setCNameCount = useSetRecoilState(productCountAtomFamily('cNameCount'));
+    const setJibunCount = useSetRecoilState(productCountAtomFamily('jibunCount'));
+    const setAreaCount = useSetRecoilState(productCountAtomFamily('areaCount'));
+    const setAddrCount = useSetRecoilState(productCountAtomFamily('addrCount'));
+    if (idx === 0) {
+      // cname
+      compute === 'plus' ? setCNameCount((prev) => prev + 1) : setCNameCount((prev) => prev - 1);
+    } else if (idx === 1) {
+      // jibun
+      compute === 'plus' ? setJibunCount((prev) => prev + 1) : setJibunCount((prev) => prev - 1);
+    } else if (idx === 2) {
+      // area
+      compute === 'plus' ? setAreaCount((prev) => prev + 1) : setAreaCount((prev) => prev - 1);
+    } else if (idx === 3) {
+      // addr
+      compute === 'plus' ? setAddrCount((prev) => prev + 1) : setAddrCount((prev) => prev - 1);
+    } else if (idx === 4) {
+      // all
+      if (compute === 'plus') {
+        setCNameCount((prev) => prev + 1);
+        setJibunCount((prev) => prev + 1);
+        setAreaCount((prev) => prev + 1);
+        setAddrCount((prev) => prev + 1);
+      } else {
+        setCNameCount((prev) => prev - 1);
+        setJibunCount((prev) => prev - 1);
+        setAreaCount((prev) => prev - 1);
+        setAddrCount((prev) => prev - 1);
+      }
+    }
+  };
+}
+
+// 이중으로 하면 hook이 된다..??!!!
+function countProduct({ product, compute }: computeProps) {
+  () => {
+    const [lotCount, setLotCount] = useRecoilState(productCountAtomFamily('lotCount'));
+    if (product === 'lot') {
+      compute === 'plus'
+        ? setLotCount((prev) => prev + 1)
+        : compute === 'minus'
+          ? setLotCount((prev) => prev - 1)
+          : setLotCount((prev) => prev);
+    }
+  };
 }
 
 export const ResultColumn = ({
@@ -29,27 +90,38 @@ export const ResultColumn = ({
   setRootCheckBox,
   checkBoxes,
   setCheckBoxes,
-  landowners,
-  setLandowners,
-  countProducts,
+  lots,
+  setLots,
 }: ColumnProps): GridColDef[] => [
   {
     field: 'checkbox',
-    width: 40,
+    minWidth: 30,
+    flex: 0.0972,
     headerName: ' ',
     sortable: false,
     resizable: false,
+    align: 'center',
+    headerAlign: 'center',
     renderHeader: () => (
       <Checkbox
         disableRipple
         value=" "
         sx={{
-          color: 'rgba(0, 0, 0, 0.8)',
+          color: '#ffbd59',
+          height: '100%',
           '&.Mui-checked': {
             color: '#ffbd59',
           },
           '&.Mui-disabled': {
             color: 'gray',
+            '& > svg': {
+              height: '1.5em',
+              width: '1.5em',
+            },
+          },
+          '& > svg': {
+            height: '1.5em',
+            width: '1.5em',
           },
         }}
         // icon={<CheckBoxBlankIcon />}
@@ -62,50 +134,45 @@ export const ResultColumn = ({
       />
     ),
     renderCell: (params: GridRenderCellParams) => {
-      const selectedLandowner = landowners.find((landowner) => params.id === landowner.id);
-      return selectedLandowner?.isPaid.every((x) => x === true) ? (
-        <Checkbox disabled />
-      ) : (
+      const selectedLot = lots.find((lot) => params.id === lot.id) as LotRowDatum;
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const [lotCount, setLotCount] = useRecoilState(productCountAtomFamily('lotCount'));
+      return doesNullExist(selectedLot) ? (
         <Checkbox
           value=" "
           disableRipple
           sx={{
-            color: 'rgba(0, 0, 0, 0.8)',
+            // height: '100%',
+            height: '1.5em',
+            width: '1.5em',
+            color: '#ffbd59',
             '&.Mui-checked': {
-              color: '#d88912',
+              color: 'rgba(255, 140, 68, 0.598)',
             },
             '& .Mui-disabled': {
               backgroundColor: 'gray',
+              '& .MuiSvgIcon-root': {
+                height: '1.5em',
+                width: '1.5em',
+              },
+              height: '1.5em',
+              width: '1.5em',
+            },
+            '& .MuiSvgIcon-root': {
+              height: '1.5em',
+              width: '1.5em',
             },
           }}
-          disabled={selectedLandowner?.isPaid.every((x) => x === true)}
+          disabled={!doesNullExist(selectedLot)}
           // icon={<CheckBoxBlankIcon />}
           // checkedIcon={<CheckBoxIcon sx={{ color: '#ffbd59' }} />}
-          checked={
-            (selectedLandowner &&
-              landowners.find((landowner) => params.id === landowner.id)?.isSelected.every((x) => x === true)) ||
-            checkBoxes.find((check) => params.id === check.id)?.checkBoxState ||
-            false
-          }
+          checked={checkBoxes.find((check) => params.id === check.id)?.checkBoxState || false}
           onChange={(e) => {
             e.stopPropagation();
             console.log(checkBoxes);
-            setLandowners(
-              landowners.map((landowner) => {
-                return params.id === landowner.id
-                  ? {
-                      ...landowner,
-                      isSelected: landowner.isSelected.every((x) => x === true)
-                        ? [false, false, false, false]
-                        : [true, true, true, true],
-                    }
-                  : landowner;
-              }),
-            );
-            countProducts({
-              idx: 4,
-              compute: selectedLandowner?.isSelected.every((x) => x === true) ? 'minus' : 'plus',
-            });
+            checkBoxes.find((check) => params.id === check.id)?.checkBoxState
+              ? setLotCount((prev) => prev - 1)
+              : setLotCount((prev) => prev + 1);
 
             // 직접 체크박스 눌렀을 때 변경
             setCheckBoxes(
@@ -118,236 +185,81 @@ export const ResultColumn = ({
                   : data;
               }),
             );
-
-            // 해당 행의 항목들이 모두 체크되지 않았다면, checkboxstate는 false로
-            selectedLandowner?.isSelected.every((x) => x !== true) &&
-              setCheckBoxes(
-                checkBoxes.map((data) => {
-                  return params.id === data.id
-                    ? {
-                        id: data.id,
-                        checkBoxState: false,
-                      }
-                    : data;
-                }),
-              );
           }}
         />
-      );
-    },
-  },
-  {
-    field: 'name',
-    headerName: '성명',
-    align: 'left',
-    resizable: false,
-    width: 80,
-  },
-  {
-    field: 'chineseCharacter',
-    headerName: '한자',
-    align: 'left',
-    resizable: false,
-    width: 80,
-    renderCell: (params: GridRenderCellParams) => {
-      const id = params.row.id;
-      const selectedLandowner = _.find(landowners, (landowner) => landowner.id === id);
-      const productNum = 0;
-
-      return selectedLandowner?.isPaid[productNum] ? (
-        selectedLandowner?.chineseName || ''
       ) : (
         <Checkbox
-          disableRipple
-          value=" "
-          icon={<CheckBoxBlankIcon />}
-          checkedIcon={<CheckBoxIcon sx={{ color: '#ffbd59' }} />}
-          checked={
-            selectedLandowner?.isSelected[productNum] ||
-            (selectedLandowner?.isSelected[productNum] &&
-              checkBoxes.find((data) => params.id === data.id)?.checkBoxState === true) ||
-            false
-          }
-          onChange={(e) => {
-            e.stopPropagation();
-            countProducts({
-              idx: productNum,
-              compute: selectedLandowner?.isSelected[productNum] ? 'minus' : 'plus',
-              // landowner이 아직 update하기 전이니까 반대로 계산
-            });
-            setLandowners(
-              landowners.map((landowner) => {
-                return id === landowner.id
-                  ? {
-                      ...landowner,
-                      isSelected: landowner.isSelected.map((item, i) => (i === productNum ? !item : item)),
-                    }
-                  : landowner;
-              }),
-            );
+          disabled
+          sx={{
+            '& > svg': {
+              height: '1.5em',
+              width: '1.5em',
+            },
           }}
         />
       );
     },
   },
   {
-    field: 'goon',
-    headerName: '군',
+    field: 'purchasedGoonDong',
+    headerName: '매수 군',
     align: 'left',
-    resizable: false,
-    width: 80,
+    minWidth: 80,
+    flex: 0.2778,
   },
   {
-    field: 'meon',
-    headerName: '면(읍)',
+    field: 'purchasedJibun',
+    headerName: '번지',
     align: 'left',
-    resizable: false,
-    width: 80,
-  },
-  {
-    field: 'li',
-    headerName: '리',
-    align: 'left',
-    resizable: false,
-    width: 80,
-  },
-  {
-    field: 'jibun',
-    headerName: '지번',
-    align: 'left',
-    resizable: false,
-    width: 80,
+    minWidth: 40,
+    flex: 0.1111,
     renderCell: (params: GridRenderCellParams) => {
       const id = params.row.id;
-      const selectedLandowner = _.find(landowners, (landowner) => landowner.id === id);
+      const selectedLot = _.find(lots, (landowner) => landowner.id === id) as LotRowDatum;
       const productNum = 1;
-      return selectedLandowner?.isPaid[productNum] ? (
-        selectedLandowner?.jibun || ''
-      ) : (
-        <Checkbox
-          disableRipple
-          value=" "
-          icon={<CheckBoxBlankIcon />}
-          checkedIcon={<CheckBoxIcon sx={{ color: '#ffbd59' }} />}
-          checked={
-            selectedLandowner?.isSelected[productNum] ||
-            (selectedLandowner?.isSelected[productNum] &&
-              checkBoxes.find((data) => params.id === data.id)?.checkBoxState === true) ||
-            false
-          }
-          onChange={(e) => {
-            e.stopPropagation();
-            countProducts({
-              idx: productNum,
-              compute: selectedLandowner?.isSelected[productNum] ? 'minus' : 'plus',
-              // landowner이 아직 update하기 전이니까 반대로 계산
-            });
-            setLandowners(
-              landowners.map((landowner) => {
-                return id === landowner.id
-                  ? {
-                      ...landowner,
-                      isSelected: landowner.isSelected.map((item, i) => (i === productNum ? !item : item)),
-                    }
-                  : landowner;
-              }),
-            );
-          }}
-        />
-      );
+      return typeof selectedLot.purchasedJibun !== 'undefined' ? selectedLot.purchasedJibun || '-' : '-';
     },
   },
   {
-    field: 'area',
-    headerName: '평방미터',
+    field: 'purchasedArea',
+    headerName: '면적',
     align: 'left',
-    resizable: false,
-    width: 80,
+    minWidth: 40,
+    flex: 0.1111,
     renderCell: (params: GridRenderCellParams) => {
       const id = params.row.id;
-      const selectedLandowner = _.find(landowners, (landowner) => landowner.id === id);
+      const selectedLot = _.find(lots, (landowner) => landowner.id === id) as LotRowDatum;
       const productNum = 2;
 
-      return selectedLandowner?.isPaid[productNum] ? (
-        selectedLandowner?.area || ''
-      ) : (
-        <Checkbox
-          disableRipple
-          value=" "
-          icon={<CheckBoxBlankIcon />}
-          checkedIcon={<CheckBoxIcon sx={{ color: '#ffbd59' }} />}
-          checked={
-            selectedLandowner?.isSelected[productNum] ||
-            (selectedLandowner?.isSelected[productNum] &&
-              checkBoxes.find((data) => params.id === data.id)?.checkBoxState === true) ||
-            false
-          }
-          onChange={(e) => {
-            e.stopPropagation();
-            countProducts({
-              idx: productNum,
-              compute: selectedLandowner?.isSelected[productNum] ? 'minus' : 'plus',
-              // landowner이 아직 update하기 전이니까 반대로 계산
-            });
-            setLandowners(
-              landowners.map((landowner) => {
-                return id === landowner.id
-                  ? {
-                      ...landowner,
-                      isSelected: landowner.isSelected.map((item, i) => (i === productNum ? !item : item)),
-                    }
-                  : landowner;
-              }),
-            );
-          }}
-        />
-      );
+      return typeof selectedLot.purchasedArea !== 'undefined' ? selectedLot.purchasedArea || '-' : '-';
     },
   },
   {
-    field: 'address',
-    headerName: '소유자 주소',
+    field: 'chineseName',
+    headerName: '한자이름',
     align: 'left',
-    resizable: false,
-    width: 180,
+    minWidth: 60,
+    flex: 0.1667,
     renderCell: (params: GridRenderCellParams) => {
       const id = params.row.id;
-      const selectedLandowner = _.find(landowners, (landowner) => landowner.id === id);
+      const selectedLot = _.find(lots, (landowner) => landowner.id === id) as LotRowDatum;
+      const productNum = 0;
+
+      return typeof selectedLot.chineseName !== 'undefined' ? selectedLot.chineseName || '-' : '-';
+    },
+  },
+  {
+    field: 'buyerAddress',
+    headerName: '거주지',
+    align: 'left',
+    resizable: false,
+    minWidth: 75,
+    flex: 0.2083,
+    renderCell: (params: GridRenderCellParams) => {
+      const id = params.row.id;
+      const selectedLot = _.find(lots, (landowner) => landowner.id === id) as LotRowDatum;
       const productNum = 3;
-      return selectedLandowner?.isPaid[productNum] ? (
-        selectedLandowner?.buyerAddress || ''
-      ) : (
-        <Checkbox
-          disableRipple
-          value=" "
-          icon={<CheckBoxBlankIcon />}
-          checkedIcon={<CheckBoxIcon sx={{ color: '#ffbd59' }} />}
-          checked={
-            selectedLandowner?.isSelected[productNum] ||
-            (selectedLandowner?.isSelected[productNum] &&
-              checkBoxes.find((data) => params.id === data.id)?.checkBoxState === true) ||
-            false
-          }
-          onChange={(e) => {
-            e.stopPropagation();
-            countProducts({
-              idx: productNum,
-              compute: selectedLandowner?.isSelected[productNum] ? 'minus' : 'plus',
-              // landowner이 아직 update하기 전이니까 반대로 계산
-            });
-            setLandowners(
-              landowners.map((landowner) => {
-                return id === landowner.id
-                  ? {
-                      ...landowner,
-                      isSelected: landowner.isSelected.map((item, i) => (i === productNum ? !item : item)),
-                    }
-                  : landowner;
-              }),
-            );
-          }}
-        />
-      );
+      return typeof selectedLot.buyerAddress !== 'undefined' ? selectedLot.buyerAddress || '-' : '-';
     },
   },
 ];
