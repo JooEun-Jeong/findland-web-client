@@ -30,21 +30,17 @@ export const LoginIcon = () => {
   return <LoginImg style={{ height: isMobile ? '20%' : 24, width: isMobile ? '20%' : 24 }} />;
 };
 
-export const IconButton = styled(Button)(() => {
-  const isMobile = useRecoilValue(isMobileAtom);
-  return {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    color: 'black',
-    fontSize: isMobile ? '1.4rem' : '1rem',
-  };
-});
+export const IconButton = styled(Button)((props: { isMobile: boolean }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  color: 'black',
+  fontSize: props.isMobile ? '1.4rem' : '1rem',
+}));
 
-export const MainWrapper = styled(Box)(() => ({
+export const HeaderWrapper = styled(Box)(() => ({
   width: '100vw',
-  height: '60px',
-  backgroundColor: '#F9FAFA',
+  backgroundColor: '#FFF',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-evenly',

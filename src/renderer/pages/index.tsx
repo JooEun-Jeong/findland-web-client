@@ -28,8 +28,9 @@ export const AppRoute: React.FC = () => {
   return (
     <React.Fragment>
       <Routes>
-        <Route index element={<Home />} />
+        <Route index path="/findLand" element={<Home />} />
         <Route path="/search/:name" element={<Search />} />
+
         <Route path="*" element={<Navigate to={'/findLand'} />} />
       </Routes>
     </React.Fragment>

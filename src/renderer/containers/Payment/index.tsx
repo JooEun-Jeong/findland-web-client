@@ -8,7 +8,17 @@ import { DataGrid } from '@mui/x-data-grid';
 import { LotRowData } from '@interfaces';
 import { lotsAtom, productCountAtomFamily } from '@states/user';
 
-import { PayButton, PayResultBox, PayResultRootBox } from './styled';
+import {
+  ComputeBoxM,
+  CountBoxM,
+  PayButton,
+  PayButtonM,
+  PayResultBox,
+  PayResultRootBox,
+  TotalComputeBoxM,
+  TotalPriceBoxM,
+  PriceTypoM,
+} from './styled';
 import { ResultColumn, ResultRow } from './TableInterface';
 
 export const PaymentResult: React.FC = () => {
@@ -169,113 +179,36 @@ export const PaymentResultMobile: React.FC = () => {
 
   return (
     <>
-      <Box sx={{ width: '100%', height: '100%' }}>
-        <Box
-          sx={{
-            display: 'flex',
-            width: '100%',
-            justifyContent: 'space-between',
-            padding: '3% 3% 3% 3%',
-            border: '1px solid #B1B2B5',
-            alignItems: 'center',
-            marginBottom: '2%',
-          }}
-        >
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              width: '45%',
-              alignItems: 'center',
-              height: '100%',
-            }}
-          >
-            <Typography sx={{ fontSize: '1.5rem', fontWeight: 'bold' }}>개수</Typography>
-            <Typography sx={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'green' }}>{lotCount}</Typography>
-          </Box>
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              width: '45%',
-            }}
-          >
-            <Typography sx={{ fontSize: '1.5rem', fontWeight: 'bold' }}>금액</Typography>
-            <Typography sx={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'green' }}>{price}</Typography>
-          </Box>
-        </Box>
+      <Box sx={{ width: '100%' }}>
+        <ComputeBoxM>
+          <CountBoxM>
+            <PriceTypoM>개수</PriceTypoM>
+            <PriceTypoM sx={{ color: 'green' }}>{lotCount}</PriceTypoM>
+          </CountBoxM>
+          <CountBoxM>
+            <PriceTypoM>금액</PriceTypoM>
+            <PriceTypoM sx={{ color: 'green' }}>{price}</PriceTypoM>
+          </CountBoxM>
+        </ComputeBoxM>
 
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            width: '100%',
-            // marginTop: '20px',
-          }}
-        >
-          <Box
-            sx={{
-              backgroundColor: '#F4F4F6',
-              borderRadius: '5px',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              padding: '3% 3%',
-              border: '1px solid #EEE',
-              width: '70%',
-              height: '100%',
-            }}
-          >
-            <Typography
-              sx={{
-                fontWeight: 'bold',
-                fontSize: '1.5rem',
-              }}
-            >
-              총액
-            </Typography>
+        <TotalComputeBoxM>
+          <TotalPriceBoxM>
+            <PriceTypoM>총액</PriceTypoM>
             <Box sx={{ display: 'flex' }}>
-              <Typography
+              <PriceTypoM
                 sx={{
-                  fontWeight: 'bold',
-                  fontSize: '1.5rem',
                   marginRight: '5px',
                 }}
               >
                 {totalCost}
-              </Typography>
-              <Typography
-                sx={{
-                  fontWeight: 'bold',
-                  fontSize: '1.5rem',
-                }}
-              >
-                원
-              </Typography>
+              </PriceTypoM>
+              <PriceTypoM>원</PriceTypoM>
             </Box>
-          </Box>
+          </TotalPriceBoxM>
           <Box sx={{ width: '25%', height: '100%' }}>
-            <Button
-              sx={{
-                backgroundColor: '#ffbd59',
-                color: '#000',
-                borderRadius: '5px',
-                height: '5vh',
-                width: '100%',
-                padding: '3%',
-                fontSize: '1.5rem',
-                fontWeight: 'bold',
-                '&:hover': {
-                  backgroundColor: 'rgb(235, 127, 56)',
-                },
-              }}
-              onClick={handlePayment}
-            >
-              결제하기
-            </Button>
+            <PayButtonM onClick={handlePayment}>결제하기</PayButtonM>
           </Box>
-        </Box>
+        </TotalComputeBoxM>
       </Box>
     </>
   );

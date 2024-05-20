@@ -3,7 +3,7 @@ import React, { useCallback, useMemo, useState, useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
 import SearchIcon from '@mui/icons-material/Search';
-import { Box, Checkbox } from '@mui/material';
+import { Box, Checkbox, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import _ from 'lodash';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -11,14 +11,28 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { UseSearchApi } from '@apis/hooks/useSearchApi';
 import logoImg from '@assets/png/logoImg.png';
 import logoTypoImg from '@assets/png/logoTypo.png';
-import { CheckedIcon, SearchButton, SearchTextField, UnCheckedIcon } from '@components';
+import { SearchButton, SearchTextField } from '@components';
 import { HeaderM, PaymentResult, PaymentResultMobile } from '@containers';
-import { LotRowData, LotRowDatum, Lot, Lots, ResponseLandData } from '@interfaces';
+import { LotRowData, LotRowDatum } from '@interfaces';
 import { isMobileAtom } from '@states';
 import { lotsAtom } from '@states/user';
-import { doesNullExist, makeLandowenersRow } from '@utils';
+import { doesNullExist } from '@utils';
 
-import { MainBox, PaymentBox, SearchBox, SearchBarWrapper } from './styled';
+import {
+  MainBox,
+  PaymentBox,
+  SearchBox,
+  SearchBarWrapper,
+  SearchBarWrapperMobile,
+  TableWrapperMobile,
+  GrayBox,
+  TableHeaderBox,
+  TableHeaderColumnBox,
+  MobileContentWrapper,
+  NoRenderBox,
+  AccountBox,
+  HeaderWrapperM,
+} from './styled';
 import { ResultColumn, checkboxProps } from './Table';
 
 export interface countProps {
@@ -36,9 +50,9 @@ export const Search: React.FC = () => {
   const { name } = useParams();
   const [keyword, setKeyword] = useState(name || '정재형');
 
-  const [lots, setLots] = useRecoilState<LotRowData>(lotsAtom);
+  // console.log('name: ' + name);
 
-  const [text, setText] = useState('');
+  const [lots, setLots] = useRecoilState<LotRowData>(lotsAtom);
 
   // const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
 
@@ -133,21 +147,7 @@ export const Search: React.FC = () => {
   const getRowId = (data: LotRowDatum) => data.id;
 
   const NoRowRender = useCallback(() => {
-    return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          color: 'rgba(255, 255, 255, 0.5)',
-          fontSize: '14px',
-          width: '100%',
-          height: '100%',
-        }}
-      >
-        No Results
-      </Box>
-    );
+    return <NoRenderBox>No Results</NoRenderBox>;
   }, []);
 
   const GridRender = useMemo(() => {
@@ -193,24 +193,17 @@ export const Search: React.FC = () => {
         }}
       />
     );
-  }, [NoRowRender, checkBoxes, lots, rootCheckBox, setLots]);
+  }, [NoRowRender, checkBoxes, isMobile, lots, rootCheckBox, setLots]);
 
   return isMobile ? (
     <>
-      <Box
-        sx={{
-          width: '100vw',
-          height: '78vh',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
+      <MobileContentWrapper>
         <Box sx={{ padding: '5% 3% 0 3%' }}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <img src={logoImg} width="12%" style={{ marginRight: '20px' }} />
             <img src={logoTypoImg} width="15%" />
           </Box>
-          <Box sx={{ display: 'flex', marginTop: '5%', width: '100%' }}>
+          <SearchBarWrapperMobile>
             <SearchBox>
               <SearchTextField
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setKeyword(e.target.value)}
@@ -230,86 +223,31 @@ export const Search: React.FC = () => {
                 <SearchIcon sx={{ color: 'rgb(255, 140, 68)', height: '5vh', width: '5vw' }} />
               </SearchButton>
             </SearchBox>
-          </Box>
+          </SearchBarWrapperMobile>
         </Box>
-        <Box
-          sx={{
-            // marginTop: '20px',
-            display: 'flex',
-            // justifyContent: 'flex-start',
-            // alignItems: 'center',
-            flexDirection: 'column',
-            height: '75%',
-            width: '100%',
-            '& .MuiDataGrid-columnHeaders': {
-              height: 'auto',
-              backgroundColor: '#fff',
-              border: 'none',
-              borderBottom: '1px solid #B1B2B5',
-              '& .MuiDataGrid-columnHeaderTitle': {
-                fontSize: '1.4rem',
-              },
-            },
-            '& .MuiDataGrid-virtualScrollerRenderZone': {
-              fontSize: '1.5rem',
-              backgroundColor: '#fff',
-            },
-            '& .MuiDataGrid-virtualScrollerContent': {
-              backgroundColor: '#fff',
-              borderBottom: '1px solid #B1B2B5',
-            },
-            marginTop: '3%',
-          }}
-        >
-          <Box sx={{ width: '100%', height: '7%', display: 'flex', justifyContent: 'flex-end' }}>
-            <Box
-              sx={{
-                width: '10%',
-                display: 'flex',
-                backgroundColor: '#F4F4F4',
-
-                justifyContent: 'center',
-                alignItems: 'center',
-                fontSize: '1.5rem',
-                fontWeight: 700,
-              }}
-            ></Box>
-            <Box
-              sx={{
-                width: '52%',
-                display: 'flex',
-                backgroundColor: '#FFC900',
-                justifyContent: 'center',
-                alignItems: 'center',
-                fontSize: '1.5rem',
-                fontWeight: 700,
-              }}
-            >
+        <TableWrapperMobile>
+          <TableHeaderBox>
+            <GrayBox />
+            <TableHeaderColumnBox width={'52%'} backgroundColor="#FFC900">
               토지 정보
-            </Box>
-            <Box
-              sx={{
-                width: '38%',
-                backgroundColor: '#ffeeca',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                fontSize: '1.5rem',
-                fontWeight: 700,
-              }}
-            >
+            </TableHeaderColumnBox>
+            <TableHeaderColumnBox width={'38%'} backgroundColor="#ffeeca">
               소유자 정보
-            </Box>
-          </Box>
+            </TableHeaderColumnBox>
+          </TableHeaderBox>
           {GridRender}
+        </TableWrapperMobile>
+        <Box sx={{ padding: '3%' }}>
+          <PaymentResultMobile />
+          <AccountBox>
+            <Typography sx={{ fontWeight: 700, fontSize: '1.5rem' }}>계좌번호</Typography>
+            <Typography sx={{ fontSize: '1.5rem' }}>우리 1005804492395 다시드림</Typography>
+          </AccountBox>
         </Box>
-      </Box>
-      <Box sx={{ padding: '3% 3% 0 3%' }}>
-        <PaymentResultMobile />
-      </Box>
-      <Box sx={{ position: 'sticky', marginTop: '2%', borderTop: '1px solid #BBB' }}>
-        <HeaderM />
-      </Box>
+        <HeaderWrapperM>
+          <HeaderM />
+        </HeaderWrapperM>
+      </MobileContentWrapper>
     </>
   ) : (
     <>
