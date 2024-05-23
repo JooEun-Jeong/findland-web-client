@@ -7,6 +7,7 @@ import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-d
 import { themeSelector } from '@theme/themeSelector';
 
 import { Home } from './Home';
+import { MyPage } from './MyPage';
 import { Search } from './SearchList';
 
 const AppRenderer: React.FC = () => {
@@ -30,7 +31,7 @@ export const AppRoute: React.FC = () => {
       <Routes>
         <Route index path="/findLand" element={<Home />} />
         <Route path="/search/:name" element={<Search />} />
-
+        <Route path="/myPage" element={<MyPage />} />
         <Route path="*" element={<Navigate to={'/findLand'} />} />
       </Routes>
     </React.Fragment>

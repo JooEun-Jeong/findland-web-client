@@ -10,7 +10,12 @@ export const productCountAtomFamily = atomFamily<number, string>({
   default: 0,
 });
 
-export const lotsAtom = atom<LotRowData>({
-  key: 'lotsAtom',
+export const lotsSearchAtom = atom<LotRowData>({
+  key: 'lotsSearchAtom',
+  default: [],
+});
+
+export const lotsPaidAtom = atom<LotRowData>({
+  key: 'lotsPaidAtom',
   default: [],
 });

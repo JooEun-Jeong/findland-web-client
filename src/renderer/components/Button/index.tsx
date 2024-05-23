@@ -55,3 +55,21 @@ export const MenuButton = styled(Button)(() => ({
     marginRight: 0,
   },
 }));
+
+export const YellowButton = styled(Button)(() => ({
+  backgroundColor: '#FFC900',
+  borderRadius: 5,
+  width: '30vw',
+  height: '100%',
+  fontSize: '2rem',
+  fontWeight: 700,
+  color: '#000',
+  '&:hover': {
+    backgroundColor: '#fcd64f',
+    color: '#000',
+  },
+  '& .Mui-disabled': {
+    backgroundColor: '#FFE9C2',
+    color: '#00000090',
+  },
+}));

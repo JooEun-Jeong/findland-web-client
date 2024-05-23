@@ -2,7 +2,6 @@ import React from 'react';
 
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
-import { CheckBox as CheckBoxIcon, CheckBoxOutlineBlank as CheckBoxBlankIcon, CheckBox } from '@mui/icons-material';
 import { Checkbox } from '@mui/material';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import _ from 'lodash';
@@ -10,6 +9,8 @@ import _ from 'lodash';
 import { LotRowData, LotRowDatum } from '@interfaces';
 import { productCountAtomFamily } from '@states/user';
 import { doesNullExist } from '@utils';
+
+import { TableEachChecbox, TableRootChecbox } from './styled';
 
 export type checkboxProps = {
   id: number;
@@ -23,6 +24,7 @@ interface ColumnProps {
   setCheckBoxes: React.Dispatch<React.SetStateAction<checkboxProps[]>>;
   lots: LotRowData;
   setLots: React.Dispatch<React.SetStateAction<LotRowData>>;
+  isMypage: boolean;
 }
 
 interface countProps {
@@ -85,13 +87,14 @@ function countProduct({ product, compute }: computeProps) {
   };
 }
 
-export const ResultColumn = ({
+export const SearchResultColmns = ({
   rootCheckBox,
   setRootCheckBox,
   checkBoxes,
   setCheckBoxes,
   lots,
   setLots,
+  isMypage,
 }: ColumnProps): GridColDef[] => [
   {
     field: 'checkbox',
@@ -103,27 +106,9 @@ export const ResultColumn = ({
     align: 'center',
     headerAlign: 'center',
     renderHeader: () => (
-      <Checkbox
+      <TableRootChecbox
         disableRipple
         value=" "
-        sx={{
-          color: '#ffbd59',
-          height: '100%',
-          '&.Mui-checked': {
-            color: '#ffbd59',
-          },
-          '&.Mui-disabled': {
-            color: 'gray',
-            '& > svg': {
-              height: '1.5em',
-              width: '1.5em',
-            },
-          },
-          '& > svg': {
-            height: '1.5em',
-            width: '1.5em',
-          },
-        }}
         // icon={<CheckBoxBlankIcon />}
         // checkedIcon={<CheckBoxIcon sx={{ color: '#ffbd59' }} />}
         checked={rootCheckBox}
@@ -137,42 +122,15 @@ export const ResultColumn = ({
       const selectedLot = lots.find((lot) => params.id === lot.id) as LotRowDatum;
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const [lotCount, setLotCount] = useRecoilState(productCountAtomFamily('lotCount'));
-      return doesNullExist(selectedLot) ? (
-        <Checkbox
+
+      const MypageCheckbox = () => (
+        <TableEachChecbox
           value=" "
           disableRipple
-          sx={{
-            // height: '100%',
-            height: '1.5em',
-            width: '1.5em',
-            color: '#ffbd59',
-            '&.Mui-checked': {
-              color: 'rgba(255, 140, 68, 0.598)',
-            },
-            '& .Mui-disabled': {
-              backgroundColor: 'gray',
-              '& .MuiSvgIcon-root': {
-                height: '1.5em',
-                width: '1.5em',
-              },
-              height: '1.5em',
-              width: '1.5em',
-            },
-            '& .MuiSvgIcon-root': {
-              height: '1.5em',
-              width: '1.5em',
-            },
-          }}
-          disabled={!doesNullExist(selectedLot)}
-          // icon={<CheckBoxBlankIcon />}
-          // checkedIcon={<CheckBoxIcon sx={{ color: '#ffbd59' }} />}
           checked={checkBoxes.find((check) => params.id === check.id)?.checkBoxState || false}
           onChange={(e) => {
             e.stopPropagation();
             console.log(checkBoxes);
-            checkBoxes.find((check) => params.id === check.id)?.checkBoxState
-              ? setLotCount((prev) => prev - 1)
-              : setLotCount((prev) => prev + 1);
 
             // 직접 체크박스 눌렀을 때 변경
             setCheckBoxes(
@@ -187,17 +145,48 @@ export const ResultColumn = ({
             );
           }}
         />
-      ) : (
-        <Checkbox
-          disabled
-          sx={{
-            '& > svg': {
-              height: '1.5em',
-              width: '1.5em',
-            },
-          }}
-        />
       );
+
+      const SearchBoxCheckbox = () =>
+        doesNullExist(selectedLot) ? (
+          <TableEachChecbox
+            value=" "
+            disableRipple
+            disabled={!doesNullExist(selectedLot)}
+            checked={checkBoxes.find((check) => params.id === check.id)?.checkBoxState || false}
+            onChange={(e) => {
+              e.stopPropagation();
+              console.log(checkBoxes);
+              checkBoxes.find((check) => params.id === check.id)?.checkBoxState
+                ? setLotCount((prev) => prev - 1)
+                : setLotCount((prev) => prev + 1);
+
+              // 직접 체크박스 눌렀을 때 변경
+              setCheckBoxes(
+                checkBoxes.map((data) => {
+                  return params.id === data.id
+                    ? {
+                        id: data.id,
+                        checkBoxState: !data.checkBoxState,
+                      }
+                    : data;
+                }),
+              );
+            }}
+          />
+        ) : (
+          <Checkbox
+            disabled
+            sx={{
+              '& > svg': {
+                height: '1.5em',
+                width: '1.5em',
+              },
+            }}
+          />
+        );
+
+      return isMypage ? <MypageCheckbox /> : <SearchBoxCheckbox />;
     },
   },
   {
@@ -216,7 +205,6 @@ export const ResultColumn = ({
     renderCell: (params: GridRenderCellParams) => {
       const id = params.row.id;
       const selectedLot = _.find(lots, (landowner) => landowner.id === id) as LotRowDatum;
-      const productNum = 1;
       return typeof selectedLot.purchasedJibun !== 'undefined' ? selectedLot.purchasedJibun || '-' : '-';
     },
   },
@@ -229,7 +217,6 @@ export const ResultColumn = ({
     renderCell: (params: GridRenderCellParams) => {
       const id = params.row.id;
       const selectedLot = _.find(lots, (landowner) => landowner.id === id) as LotRowDatum;
-      const productNum = 2;
 
       return typeof selectedLot.purchasedArea !== 'undefined' ? selectedLot.purchasedArea || '-' : '-';
     },
@@ -243,7 +230,6 @@ export const ResultColumn = ({
     renderCell: (params: GridRenderCellParams) => {
       const id = params.row.id;
       const selectedLot = _.find(lots, (landowner) => landowner.id === id) as LotRowDatum;
-      const productNum = 0;
 
       return typeof selectedLot.chineseName !== 'undefined' ? selectedLot.chineseName || '-' : '-';
     },
@@ -258,7 +244,6 @@ export const ResultColumn = ({
     renderCell: (params: GridRenderCellParams) => {
       const id = params.row.id;
       const selectedLot = _.find(lots, (landowner) => landowner.id === id) as LotRowDatum;
-      const productNum = 3;
       return typeof selectedLot.buyerAddress !== 'undefined' ? selectedLot.buyerAddress || '-' : '-';
     },
   },
