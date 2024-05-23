@@ -6,6 +6,7 @@ import { Box, Checkbox } from '@mui/material';
 import { DataGrid, GridSearchIcon } from '@mui/x-data-grid';
 import _ from 'lodash';
 
+import { MapServiceModal } from '@/renderer/containers/MyPage';
 import { UseMypageApi } from '@apis/hooks/useMypageApi';
 import logoImg from '@assets/png/logoImg.png';
 import logoTypoImg from '@assets/png/logoTypo.png';
@@ -33,6 +34,7 @@ export const MyPage = () => {
   const [keyword, setKeyword] = useState('');
   const isMobile = useRecoilValue(isMobileAtom);
   const [paidLots, setPaidLots] = useRecoilState(lotsPaidAtom);
+  const [isOpenModal, setIsOpenModal] = useState(false);
 
   const mypageApi = UseMypageApi();
 
@@ -53,6 +55,8 @@ export const MyPage = () => {
     }),
   );
   const getRowId = useCallback((data: LotRowDatum) => data.id, []);
+  const handleOpen = useCallback(() => setIsOpenModal(true), []);
+  const handleClose = useCallback(() => setIsOpenModal(false), []);
 
   useEffect(() => {
     const newCheckBoxState = paidLots.map((item) => {
@@ -198,7 +202,7 @@ export const MyPage = () => {
           {GridRender}
         </TableWrapperMobile>
         <Box sx={{ padding: '3%', height: '10vh', display: 'flex', justifyContent: 'space-between' }}>
-          <FindServiceButton>토지 현재 위치 확인하기</FindServiceButton>
+          <FindServiceButton onClick={handleOpen}>토지 현재 위치 확인하기</FindServiceButton>
           <FileDownloadButton>
             <FileDownloadTypo>결제한 토지 정보</FileDownloadTypo>
             <FileDownloadTypo>다운로드</FileDownloadTypo>
@@ -208,6 +212,7 @@ export const MyPage = () => {
           <HeaderM />
         </HeaderWrapperM>
       </MobileContentWrapper>
+      {isOpenModal && <MapServiceModal open={isOpenModal} handleClose={handleClose} />}
     </>
   ) : (
     <></>
