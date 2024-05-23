@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 
 import { LotRowData } from '@interfaces';
-import { lotsAtom, productCountAtomFamily } from '@states/user';
+import { lotsSearchAtom, productCountAtomFamily } from '@states/user';
 
 import {
   ComputeBoxM,
@@ -19,7 +19,7 @@ import {
   TotalPriceBoxM,
   PriceTypoM,
 } from './styled';
-import { ResultColumn, ResultRow } from './TableInterface';
+import { ProductSelectedColmns, ResultRow } from './TableInterface';
 
 export const PaymentResult: React.FC = () => {
   const [cNameCount, setCNameCount] = useRecoilState(productCountAtomFamily('lotCount'));
@@ -28,7 +28,7 @@ export const PaymentResult: React.FC = () => {
   const [addrCount, setAddrCount] = useRecoilState(productCountAtomFamily('addrCount'));
   const [totalCost, setTotalCost] = useState<number>(0);
 
-  const [lotRows, setLotRows] = useRecoilState<LotRowData>(lotsAtom);
+  const [lotRows, setLotRows] = useRecoilState<LotRowData>(lotsSearchAtom);
 
   const [selectedProductNumbers, setSelectedProductNumbers] = useState<ResultRow[]>([
     { id: 1, count: '개수', addressCount: 0, areaCount: 0, chineseCharacterCount: 0, jibunCount: 0 },
@@ -78,7 +78,7 @@ export const PaymentResult: React.FC = () => {
         <Box sx={{ padding: '5px' }}>
           <DataGrid
             rows={selectedProductNumbers}
-            columns={ResultColumn}
+            columns={ProductSelectedColmns}
             hideFooter
             disableColumnMenu
             disableColumnFilter
@@ -154,7 +154,7 @@ export const PaymentResultMobile: React.FC = () => {
   const [totalCost, setTotalCost] = useState<number>(0);
   const price = 20000;
 
-  const [lotRows, setLotRows] = useRecoilState<LotRowData>(lotsAtom);
+  const [lotRows, setLotRows] = useRecoilState<LotRowData>(lotsSearchAtom);
 
   useEffect(() => {
     setTotalCost(lotCount * price);

@@ -16,7 +16,7 @@ import { ErrorFallback, SearchButton, SearchTextField } from '@components';
 import { HeaderM, PaymentResult, PaymentResultMobile } from '@containers';
 import { LotRowData, LotRowDatum } from '@interfaces';
 import { isMobileAtom } from '@states';
-import { lotsAtom } from '@states/user';
+import { lotsSearchAtom } from '@states/user';
 import { doesNullExist } from '@utils';
 
 import {
@@ -33,8 +33,10 @@ import {
   NoRenderBox,
   AccountBox,
   HeaderWrapperM,
+  NoRenderTitleTypo,
+  NoRenderContentTypo,
 } from './styled';
-import { ResultColumn, checkboxProps } from './Table';
+import { SearchResultColmns, checkboxProps } from './Table';
 
 export interface countProps {
   idx: number;
@@ -53,7 +55,7 @@ export const Search: React.FC = () => {
 
   // console.log('name: ' + name);
 
-  const [lots, setLots] = useRecoilState<LotRowData>(lotsAtom);
+  const [lots, setLots] = useRecoilState<LotRowData>(lotsSearchAtom);
 
   // const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
 
@@ -139,28 +141,38 @@ export const Search: React.FC = () => {
 
   const getResult = useCallback(async () => {
     if (searchApi) {
-      searchApi.getLandOwners(keyword);
+      const landOwners: LotRowData = await searchApi.getLandOwners(keyword);
+      setLots(landOwners);
     } else {
       setLots([]);
     }
   }, [keyword, searchApi, setLots]);
 
-  const getRowId = (data: LotRowDatum) => data.id;
+  const getRowId = useCallback((data: LotRowDatum) => data.id, []);
 
   const NoRowRender = useCallback(() => {
-    return <NoRenderBox>No Results</NoRenderBox>;
+    return (
+      <NoRenderBox sx={{ flexDirection: 'column' }}>
+        <NoRenderTitleTypo sx={{ marginBottom: '5%' }}>검색된 결과가 없습니다.</NoRenderTitleTypo>
+        <NoRenderTitleTypo>1. 한자 성함이 여러 발음일 수 있습니다.</NoRenderTitleTypo>
+        <NoRenderContentTypo sx={{ marginBottom: '5%' }}>{`예시) 灐 = 박진형 = 박진영`}</NoRenderContentTypo>
+        <NoRenderTitleTypo>2. 친가 외가 모두 검색해 보셨나요?</NoRenderTitleTypo>
+        <NoRenderContentTypo>{`1910년대에 살아계셨던 친척들을 확인해보세요`}</NoRenderContentTypo>
+      </NoRenderBox>
+    );
   }, []);
 
   const GridRender = useMemo(() => {
     return (
       <DataGrid
-        columns={ResultColumn({
+        columns={SearchResultColmns({
           rootCheckBox,
           setRootCheckBox,
           checkBoxes,
           setCheckBoxes,
           lots,
           setLots,
+          isMypage: false,
         })}
         rows={lots}
         rowHeight={isMobile ? 50 : 30}
