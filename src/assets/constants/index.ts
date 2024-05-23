@@ -145,3 +145,106 @@ export const TmpResult = [
     purchasedArea: '24평', // 24평
   },
 ];
+
+export const myPageDummyResult = [
+  {
+    id: 1,
+    koreanName: '김숙',
+    chineseName: '金淑',
+    buyerAddress: '경기도 부천군', // 경기도 부천군
+    purchasedGoon: '경기도 고양군', // 경기도 고양군
+    purchasedDong: '대화동', // 대화동
+    purchasedJibun: '17번', // 17번
+    purchasedArea: '24평', // 24평
+  },
+  {
+    id: 4,
+    koreanName: '김숙',
+    chineseName: '金淑',
+    buyerAddress: '경기도 부천군', // 경기도 부천군
+    purchasedGoon: '경기도 고양군', // 경기도 고양군
+    purchasedDong: '대화동', // 대화동
+    purchasedJibun: '17번', // 17번
+    purchasedArea: '24평', // 24평
+  },
+  {
+    id: 5,
+    koreanName: '김숙',
+    chineseName: '金淑',
+    buyerAddress: '경기도 부천군', // 경기도 부천군
+    purchasedGoon: '경기도 고양군', // 경기도 고양군
+    purchasedDong: '대화동', // 대화동
+    purchasedJibun: '17번', // 17번
+    purchasedArea: '24평', // 24평
+  },
+  {
+    id: 6,
+    koreanName: '김숙',
+    chineseName: '金淑',
+    buyerAddress: '경기도 부천군', // 경기도 부천군
+    purchasedGoon: '경기도 고양군', // 경기도 고양군
+    purchasedDong: '대화동', // 대화동
+    purchasedJibun: '17번', // 17번
+    purchasedArea: '24평', // 24평
+  },
+  {
+    id: 7,
+    koreanName: '김숙',
+    chineseName: '金淑',
+    buyerAddress: '경기도 부천군', // 경기도 부천군
+    purchasedGoon: '경기도 고양군', // 경기도 고양군
+    purchasedDong: '대화동', // 대화동
+    purchasedJibun: '17번', // 17번
+    purchasedArea: '24평', // 24평
+  },
+  {
+    id: 8,
+    koreanName: '김숙',
+    chineseName: '金淑',
+    buyerAddress: '경기도 부천군', // 경기도 부천군
+    purchasedGoon: '경기도 고양군', // 경기도 고양군
+    purchasedDong: '대화동', // 대화동
+    purchasedJibun: '17번', // 17번
+    purchasedArea: '24평', // 24평
+  },
+  {
+    id: 9,
+    koreanName: '김숙',
+    chineseName: '金淑',
+    buyerAddress: '경기도 부천군', // 경기도 부천군
+    purchasedGoon: '경기도 고양군', // 경기도 고양군
+    purchasedDong: '대화동', // 대화동
+    purchasedJibun: '17번', // 17번
+    purchasedArea: '24평', // 24평
+  },
+  {
+    id: 10,
+    koreanName: '김숙',
+    chineseName: '金淑',
+    buyerAddress: '경기도 부천군', // 경기도 부천군
+    purchasedGoon: '경기도 고양군', // 경기도 고양군
+    purchasedDong: '대화동', // 대화동
+    purchasedJibun: '17번', // 17번
+    purchasedArea: '24평', // 24평
+  },
+  {
+    id: 11,
+    koreanName: '김숙',
+    chineseName: '金淑',
+    buyerAddress: '경기도 부천군', // 경기도 부천군
+    purchasedGoon: '경기도 고양군', // 경기도 고양군
+    purchasedDong: '대화동', // 대화동
+    purchasedJibun: '17번', // 17번
+    purchasedArea: '24평', // 24평
+  },
+  {
+    id: 12,
+    koreanName: '김숙',
+    chineseName: '金淑',
+    buyerAddress: '경기도 부천군', // 경기도 부천군
+    purchasedGoon: '경기도 고양군', // 경기도 고양군
+    purchasedDong: '대화동', // 대화동
+    purchasedJibun: '17번', // 17번
+    purchasedArea: '24평', // 24평
+  },
+];
