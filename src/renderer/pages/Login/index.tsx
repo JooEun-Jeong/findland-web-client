@@ -3,7 +3,7 @@ import React from 'react';
 import 'swiper/css';
 import 'swiper/css/autoplay';
 import 'swiper/css/navigation';
-import './swiper.pagination.style.css';
+import '@theme/swiper.pagination.style.css';
 import { Typography } from '@mui/material';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
