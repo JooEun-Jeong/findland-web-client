@@ -28,6 +28,7 @@ export const MapModalContentWrapper = styled(Box)(() => ({
   justifyContent: 'flex-start',
   width: '100%',
   padding: '3%',
+  backgroundColor: '#FFF',
 }));
 
 export const MapModalTitleWrapper = styled(Box)(() => ({
