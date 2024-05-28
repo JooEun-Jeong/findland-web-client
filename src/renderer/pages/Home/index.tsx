@@ -3,9 +3,11 @@ import React, { useMemo, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
 import { Box, useMediaQuery, useTheme } from '@mui/material';
+import { ErrorBoundary } from 'react-error-boundary';
 
 import { MainContent } from '@/renderer/containers/MainContent';
 import { SearchSwiper } from '@/renderer/containers/SearchSwiper';
+import { ErrorFallback } from '@components';
 import { Footer, HeaderM, HeaderW } from '@containers';
 import { isMobileAtom, isSearchingAtom } from '@states';
 
@@ -51,5 +53,11 @@ export const Home: React.FC = () => {
     ),
     [isSearching],
   );
-  return <React.Fragment>{isSmallScreen || isMobile ? MobileUI : DesktopUI}</React.Fragment>;
+  return (
+    <React.Fragment>
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        {isSmallScreen || isMobile ? MobileUI : DesktopUI}
+      </ErrorBoundary>
+    </React.Fragment>
+  );
 };

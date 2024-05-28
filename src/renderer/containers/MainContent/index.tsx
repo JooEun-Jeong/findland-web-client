@@ -3,8 +3,10 @@ import React from 'react';
 import { useRecoilValue } from 'recoil';
 
 import { Box, Grid, useMediaQuery, useTheme } from '@mui/material';
+import { ErrorBoundary } from 'react-error-boundary';
 
 import logoImg from '@assets/png/logo.png';
+import { ErrorFallback } from '@components';
 import { isMobileAtom } from '@states';
 
 import { Ariticles } from './Articles';
@@ -17,7 +19,7 @@ export const MainContent = () => {
   const isMobile = useRecoilValue(isMobileAtom);
 
   return (
-    <>
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
       <MainContentWrapper>
         {!(isSmallScreen || isMobile) ? (
           <Grid container spacing={2} className="mainGrid">
@@ -48,6 +50,6 @@ export const MainContent = () => {
           </>
         )}
       </MainContentWrapper>
-    </>
+    </ErrorBoundary>
   );
 };

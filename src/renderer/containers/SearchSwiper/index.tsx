@@ -5,11 +5,13 @@ import 'swiper/css/autoplay';
 import 'swiper/css/navigation';
 import '@theme/swiper.pagination.style.css';
 import { Box, Typography } from '@mui/material';
+import { ErrorBoundary } from 'react-error-boundary';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import logoImg from '@assets/png/logoImg.png';
 import logoTypoImg from '@assets/png/logoTypo.png';
+import { ErrorFallback } from '@components';
 import { Loading } from '@pages/Loading';
 import { SwiperContentBox } from '@pages/Login/styled';
 
@@ -40,35 +42,37 @@ export const SearchSwiper = () => {
   );
 
   return (
-    <MainBox>
-      <LogoBox>
-        <img src={logoImg} width="18%" style={{ marginBottom: '20px' }} />
-        <img src={logoTypoImg} width="15%" />
-      </LogoBox>
-      <Swiper
-        modules={[Navigation, Pagination, Autoplay]}
-        spaceBetween={50}
-        slidesPerView={1}
-        rewind={true}
-        pagination={{
-          clickable: true,
-        }}
-        autoplay={{
-          delay: 3000,
-          disableOnInteraction: false,
-        }}
-        onSwiper={(swiper) => console.log(swiper)}
-        style={{
-          width: '100%',
-          height: '90%',
-        }}
-      >
-        {descriptions.map((description, idx) => (
-          <SwiperSlide key={`des-${idx}`}>
-            <Description titles={description.title} des={description.des} />
-          </SwiperSlide>
-        ))}
-      </Swiper>
-    </MainBox>
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <MainBox>
+        <LogoBox>
+          <img src={logoImg} width="18%" style={{ marginBottom: '20px' }} />
+          <img src={logoTypoImg} width="15%" />
+        </LogoBox>
+        <Swiper
+          modules={[Navigation, Pagination, Autoplay]}
+          spaceBetween={50}
+          slidesPerView={1}
+          rewind={true}
+          pagination={{
+            clickable: true,
+          }}
+          autoplay={{
+            delay: 3000,
+            disableOnInteraction: false,
+          }}
+          onSwiper={(swiper) => console.log(swiper)}
+          style={{
+            width: '100%',
+            height: '90%',
+          }}
+        >
+          {descriptions.map((description, idx) => (
+            <SwiperSlide key={`des-${idx}`}>
+              <Description titles={description.title} des={description.des} />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </MainBox>
+    </ErrorBoundary>
   );
 };

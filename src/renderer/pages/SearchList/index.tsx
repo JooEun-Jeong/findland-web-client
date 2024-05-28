@@ -6,12 +6,13 @@ import SearchIcon from '@mui/icons-material/Search';
 import { Box, Checkbox, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import _ from 'lodash';
+import { ErrorBoundary } from 'react-error-boundary';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { UseSearchApi } from '@apis/hooks/useSearchApi';
 import logoImg from '@assets/png/logoImg.png';
 import logoTypoImg from '@assets/png/logoTypo.png';
-import { SearchButton, SearchTextField } from '@components';
+import { ErrorFallback, SearchButton, SearchTextField } from '@components';
 import { HeaderM, PaymentResult, PaymentResultMobile } from '@containers';
 import { LotRowData, LotRowDatum } from '@interfaces';
 import { isMobileAtom } from '@states';
@@ -196,7 +197,7 @@ export const Search: React.FC = () => {
   }, [NoRowRender, checkBoxes, isMobile, lots, rootCheckBox, setLots]);
 
   return isMobile ? (
-    <>
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
       <MobileContentWrapper>
         <Box sx={{ padding: '5% 3% 0 3%' }}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -248,9 +249,9 @@ export const Search: React.FC = () => {
           <HeaderM />
         </HeaderWrapperM>
       </MobileContentWrapper>
-    </>
+    </ErrorBoundary>
   ) : (
-    <>
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
       <MainBox>
         <SearchBarWrapper>
           <SearchBox>
@@ -280,6 +281,6 @@ export const Search: React.FC = () => {
           </PaymentBox>
         </Box>
       </MainBox>
-    </>
+    </ErrorBoundary>
   );
 };
