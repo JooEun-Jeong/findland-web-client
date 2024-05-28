@@ -38,7 +38,6 @@ export const Home: React.FC = () => {
             sx={{
               width: '100vw',
               height: '100vh',
-              // padding: '10% 0 5% 0',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',

@@ -13,17 +13,24 @@ type UserApiInstance = {
 export const useUserApi = (): UserApiInstance => {
   const accessToken = useRecoilValue(accessTokenAtom);
 
-  const instance = axiosCreateInstance({
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
+  const instance = accessToken
+    ? axiosCreateInstance({
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer${accessToken}`,
+        },
+      })
+    : axiosCreateInstance({
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+        },
+      });
 
   const api = useMemo(() => {
     if (instance) {
       return {
         login: () =>
-          instance.post(`/api/v1/auth/kakao/login`).then(({ data }) => {
+          instance.get(`/api/v1/auth/kakao/login`).then(({ data }) => {
             // data : {loginUrl: string;}
             console.log('this is given login data' + JSON.stringify(data));
             window.location.href = data.loginUrl;

@@ -9,6 +9,7 @@ import { themeSelector } from '@theme/themeSelector';
 import { KakaoCallback } from './Callbacks/KakaoCallback';
 import { Home } from './Home';
 import { Login } from './Login';
+import { ProtectedRoute } from './ProtectedRouter';
 import { Search } from './SearchList';
 import { SearchSwiper } from '../containers/SearchSwiper';
 
@@ -36,14 +37,14 @@ export const AppRoute: React.FC = () => {
   return (
     <React.Fragment>
       <Routes>
-        {/* <Route path="/findLand" element={<ProtectedRoute />}>
-          <Route index element={<Home />} />
-        </Route> */}
         <Route path="/login" element={<Login />} />
-        <Route path="/auth/kakao/callback" element={<KakaoCallback />} />
-        <Route path="/searchsw" element={<SearchSwiper />} />
-        <Route index path="/findLand" element={<Home />} />
-        <Route path="/search/:name" element={<Search />} />
+        <Route path="/kakaoCallback" element={<KakaoCallback />} />
+
+        <Route element={<ProtectedRoute />}>
+          <Route path="/searchsw" element={<SearchSwiper />} />
+          <Route index path="/findLand" element={<Home />} />
+          <Route path="/search/:name" element={<Search />} />
+        </Route>
 
         <Route path="*" element={<Navigate to={'/findLand'} />} />
       </Routes>

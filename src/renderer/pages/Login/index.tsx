@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import 'swiper/css';
 import 'swiper/css/autoplay';
@@ -8,6 +8,7 @@ import { Typography } from '@mui/material';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
+import { useUserApi } from '@apis/hooks/useUserApi';
 import Des1Im from '@assets/png/FirstDes1.png';
 import Des2Im from '@assets/png/FirstDes2.png';
 import Des3Im from '@assets/png/FirstDes3.png';
@@ -23,6 +24,11 @@ const firstDescription = [
 ];
 
 export const Login = () => {
+  const userApi = useUserApi();
+
+  const handleLogin = useCallback(() => {
+    userApi?.login();
+  }, [userApi]);
   const Description = (props: { titles: string[]; imageUrl: string }) => (
     <>
       <SwiperContentBox>
@@ -71,7 +77,7 @@ export const Login = () => {
           ))}
         </Swiper>
       </>
-      <LoginButton>카카오톡으로 간편 로그인</LoginButton>
+      <LoginButton onClick={handleLogin}>카카오톡으로 간편 로그인</LoginButton>
     </MainBox>
   );
 };
