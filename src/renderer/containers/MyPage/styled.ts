@@ -17,7 +17,7 @@ export const MapModalWrapper = styled(Box)(() => ({
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: '90vw',
-  bgcolor: 'background.paper',
+  bgcolor: '#fff',
   border: '2px solid #000',
   p: 4,
 }));
