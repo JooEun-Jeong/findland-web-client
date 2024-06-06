@@ -8,6 +8,12 @@ export const authenticatedStateAtom = atom<boolean>({
   default: false,
 });
 
+export const jwtTokenAtom = atom<string>({
+  key: 'jwtTokenAtom',
+  default: '',
+  effects: [localStorageEffect('jwtToken', '')],
+});
+
 export const accessTokenAtom = atom<string>({
   key: 'accessTokenAtom',
   default: '',

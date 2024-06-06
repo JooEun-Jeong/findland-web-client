@@ -7,9 +7,9 @@ type ApiObject = {
 };
 
 const api = (): ApiObject => {
-  const accessToken = getLocalStorageItem('accessToken')?.accessToken || '';
+  const jwtToken = getLocalStorageItem('jwtToken')?.jwtToken || '';
   const headers = {
-    Authorization: 'Bearer ' + accessToken,
+    Authorization: 'Bearer ' + jwtToken,
   };
 
   return {
