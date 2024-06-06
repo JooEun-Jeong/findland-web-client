@@ -23,7 +23,8 @@ export const OpenImDetail =
 
 export const TempPatentDetail = '특허 가출원 번호: 10-2023-0076900';
 
-export const TmpResult = [
+export const TmpResult = [];
+export const TmpResult2 = [
   {
     id: 1,
     koreanName: '김숙',
