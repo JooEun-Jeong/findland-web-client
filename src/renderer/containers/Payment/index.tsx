@@ -6,7 +6,7 @@ import { Box, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 
 import { LotRowData } from '@interfaces';
-import { lotsSearchAtom, productCountAtomFamily } from '@states/user';
+import { lotsAtom, productCountAtomFamily } from '@states/user';
 
 import {
   ComputeBoxM,
@@ -28,7 +28,7 @@ export const PaymentResult: React.FC = () => {
   const [addrCount, setAddrCount] = useRecoilState(productCountAtomFamily('addrCount'));
   const [totalCost, setTotalCost] = useState<number>(0);
 
-  const [lotRows, setLotRows] = useRecoilState<LotRowData>(lotsSearchAtom);
+  const [lotRows, setLotRows] = useRecoilState<LotRowData>(lotsAtom);
 
   const [selectedProductNumbers, setSelectedProductNumbers] = useState<ResultRow[]>([
     { id: 1, count: '개수', addressCount: 0, areaCount: 0, chineseCharacterCount: 0, jibunCount: 0 },
@@ -154,7 +154,7 @@ export const PaymentResultMobile: React.FC = () => {
   const [totalCost, setTotalCost] = useState<number>(0);
   const price = 20000;
 
-  const [lotRows, setLotRows] = useRecoilState<LotRowData>(lotsSearchAtom);
+  const [lotRows, setLotRows] = useRecoilState<LotRowData>(lotsAtom);
 
   useEffect(() => {
     setTotalCost(lotCount * price);

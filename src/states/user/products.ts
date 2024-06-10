@@ -12,3 +12,8 @@ export const lotsAtom = atom<LotRowData>({
   key: 'lotsAtom',
   default: [],
 });
+
+export const lotsPaidAtom = atom<LotRowData>({
+  key: 'lotsPaidAtom',
+  default: [],
+});

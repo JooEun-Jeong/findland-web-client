@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
 import api from '@apis';
-import { LotRowData } from '@interfaces/apis';
+import { LotRowData, SearchLotRes } from '@interfaces/apis';
 import { makeLandowenersRow } from '@utils';
 
 type UseSearchApi = {
@@ -16,7 +16,10 @@ export const UseSearchApi = (): UseSearchApi => {
           try {
             const landOwners: LotRowData = await api()
               .search.getLandOwners(name)
-              .then((lots) => makeLandowenersRow(lots));
+              .then((res) => {
+                console.log('Here are data: ', res.data);
+                return makeLandowenersRow(res.data.products);
+              });
 
             return landOwners;
           } catch (e) {

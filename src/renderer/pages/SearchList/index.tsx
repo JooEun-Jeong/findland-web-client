@@ -16,7 +16,7 @@ import { ErrorFallback, SearchButton, SearchTextField } from '@components';
 import { HeaderM, PaymentResult, PaymentResultMobile } from '@containers';
 import { LotRowData, LotRowDatum } from '@interfaces';
 import { isMobileAtom } from '@states';
-import { lotsSearchAtom } from '@states/user';
+import { lotsAtom } from '@states/user';
 import { doesNullExist } from '@utils';
 
 import {
@@ -55,7 +55,7 @@ export const Search: React.FC = () => {
 
   // console.log('name: ' + name);
 
-  const [lots, setLots] = useRecoilState<LotRowData>(lotsSearchAtom);
+  const [lots, setLots] = useRecoilState<LotRowData>(lotsAtom);
 
   // const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
 
@@ -142,6 +142,7 @@ export const Search: React.FC = () => {
   const getResult = useCallback(async () => {
     if (searchApi) {
       const landOwners: LotRowData = await searchApi.getLandOwners(keyword);
+      console.log('this is landOwners', landOwners);
       setLots(landOwners);
     } else {
       setLots([]);
@@ -206,7 +207,7 @@ export const Search: React.FC = () => {
         }}
       />
     );
-  }, [NoRowRender, checkBoxes, isMobile, lots, rootCheckBox, setLots]);
+  }, [NoRowRender, checkBoxes, getRowId, isMobile, lots, rootCheckBox, setLots]);
 
   return isMobile ? (
     <ErrorBoundary FallbackComponent={ErrorFallback}>

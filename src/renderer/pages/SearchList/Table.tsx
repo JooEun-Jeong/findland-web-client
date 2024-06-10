@@ -13,7 +13,7 @@ import { doesNullExist } from '@utils';
 import { TableEachChecbox, TableRootChecbox } from './styled';
 
 export type checkboxProps = {
-  id: number;
+  id: string;
   checkBoxState: boolean;
 };
 

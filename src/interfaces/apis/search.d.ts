@@ -16,20 +16,31 @@ export type ResponseLandData = Array<ResponseLandDatum>;
 ////////////////////
 
 export interface Lot {
-  id: number;
+  id: string;
+  itemType: string;
+  productType: string;
+  amount: number;
   koreanName: string;
-  chineseName: string | null; // 결제하지 않았다면 null, 결제한 항목이라면 string
-  buyerAddress: string | null; // 경기도 부천군
-  purchasedGoon: string; // 경기도 고양군
-  purchasedDong: string; // 대화동
-  purchasedJibun: string | null; // 17번
-  purchasedArea: string | null; // 24평
+  chineseName: string;
+  buyerAddress: string;
+  purchasedGoon: string;
+  purchasedMyeon: string;
+  purchasedLi: string;
+  purchasedJibun: string;
+  purchasedJimok: string;
+  purchasedArea: string;
 }
 
-export type Lots = Array<Lot>;
+export interface SearchLotRes {
+  products: Array<Lot>;
+  page: number;
+  size: number;
+  totalPage: number;
+  totalElement: number;
+}
 
 export interface LotRowDatum {
-  id: number;
+  id: string;
   koreanName: string;
   chineseName: string | null; // 결제하지 않았다면 null, 결제한 항목이라면 string
   buyerAddress: string | null; // 경기도 부천군

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
@@ -25,26 +25,31 @@ export const KakaoCallback: React.FC = () => {
     // }, 2000);
   }, []);
 
-  useEffect(() => {
-    const login_Signup = async () => {
-      if (userApi) {
-        let receivedData: UserSignupReq;
-        await userApi
-          .getUserInfo()
-          .then((data) => (receivedData = { ...data, accessToken: accessToken }))
-          .catch((e) => {
-            console.error('error at getting jwt(getUserInfo): ' + e);
-            if (e.response && (e.response.status === 401 || e.response.status === 400)) {
-              userApi.signUp(receivedData);
-            }
-          });
-        setTimeout(() => {
-          navigate(`findLand`);
-        }, 4000);
-      }
-    };
+  const login_signup = useCallback(async () => {
+    if (userApi) {
+      let receivedData: UserSignupReq;
+      await userApi
+        .getUserInfo()
+        .then((data) => {
+          console.log('received data: ' + JSON.stringify(data));
+          receivedData = { ...data, accessToken: accessToken };
+        })
+        .catch((e) => {
+          console.error('error at getting jwt(getUserInfo): ' + e);
+          if (e.response && (e.response.status === 401 || e.response.status === 400)) {
+            userApi.signUp(receivedData);
+          }
+        });
+      setTimeout(() => {
+        navigate(`findLand`);
+      }, 4000);
+    }
+  }, [accessToken, navigate, userApi]);
 
-    login_Signup();
+  useEffect(() => {
+    if (accessToken !== '') {
+      login_signup();
+    }
   }, [accessToken]);
 
   return (

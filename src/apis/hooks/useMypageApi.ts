@@ -16,7 +16,7 @@ export const UseMypageApi = (): UseMypageApi => {
           try {
             const landOwners: LotRowData = await api()
               .mypage.getPaidLots(name)
-              .then((lots) => makeLandowenersRow(lots));
+              .then((data) => makeLandowenersRow(data.products));
             return landOwners;
           } catch (e) {
             console.error('Error: get paid land owners data', e);

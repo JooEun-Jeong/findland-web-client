@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import {
@@ -20,6 +20,7 @@ import OpenIm from '@assets/png/openim.png';
 import { SearchField } from '@components';
 import { FindMethods, OpenImDetail, TempPatentDetail } from '@constants';
 import { isMobileAtom, isSearchingAtom } from '@states';
+import { lotsAtom } from '@states/user';
 
 import { SearchMainWrapper, SearchBarWrapper, OpenImageWrapper, SearchTitleTypo, AccordionWrapper } from './styled';
 
@@ -34,18 +35,20 @@ export const SearchBarArea = () => {
 
   const [text, setText] = useState('');
   const [isSearching, setIsSearching] = useRecoilState(isSearchingAtom);
+  const setLots = useSetRecoilState(lotsAtom);
 
   const handleSubmit = useCallback(async () => {
     if (searchApi) {
       setIsSearching(true);
-      const data = await searchApi.getLandOwners(text);
-      console.log('data ', data);
+      const landOwners = await searchApi.getLandOwners(text);
+      console.log('data ', landOwners);
+      setLots(landOwners);
       setTimeout(function () {
         setIsSearching(false);
-        navigate(`/search/${text}`, { state: { keyword: text, data: data } });
+        navigate(`/search/${text}`, { state: { keyword: text, data: landOwners } });
       }, 6000);
     }
-  }, [navigate, searchApi, setIsSearching, text]);
+  }, [navigate, searchApi, setIsSearching, setLots, text]);
 
   return (
     <>
