@@ -53,25 +53,7 @@ export const Search: React.FC = () => {
   const { name } = useParams();
   const [keyword, setKeyword] = useState(name || '정재형');
 
-  // console.log('name: ' + name);
-
   const [lots, setLots] = useRecoilState<LotRowData>(lotsAtom);
-
-  // const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
-
-  // selectionModel:: number[]. shows only selected one.
-  // const handleSelectionModelChange = useCallback(
-  //   (selectionModel: any) => {
-  //     console.log('selectionModel', selectionModel);
-  //     console.log('selectedRowIds', selectedRowIds);
-  //     const findRow = _.find(selectedRowIds, (id) => id === selectionModel[0]);
-
-  //     findRow
-  //       ? setSelectedRowIds(selectedRowIds.filter((id) => id === selectionModel[0]))
-  //       : setSelectedRowIds([...selectedRowIds, ...selectionModel]);
-  //   },
-  //   [selectedRowIds],
-  // );
 
   const [rootCheckBox, setRootCheckBox] = useState<boolean>(false);
   const [checkBoxes, setCheckBoxes] = useState<Array<checkboxProps>>(
@@ -190,8 +172,6 @@ export const Search: React.FC = () => {
             />
           ),
         }}
-        // rowSelectionModel={selectedRowIds}
-        // onRowSelectionModelChange={handleSelectionModelChange}
         hideFooter
         getRowId={getRowId}
         disableColumnMenu
