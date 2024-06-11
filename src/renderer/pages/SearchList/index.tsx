@@ -51,7 +51,20 @@ export const Search: React.FC = () => {
   const searchApi = UseSearchApi();
 
   const { name } = useParams();
-  const [keyword, setKeyword] = useState(name || '정재형');
+
+  const directName = _.isUndefined(name) && (location.state.keyword as string);
+  console.log('name!!!!', name || directName || '정재형');
+
+  const [keyword, setKeyword] = useState(name || directName || '정재형');
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (directName === false) {
+        await getResult();
+      }
+    };
+    fetchData();
+  }, []);
 
   const [lots, setLots] = useRecoilState<LotRowData>(lotsAtom);
 
@@ -171,6 +184,11 @@ export const Search: React.FC = () => {
               }}
             />
           ),
+        }}
+        onCellClick={(cell, event) => {
+          if (cell.field === 'checkbox') {
+            event.stopPropagation();
+          }
         }}
         hideFooter
         getRowId={getRowId}

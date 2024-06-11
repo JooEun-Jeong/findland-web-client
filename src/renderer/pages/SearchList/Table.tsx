@@ -103,6 +103,7 @@ export const SearchResultColmns = ({
     headerName: ' ',
     sortable: false,
     resizable: false,
+
     align: 'center',
     headerAlign: 'center',
     renderHeader: () => (
@@ -157,21 +158,19 @@ export const SearchResultColmns = ({
             onChange={(e) => {
               e.stopPropagation();
               console.log(checkBoxes);
-              checkBoxes.find((check) => params.id === check.id)?.checkBoxState
-                ? setLotCount((prev) => prev - 1)
-                : setLotCount((prev) => prev + 1);
+              const checkBoxState = checkBoxes.find((check) => params.id === check.id)?.checkBoxState;
+              console.log('checkbox', checkBoxState);
 
-              // 직접 체크박스 눌렀을 때 변경
-              setCheckBoxes(
-                checkBoxes.map((data) => {
-                  return params.id === data.id
-                    ? {
-                        id: data.id,
-                        checkBoxState: !data.checkBoxState,
-                      }
-                    : data;
-                }),
-              );
+              setCheckBoxes((prevCheckBoxes) => {
+                const updatedCheckBoxes = prevCheckBoxes.map((data) => {
+                  if (params.id === data.id) {
+                    checkBoxState ? setLotCount((prev) => prev - 1) : setLotCount((prev) => prev + 1);
+                    return { id: data.id, checkBoxState: !data.checkBoxState };
+                  }
+                  return data;
+                });
+                return updatedCheckBoxes;
+              });
             }}
           />
         ) : (
