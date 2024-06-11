@@ -1,23 +1,25 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState, RefObject } from 'react';
 
 import { useRecoilState, useRecoilValue } from 'recoil';
 
 import { Box, Checkbox } from '@mui/material';
-import { DataGrid, GridSearchIcon } from '@mui/x-data-grid';
 import _ from 'lodash';
 
 import { MapServiceModal } from '@/renderer/containers/MyPage';
 import { UseMypageApi } from '@apis/hooks/useMypageApi';
-import logoImg from '@assets/png/logoImg.png';
+import logoImg from '@assets/png/LogoImg.png';
 import logoTypoImg from '@assets/png/logoTypo.png';
-import { SearchButton, SearchTextField } from '@components';
-import { HeaderM } from '@containers';
+import { SearchButton, SearchIcon, SearchTextField } from '@components';
+import { HeaderM, Loading } from '@containers';
 import { LotRowDatum } from '@interfaces';
 import {
+  DataGridStyled,
   GrayBox,
   HeaderWrapperM,
   MobileContentWrapper,
   NoRenderBox,
+  NoRenderContentTypo,
+  NoRenderTitleTypo,
   SearchBarWrapperMobile,
   SearchBox,
   TableHeaderBox,
@@ -26,7 +28,8 @@ import {
 } from '@pages/SearchList/styled';
 import { SearchResultColmns, checkboxProps } from '@pages/SearchList/Table';
 import { isMobileAtom } from '@states';
-import { lotsPaidAtom } from '@states/user';
+import { lotsPaidAtom, productCountAtomFamily } from '@states/user';
+import { downloadCSV } from '@utils';
 
 import { FileDownloadButton, FileDownloadTypo, FindServiceButton } from './styled';
 
@@ -35,27 +38,80 @@ export const MyPage = () => {
   const isMobile = useRecoilValue(isMobileAtom);
   const [paidLots, setPaidLots] = useRecoilState(lotsPaidAtom);
   const [isOpenModal, setIsOpenModal] = useState(false);
-
-  const mypageApi = UseMypageApi();
-
-  const getPaidLots = useCallback(async () => {
-    if (mypageApi) {
-      const lots = await mypageApi.getPaidLots(keyword);
-      setPaidLots(lots);
-    }
-  }, [keyword, mypageApi, setPaidLots]);
-
+  const [lotCount, setLotCount] = useState<number>(0);
+  const [serviceIds, setServiceIds] = useState<Array<string>>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSearchClicked, setIsSearchClicked] = useState(false);
   const [rootCheckBox, setRootCheckBox] = useState<boolean>(false);
+  const [page, setPage] = useState<number>(0);
   const [checkBoxes, setCheckBoxes] = useState<Array<checkboxProps>>(
     paidLots.map((item) => {
       return {
         id: item.id,
         checkBoxState: false,
+        purchaseStatus: item?.mapAnalysisPurchaseStatus || 'NOT_PURCHASED',
       };
     }),
   );
+
+  const mypageApi = UseMypageApi();
+  const size = 50;
+  const dataGridRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
+
+  const handleOnRowsScrollEnd = useCallback(async () => {
+    if (mypageApi) {
+      if (isSearchClicked) {
+        // 만약 한번이라도 클릭되었다면, 해당 키워드로 무한 스크롤 준비
+        const lots = await mypageApi.getOneLandownerWithName(page + 1, size, keyword);
+        setPaidLots(lots);
+      } else {
+        // 전체 결제 내역 보여주기
+        const lots = await mypageApi.getAllPaidLots(page + 1, size);
+        setPaidLots(lots);
+      }
+      setPage((prev) => prev + 1);
+    }
+  }, [isSearchClicked, keyword, mypageApi, page, setPaidLots]);
+
+  const getAllPaidLots = useCallback(async () => {
+    if (mypageApi) {
+      const lots = await mypageApi.getAllPaidLots(page, size);
+      setPaidLots(lots);
+    }
+  }, [mypageApi, page, setPaidLots]);
+
+  const getOneLandowner = useCallback(async () => {
+    if (mypageApi) {
+      setIsLoading(true);
+      setPage(0);
+      setIsSearchClicked(true);
+      const lots = await mypageApi.getOneLandownerWithName(0, size, keyword);
+      setPaidLots(lots);
+      setIsLoading(false);
+    }
+  }, [keyword, mypageApi, setPaidLots]);
+
+  const handleDownloadClick = useCallback(() => {
+    const selectedProductIds = _.map(checkBoxes, (checkBox) => (checkBox.checkBoxState === true ? checkBox.id : false));
+    console.log('selectedProductIds', selectedProductIds);
+    const data = _.filter(paidLots, (item) => _.includes(selectedProductIds, item.id));
+    console.log(data);
+    const fileName = '필지';
+    downloadCSV({ data, fileName });
+  }, [checkBoxes, paidLots]);
+
+  useEffect(() => {
+    getAllPaidLots();
+  }, []);
+
   const getRowId = useCallback((data: LotRowDatum) => data.id, []);
-  const handleOpen = useCallback(() => setIsOpenModal(true), []);
+  const handleOpen = useCallback(() => {
+    setIsOpenModal(true);
+    const selectedProductIds = _.map(checkBoxes, (checkBox) => (checkBox.checkBoxState === true ? checkBox.id : false));
+    const data = _.filter(paidLots, (item) => _.includes(selectedProductIds, item.id));
+    const selectedProductMapIds = _.compact(data.map((item) => item.mapAnalysisProductId));
+    setServiceIds(selectedProductMapIds);
+  }, [checkBoxes, paidLots]);
   const handleClose = useCallback(() => setIsOpenModal(false), []);
 
   useEffect(() => {
@@ -63,6 +119,7 @@ export const MyPage = () => {
       return {
         id: item.id,
         checkBoxState: false,
+        purchaseStatus: item?.mapAnalysisPurchaseStatus || 'NOT_PURCHASED',
       };
     }) as Array<checkboxProps>;
     setCheckBoxes(newCheckBoxState);
@@ -94,6 +151,7 @@ export const MyPage = () => {
           return {
             id: item.id,
             checkBoxState: true,
+            purchaseStatus: item.purchaseStatus,
           };
         }),
       );
@@ -104,63 +162,97 @@ export const MyPage = () => {
       })
     ) {
       setCheckBoxes(
-        checkBoxes.map((device) => {
+        checkBoxes.map((item) => {
           return {
-            id: device.id,
+            id: item.id,
             checkBoxState: false,
+            purchaseStatus: item.purchaseStatus,
           };
         }),
       );
     }
   }, [rootCheckBox]);
 
+  useEffect(() => {
+    const handleScroll = (event: Event) => {
+      const target = event.target as HTMLDivElement;
+      const { scrollTop, clientHeight, scrollHeight } = target;
+      if (scrollHeight - scrollTop === clientHeight) {
+        handleOnRowsScrollEnd();
+      }
+    };
+
+    const dataGridNode = dataGridRef.current;
+    if (dataGridNode) {
+      dataGridNode.addEventListener('scroll', handleScroll);
+      return () => {
+        dataGridNode.removeEventListener('scroll', handleScroll);
+      };
+    }
+  }, [handleOnRowsScrollEnd]);
+
   const NoRowRender = useCallback(() => {
-    return <NoRenderBox>조상님의 이름을 검색해주세요!</NoRenderBox>;
+    return (
+      <NoRenderBox sx={{ flexDirection: 'column' }}>
+        <NoRenderTitleTypo sx={{ marginBottom: '5%' }}>구매하신 내역 중 일치하는 결과가 없습니다.</NoRenderTitleTypo>
+        <NoRenderTitleTypo>1. 한자 성함이 여러 발음일 수 있습니다.</NoRenderTitleTypo>
+        <NoRenderContentTypo sx={{ marginBottom: '5%' }}>{`예시) 灐 = 박진형 = 박진영`}</NoRenderContentTypo>
+        <NoRenderTitleTypo>2. 친가 외가 모두 검색해 보셨나요?</NoRenderTitleTypo>
+        <NoRenderContentTypo>{`1910년대에 살아계셨던 친척들을 확인해보세요`}</NoRenderContentTypo>
+      </NoRenderBox>
+    );
   }, []);
 
   const GridRender = useMemo(() => {
-    return (
-      <DataGrid
-        columns={SearchResultColmns({
-          rootCheckBox,
-          setRootCheckBox,
-          checkBoxes,
-          setCheckBoxes,
-          lots: paidLots,
-          setLots: setPaidLots,
-          isMypage: true,
-        })}
-        rows={paidLots}
-        rowHeight={isMobile ? 50 : 30}
-        slots={{
-          noRowsOverlay: NoRowRender,
-          baseCheckbox: () => (
-            <Checkbox
-              sx={{
-                color: '#ffbd59',
-                '&.Mui-checked': {
+    return isLoading ? (
+      <div style={{ height: 'calc(var(--vh, 1vh) * 57)', width: '100%', overflow: 'auto', padding: '2px' }}>
+        <Loading />
+      </div>
+    ) : (
+      <div
+        ref={dataGridRef}
+        style={{ height: 'calc(var(--vh, 1vh) * 57)', width: '100%', overflow: 'auto', padding: '2px' }}
+      >
+        <DataGridStyled
+          columns={SearchResultColmns({
+            rootCheckBox,
+            setRootCheckBox,
+            checkBoxes,
+            setCheckBoxes,
+            lots: paidLots,
+            setLots: setPaidLots,
+            setLotCount,
+            isMypage: true,
+          })}
+          rows={paidLots}
+          rowHeight={isMobile ? 25 : 30}
+          columnHeaderHeight={30}
+          slots={{
+            noRowsOverlay: NoRowRender,
+            baseCheckbox: () => (
+              <Checkbox
+                sx={{
                   color: '#ffbd59',
-                },
-              }}
-            />
-          ),
-        }}
-        hideFooter
-        getRowId={getRowId}
-        disableColumnMenu
-        pageSizeOptions={[30]}
-        sx={{
-          backgroundColor: '#f7f7f7',
-          borderRadius: '5px',
-          '& .MuiDataGrid-row': {
-            '&.Mui-selected': {
-              backgroundColor: '#f6cc8d49',
-            },
-          },
-        }}
-      />
+                  '&.Mui-checked': {
+                    color: '#ffbd59',
+                  },
+                }}
+              />
+            ),
+          }}
+          hideFooter
+          // getRowId={getRowId}
+          disableColumnMenu
+          disableRowSelectionOnClick
+          pageSizeOptions={[50]}
+        />
+      </div>
     );
-  }, [NoRowRender, checkBoxes, getRowId, isMobile, paidLots, rootCheckBox, setPaidLots]);
+  }, [NoRowRender, checkBoxes, isLoading, isMobile, paidLots, rootCheckBox, setLotCount, setPaidLots]);
+
+  useEffect(() => {
+    console.log('lotCount', lotCount);
+  }, [lotCount]);
 
   return isMobile ? (
     <>
@@ -178,13 +270,13 @@ export const MyPage = () => {
               />
               <SearchButton
                 type="submit"
-                onClick={getPaidLots}
+                onClick={getOneLandowner}
                 className="mobile"
                 sx={{
                   marginLeft: '10px',
                 }}
               >
-                <GridSearchIcon sx={{ color: 'rgb(255, 140, 68)', height: '5vh', width: '5vw' }} />
+                <SearchIcon />
               </SearchButton>
             </SearchBox>
           </SearchBarWrapperMobile>
@@ -201,9 +293,9 @@ export const MyPage = () => {
           </TableHeaderBox>
           {GridRender}
         </TableWrapperMobile>
-        <Box sx={{ padding: '3%', height: '10vh', display: 'flex', justifyContent: 'space-between' }}>
+        <Box sx={{ padding: '3%', height: '10%', display: 'flex', justifyContent: 'space-between' }}>
           <FindServiceButton onClick={handleOpen}>토지 현재 위치 확인하기</FindServiceButton>
-          <FileDownloadButton>
+          <FileDownloadButton onClick={handleDownloadClick}>
             <FileDownloadTypo>결제한 토지 정보</FileDownloadTypo>
             <FileDownloadTypo>다운로드</FileDownloadTypo>
           </FileDownloadButton>
@@ -212,7 +304,16 @@ export const MyPage = () => {
           <HeaderM />
         </HeaderWrapperM>
       </MobileContentWrapper>
-      {isOpenModal && <MapServiceModal open={isOpenModal} handleClose={handleClose} />}
+      {isOpenModal && (
+        <MapServiceModal
+          open={isOpenModal}
+          setLotCount={setLotCount}
+          handleClose={handleClose}
+          selectedLotCount={lotCount}
+          selectedLotMapIds={serviceIds}
+          checkBoxes={checkBoxes}
+        />
+      )}
     </>
   ) : (
     <></>

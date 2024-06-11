@@ -24,7 +24,7 @@ export const MainBox = styled(Box)(() => ({
   alignItems: 'center',
   padding: '10% 3% 0 3%',
   width: '100vw',
-  height: '100vh',
+  height: 'calc(var(--vh, 1vh) * 100)',
 }));
 
 export const LogoBox = styled(Box)(() => ({
@@ -39,7 +39,7 @@ export const LoginButton = styled(Button)(() => ({
   color: '#000',
   width: '60%',
   padding: '3%',
-  fontSize: '1.8rem',
+  fontSize: '0.8rem',
   fontWeight: 'bold',
   borderRadius: 5,
   '&:hover': {

@@ -47,3 +47,7 @@ export interface GetJwtTokenRes {
 export interface GetLoginUrlRes {
   loginUrl: string;
 }
+
+export interface GetLoginUrlReq {
+  redirectUri: string;
+}

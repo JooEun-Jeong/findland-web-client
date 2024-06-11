@@ -1,9 +1,10 @@
-import { styled, Box, Typography } from '@mui/material';
+import { styled, Typography } from '@mui/material';
 
 import { YellowButton } from '@components';
 
 export const FindServiceButton = styled(YellowButton)(() => ({
   width: '60vw',
+  fontSize: '0.8rem',
 }));
 
 export const FileDownloadButton = styled(YellowButton)(() => ({
@@ -12,5 +13,5 @@ export const FileDownloadButton = styled(YellowButton)(() => ({
 }));
 
 export const FileDownloadTypo = styled(Typography)(() => ({
-  fontSize: '1.7rem',
+  fontSize: '0.7rem',
 }));

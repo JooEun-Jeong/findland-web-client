@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { MouseEventHandler } from 'react';
 
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
@@ -15,6 +15,7 @@ import { TableEachChecbox, TableRootChecbox } from './styled';
 export type checkboxProps = {
   id: string;
   checkBoxState: boolean;
+  purchaseStatus: string; // PENDING, NOT_PURCHASED, PURCHASED
 };
 
 interface ColumnProps {
@@ -24,6 +25,7 @@ interface ColumnProps {
   setCheckBoxes: React.Dispatch<React.SetStateAction<checkboxProps[]>>;
   lots: LotRowData;
   setLots: React.Dispatch<React.SetStateAction<LotRowData>>;
+  setLotCount: React.Dispatch<React.SetStateAction<number>>;
   isMypage: boolean;
 }
 
@@ -73,19 +75,19 @@ function countProducts({ idx, compute }: countProps) {
   };
 }
 
-// 이중으로 하면 hook이 된다..??!!!
-function countProduct({ product, compute }: computeProps) {
-  () => {
-    const [lotCount, setLotCount] = useRecoilState(productCountAtomFamily('lotCount'));
-    if (product === 'lot') {
-      compute === 'plus'
-        ? setLotCount((prev) => prev + 1)
-        : compute === 'minus'
-          ? setLotCount((prev) => prev - 1)
-          : setLotCount((prev) => prev);
-    }
-  };
-}
+// // 이중으로 하면 hook이 된다..??!!!
+// function countProduct({ product, compute }: computeProps) {
+//   () => {
+//     const [lotCount, setLotCount] = useRecoilState(productCountAtomFamily('lotCount'));
+//     if (product === 'lot') {
+//       compute === 'plus'
+//         ? setLotCount((prev) => prev + 1)
+//         : compute === 'minus'
+//           ? setLotCount((prev) => prev - 1)
+//           : setLotCount((prev) => prev);
+//     }
+//   };
+// }
 
 export const SearchResultColmns = ({
   rootCheckBox,
@@ -94,6 +96,7 @@ export const SearchResultColmns = ({
   setCheckBoxes,
   lots,
   setLots,
+  setLotCount,
   isMypage,
 }: ColumnProps): GridColDef[] => [
   {
@@ -104,89 +107,72 @@ export const SearchResultColmns = ({
     sortable: false,
     resizable: false,
     align: 'center',
+    headerClassName: 'checkbox-header',
+    cellClassName: 'checkbox-cell',
     headerAlign: 'center',
-    renderHeader: () => (
-      <TableRootChecbox
-        disableRipple
-        value=" "
-        // icon={<CheckBoxBlankIcon />}
-        // checkedIcon={<CheckBoxIcon sx={{ color: '#ffbd59' }} />}
-        checked={rootCheckBox}
-        onClick={(e) => {
-          e.stopPropagation();
-          setRootCheckBox(!rootCheckBox);
-        }}
-      />
-    ),
-    renderCell: (params: GridRenderCellParams) => {
-      const selectedLot = lots.find((lot) => params.id === lot.id) as LotRowDatum;
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      const [lotCount, setLotCount] = useRecoilState(productCountAtomFamily('lotCount'));
-
-      const MypageCheckbox = () => (
-        <TableEachChecbox
-          value=" "
-          disableRipple
-          checked={checkBoxes.find((check) => params.id === check.id)?.checkBoxState || false}
-          onChange={(e) => {
-            e.stopPropagation();
-            console.log(checkBoxes);
-
-            // 직접 체크박스 눌렀을 때 변경
-            setCheckBoxes(
-              checkBoxes.map((data) => {
-                return params.id === data.id
-                  ? {
-                      id: data.id,
-                      checkBoxState: !data.checkBoxState,
-                    }
-                  : data;
-              }),
-            );
-          }}
-        />
+    renderHeader: () => {
+      const allDisabled = lots.every((lot) =>
+        isMypage ? !_.isUndefined(lot.mapAnalysisPurchaseStatus) : lot.purchaseStatus !== 'NOT_PURCHASED',
       );
 
-      const SearchBoxCheckbox = () =>
-        isUnpaid(selectedLot) ? (
-          <TableEachChecbox
-            value=" "
-            disableRipple
-            disabled={!isUnpaid(selectedLot)}
-            checked={checkBoxes.find((check) => params.id === check.id)?.checkBoxState || false}
-            onChange={(e) => {
-              e.stopPropagation();
-              console.log(checkBoxes);
-              checkBoxes.find((check) => params.id === check.id)?.checkBoxState
-                ? setLotCount((prev) => prev - 1)
-                : setLotCount((prev) => prev + 1);
-
-              // 직접 체크박스 눌렀을 때 변경
-              setCheckBoxes(
-                checkBoxes.map((data) => {
-                  return params.id === data.id
-                    ? {
-                        id: data.id,
-                        checkBoxState: !data.checkBoxState,
-                      }
-                    : data;
-                }),
-              );
-            }}
-          />
-        ) : (
-          <Checkbox
-            disabled
-            sx={{
-              '& > svg': {
-                height: '1.5em',
-                width: '1.5em',
-              },
-            }}
-          />
+      const handleRootCheckBoxClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.stopPropagation();
+        const newState = !rootCheckBox;
+        setRootCheckBox(newState);
+        const filteredBoxes = checkBoxes.filter(
+          (box) => box.purchaseStatus === 'NOT_PURCHASED' || _.isUndefined(box.purchaseStatus),
         );
+        setLotCount(newState ? filteredBoxes.length : 0);
+      };
 
-      return isMypage ? <MypageCheckbox /> : <SearchBoxCheckbox />;
+      return (
+        <TableRootChecbox
+          disableRipple
+          value=" "
+          disabled={allDisabled}
+          checked={rootCheckBox}
+          onClick={handleRootCheckBoxClick}
+        />
+      );
+    },
+    renderCell: (params: GridRenderCellParams) => {
+      const selectedLot = lots.find((lot) => params.id === lot.id) as LotRowDatum;
+      const checkboxState = checkBoxes.find((check) => params.id === check.id)?.checkBoxState || false;
+
+      const handleCheckBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        e.stopPropagation();
+        e.preventDefault();
+        setCheckBoxes((prevCheckBoxes) =>
+          prevCheckBoxes.map((data) => {
+            if (params.id === data.id) {
+              setLotCount((prev) => (checkboxState ? prev - 1 : prev + 1));
+              return { ...data, checkBoxState: !data.checkBoxState };
+            }
+            return data;
+          }),
+        );
+      };
+
+      const isDisabled = isMypage
+        ? !(
+            selectedLot?.mapAnalysisPurchaseStatus === 'NOT_PURCHASED' ||
+            _.isUndefined(selectedLot.mapAnalysisPurchaseStatus)
+          )
+        : !(isUnpaid(selectedLot) && selectedLot.purchaseStatus === 'NOT_PURCHASED');
+
+      return isDisabled ? (
+        <Checkbox
+          disabled
+          sx={{
+            '& > svg': {
+              height: '1rem',
+              width: '1rem',
+            },
+          }}
+        />
+      ) : (
+        <TableEachChecbox value=" " disableRipple checked={checkboxState} onChange={handleCheckBoxChange} />
+      );
     },
   },
   {
@@ -194,6 +180,7 @@ export const SearchResultColmns = ({
     headerName: '매수 군',
     align: 'left',
     minWidth: 80,
+    sortable: false,
     flex: 0.2778,
   },
   {
@@ -202,6 +189,7 @@ export const SearchResultColmns = ({
     align: 'left',
     minWidth: 40,
     flex: 0.1111,
+    sortable: false,
     renderCell: (params: GridRenderCellParams) => {
       const id = params.row.id;
       const selectedLot = _.find(lots, (landowner) => landowner.id === id) as LotRowDatum;
@@ -214,6 +202,7 @@ export const SearchResultColmns = ({
     align: 'left',
     minWidth: 40,
     flex: 0.1111,
+    sortable: false,
     renderCell: (params: GridRenderCellParams) => {
       const id = params.row.id;
       const selectedLot = _.find(lots, (landowner) => landowner.id === id) as LotRowDatum;
@@ -227,6 +216,7 @@ export const SearchResultColmns = ({
     align: 'left',
     minWidth: 60,
     flex: 0.1667,
+    sortable: false,
     renderCell: (params: GridRenderCellParams) => {
       const id = params.row.id;
       const selectedLot = _.find(lots, (landowner) => landowner.id === id) as LotRowDatum;
@@ -238,13 +228,21 @@ export const SearchResultColmns = ({
     field: 'buyerAddress',
     headerName: '거주지',
     align: 'left',
-    resizable: false,
     minWidth: 75,
     flex: 0.2083,
+    sortable: false,
     renderCell: (params: GridRenderCellParams) => {
       const id = params.row.id;
       const selectedLot = _.find(lots, (landowner) => landowner.id === id) as LotRowDatum;
-      return typeof selectedLot.buyerAddress !== 'undefined' ? selectedLot.buyerAddress || '-' : '-';
+      if (typeof selectedLot.buyerAddress !== 'undefined') {
+        if (selectedLot.buyerAddress === 'X') {
+          return selectedLot.purchasedGoonDong;
+        } else {
+          return selectedLot.buyerAddress;
+        }
+      } else {
+        return '-';
+      }
     },
   },
 ];

@@ -7,7 +7,7 @@ export const MainBox = styled(Box)(() => ({
   alignItems: 'center',
   padding: '10% 3% 0 3%',
   width: '100vw',
-  height: '100vh',
+  height: 'calc(var(--vh, 1vh) * 100)',
 }));
 
 export const LogoBox = styled(Box)(() => ({

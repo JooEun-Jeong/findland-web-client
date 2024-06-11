@@ -1,23 +1,23 @@
-import React, { useCallback, useMemo, useState, useEffect } from 'react';
+import React, { useCallback, useMemo, useState, useEffect, useRef, RefObject } from 'react';
 
 import { useRecoilState, useRecoilValue } from 'recoil';
 
-import SearchIcon from '@mui/icons-material/Search';
-import { Box, Checkbox, Typography } from '@mui/material';
+import { Box, Checkbox } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import _ from 'lodash';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
+import { FooterContacts } from '@/renderer/containers/Footer/Contacts';
+import { UsePaymentApi } from '@apis/hooks/userPaymentApi';
 import { UseSearchApi } from '@apis/hooks/useSearchApi';
-import logoImg from '@assets/png/logoImg.png';
+import logoImg from '@assets/png/LogoImg.png';
 import logoTypoImg from '@assets/png/logoTypo.png';
-import { ErrorFallback, SearchButton, SearchTextField } from '@components';
-import { HeaderM, PaymentResult, PaymentResultMobile } from '@containers';
-import { LotRowData, LotRowDatum } from '@interfaces';
+import { ErrorFallback, SearchButton, SearchIcon, SearchTextField } from '@components';
+import { HeaderM, Loading, PaymentResult, PaymentResultMobile } from '@containers';
+import { LotRowData, LotRowDatum, ProductTransferReq } from '@interfaces';
 import { isMobileAtom } from '@states';
 import { lotsAtom } from '@states/user';
-import { isUnpaid } from '@utils';
 
 import {
   MainBox,
@@ -31,10 +31,10 @@ import {
   TableHeaderColumnBox,
   MobileContentWrapper,
   NoRenderBox,
-  AccountBox,
   HeaderWrapperM,
   NoRenderTitleTypo,
   NoRenderContentTypo,
+  DataGridStyled,
 } from './styled';
 import { SearchResultColmns, checkboxProps } from './Table';
 
@@ -49,9 +49,15 @@ export const Search: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const searchApi = UseSearchApi();
+  const paymentApi = UsePaymentApi();
 
   const { name } = useParams();
-  const [keyword, setKeyword] = useState(name || '정재형');
+
+  const directName = _.isUndefined(name) && (location.state.keyword as string);
+
+  const [keyword, setKeyword] = useState(name || directName || '정재형');
+  const [lotCount, setLotCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [lots, setLots] = useRecoilState<LotRowData>(lotsAtom);
 
@@ -61,15 +67,60 @@ export const Search: React.FC = () => {
       return {
         id: item.id,
         checkBoxState: item.isSelected,
+        purchaseStatus: item.purchaseStatus,
       };
     }),
   );
+
+  const [page, setPage] = useState<number>(0);
+  const size = 50;
+
+  const dataGridRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
+
+  const handleOnRowsScrollEnd = useCallback(async () => {
+    if (searchApi) {
+      const landOwners: LotRowData = await searchApi.getLandOwners(keyword, page + 1, size);
+      console.log('handle On row scroll end', landOwners);
+      setLots((prev) => [...prev, ...landOwners]);
+      setPage((prev) => prev + 1);
+    }
+  }, [keyword, page, searchApi, setLots]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (directName === false) {
+        await getResult();
+      }
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = (event: Event) => {
+      const target = event.target as HTMLDivElement;
+      const { scrollTop, clientHeight, scrollHeight } = target;
+      console.log('Scroll Event:', { scrollTop, clientHeight, scrollHeight });
+      if (scrollHeight - scrollTop === clientHeight) {
+        console.log('Reached bottom of the grid');
+        handleOnRowsScrollEnd();
+      }
+    };
+
+    const dataGridNode = dataGridRef.current;
+    if (dataGridNode) {
+      dataGridNode.addEventListener('scroll', handleScroll);
+      return () => {
+        dataGridNode.removeEventListener('scroll', handleScroll);
+      };
+    }
+  }, [handleOnRowsScrollEnd]);
 
   useEffect(() => {
     const newCheckBoxState = lots.map((item) => {
       return {
         id: item.id,
         checkBoxState: item.isSelected,
+        purchaseStatus: item.purchaseStatus,
       };
     }) as Array<checkboxProps>;
     setCheckBoxes(newCheckBoxState);
@@ -101,6 +152,7 @@ export const Search: React.FC = () => {
           return {
             id: item.id,
             checkBoxState: true,
+            purchaseStatus: item.purchaseStatus,
           };
         }),
       );
@@ -111,10 +163,11 @@ export const Search: React.FC = () => {
       })
     ) {
       setCheckBoxes(
-        checkBoxes.map((device) => {
+        checkBoxes.map((item) => {
           return {
-            id: device.id,
+            id: item.id,
             checkBoxState: false,
+            purchaseStatus: item.purchaseStatus,
           };
         }),
       );
@@ -123,15 +176,43 @@ export const Search: React.FC = () => {
 
   const getResult = useCallback(async () => {
     if (searchApi) {
-      const landOwners: LotRowData = await searchApi.getLandOwners(keyword);
+      setIsLoading(true);
+      const landOwners: LotRowData = await searchApi.getLandOwners(keyword, page, size);
       console.log('this is landOwners', landOwners);
       setLots(landOwners);
+      setIsLoading(false);
     } else {
       setLots([]);
     }
-  }, [keyword, searchApi, setLots]);
+  }, [keyword, page, searchApi, setLots]);
 
   const getRowId = useCallback((data: LotRowDatum) => data.id, []);
+
+  const handlePayment = useCallback(
+    async (bankAccountName: string) => {
+      // api 필요
+      if (paymentApi) {
+        const productIds = checkBoxes
+          .filter((checkBox) => checkBox.checkBoxState && checkBox.purchaseStatus === 'NOT_PURCHASED')
+          .map((checkbox) => checkbox.id);
+
+        console.log('productIds: ' + productIds);
+
+        const postData: ProductTransferReq = {
+          productIds: productIds,
+          bankAccountName: bankAccountName,
+        };
+        await paymentApi.postProductTransfer(postData);
+        // 로딩 화면 필요
+
+        // // row 다시 세팅
+        window.location.reload();
+      }
+
+      setLotCount(0);
+    },
+    [checkBoxes, paymentApi, setLotCount],
+  );
 
   const NoRowRender = useCallback(() => {
     return (
@@ -146,48 +227,59 @@ export const Search: React.FC = () => {
   }, []);
 
   const GridRender = useMemo(() => {
-    return (
-      <DataGrid
-        columns={SearchResultColmns({
-          rootCheckBox,
-          setRootCheckBox,
-          checkBoxes,
-          setCheckBoxes,
-          lots,
-          setLots,
-          isMypage: false,
-        })}
-        rows={lots}
-        rowHeight={isMobile ? 50 : 30}
-        slots={{
-          noRowsOverlay: NoRowRender,
-          baseCheckbox: () => (
-            <Checkbox
-              sx={{
-                color: '#ffbd59',
-                '&.Mui-checked': {
+    return isLoading ? (
+      <div style={{ height: 'calc(var(--vh, 1vh) * 45)', width: '100%', overflow: 'auto', padding: '2px' }}>
+        <Loading />
+      </div>
+    ) : (
+      <div
+        ref={dataGridRef}
+        style={{ height: 'calc(var(--vh, 1vh) * 45)', width: '100%', overflow: 'auto', padding: '2px' }}
+      >
+        <DataGridStyled
+          columns={SearchResultColmns({
+            rootCheckBox,
+            setRootCheckBox,
+            checkBoxes,
+            setCheckBoxes,
+            lots,
+            setLots,
+            setLotCount,
+            isMypage: false,
+          })}
+          rows={lots}
+          rowHeight={isMobile ? 25 : 30}
+          columnHeaderHeight={30}
+          slots={{
+            noRowsOverlay: NoRowRender,
+            baseCheckbox: () => (
+              <Checkbox
+                sx={{
                   color: '#ffbd59',
-                },
-              }}
-            />
-          ),
-        }}
-        hideFooter
-        getRowId={getRowId}
-        disableColumnMenu
-        pageSizeOptions={[30]}
-        sx={{
-          backgroundColor: '#f7f7f7',
-          borderRadius: '5px',
-          '& .MuiDataGrid-row': {
-            '&.Mui-selected': {
-              backgroundColor: '#f6cc8d49',
-            },
-          },
-        }}
-      />
+                  '&.Mui-checked': {
+                    color: '#ffbd59',
+                  },
+                }}
+              />
+            ),
+          }}
+          onCellClick={(cell, event) => {
+            if (cell.field === 'checkbox') {
+              event.stopPropagation();
+            }
+          }}
+          hideFooter
+          // getRowId={getRowId}
+          sx={{
+            boxShadow: 3,
+          }}
+          disableColumnMenu
+          disableRowSelectionOnClick
+          pageSizeOptions={[30]}
+        />
+      </div>
     );
-  }, [NoRowRender, checkBoxes, getRowId, isMobile, lots, rootCheckBox, setLots]);
+  }, [NoRowRender, checkBoxes, isLoading, isMobile, lots, rootCheckBox, setLots]);
 
   return isMobile ? (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
@@ -214,7 +306,7 @@ export const Search: React.FC = () => {
                   marginLeft: '10px',
                 }}
               >
-                <SearchIcon sx={{ color: 'rgb(255, 140, 68)', height: '5vh', width: '5vw' }} />
+                <SearchIcon />
               </SearchButton>
             </SearchBox>
           </SearchBarWrapperMobile>
@@ -229,14 +321,11 @@ export const Search: React.FC = () => {
               소유자 정보
             </TableHeaderColumnBox>
           </TableHeaderBox>
-          {GridRender}
+          <Box>{GridRender}</Box>
         </TableWrapperMobile>
         <Box sx={{ padding: '3%' }}>
-          <PaymentResultMobile />
-          <AccountBox>
-            <Typography sx={{ fontWeight: 700, fontSize: '1.5rem' }}>계좌번호</Typography>
-            <Typography sx={{ fontSize: '1.5rem' }}>우리 1005804492395 다시드림</Typography>
-          </AccountBox>
+          <PaymentResultMobile lotCount={lotCount} handlePayment={handlePayment} setLotCount={setLotCount} />
+          <FooterContacts />
         </Box>
         <HeaderWrapperM>
           <HeaderM />

@@ -29,6 +29,9 @@ export interface Lot {
   purchasedJibun: string;
   purchasedJimok: string;
   purchasedArea: string;
+  purchaseStatus: string;
+  mapAnalysisProductId?: string;
+  mapAnalysisPurchaseStatus?: string;
 }
 
 export interface SearchLotRes {
@@ -42,11 +45,14 @@ export interface SearchLotRes {
 export interface LotRowDatum {
   id: string;
   koreanName: string;
-  chineseName: string | null; // 결제하지 않았다면 null, 결제한 항목이라면 string
-  buyerAddress: string | null; // 경기도 부천군
+  chineseName: string;
+  buyerAddress: string;
   purchasedGoonDong: string; // 경기도 고양군
-  purchasedJibun: string | null; // 17번
-  purchasedArea: string | null; // 24평
+  purchasedJibun: string; // 17번
+  purchasedArea: string; // 24평
   isSelected: boolean;
+  purchaseStatus: string; // COMPLETED, NOT_PURCHASED
+  mapAnalysisProductId?: string;
+  mapAnalysisPurchaseStatus?: string;
 }
 export type LotRowData = Array<LotRowDatum>;

@@ -41,7 +41,7 @@ export const MainContent = () => {
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'flex-end',
-                paddingTop: '10vh',
+                paddingTop: 'calc(var(--vh, 1vh) * 10)',
               }}
             >
               <img src={logoImg} width="35%" />

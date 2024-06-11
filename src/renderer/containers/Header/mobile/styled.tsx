@@ -12,22 +12,22 @@ import { isMobileAtom } from '@states';
 
 export const HomeIcon = () => {
   const isMobile = useRecoilValue(isMobileAtom);
-  return <HomeImg style={{ height: isMobile ? '15%' : 22, width: isMobile ? '16%' : 21 }} />;
+  return <HomeImg style={{ height: isMobile ? '20%' : 22, width: isMobile ? '21%' : 21 }} />;
 };
 
 export const MessageIcon = () => {
   const isMobile = useRecoilValue(isMobileAtom);
-  return <MessageImg style={{ color: 'black', width: isMobile ? '21%' : 25, height: isMobile ? '20%' : 24 }} />;
+  return <MessageImg style={{ color: 'black', width: isMobile ? '26%' : 25, height: isMobile ? '25%' : 24 }} />;
 };
 
 export const UserIcon = () => {
   const isMobile = useRecoilValue(isMobileAtom);
-  return <UserImg style={{ width: isMobile ? '20%' : 24, height: isMobile ? '20%' : 24 }} />;
+  return <UserImg style={{ width: isMobile ? '25%' : 24, height: isMobile ? '25%' : 24 }} />;
 };
 
 export const LoginIcon = () => {
   const isMobile = useRecoilValue(isMobileAtom);
-  return <LoginImg style={{ height: isMobile ? '20%' : 24, width: isMobile ? '20%' : 24 }} />;
+  return <LoginImg style={{ height: isMobile ? '25%' : 24, width: isMobile ? '25%' : 24 }} />;
 };
 
 export const IconButton = styled(Button)((props: { isMobile: boolean }) => ({
@@ -35,7 +35,7 @@ export const IconButton = styled(Button)((props: { isMobile: boolean }) => ({
   flexDirection: 'column',
   alignItems: 'center',
   color: 'black',
-  fontSize: props.isMobile ? '1.4rem' : '1rem',
+  fontSize: props.isMobile ? '0.7rem' : '1rem',
 }));
 
 export const HeaderWrapper = styled(Box)(() => ({

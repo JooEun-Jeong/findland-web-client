@@ -35,11 +35,11 @@ export const MapModalTitleWrapper = styled(Box)(() => ({
   display: 'flex',
   width: '100%',
   justifyContent: 'center',
-  marginBottom: '2%',
+  margin: '30px 0',
 }));
 
 export const MapModalTitleTypo = styled(Typography)(() => ({
-  fontSize: '2rem',
+  fontSize: '1rem',
   fontWeight: 600,
 }));
 
@@ -63,7 +63,7 @@ export const MapModalButtonWrapper = styled(Box)(() => ({
 }));
 
 export const MapModalContentFirstTypo = styled(Typography)(() => ({
-  fontSize: '1.8rem',
+  fontSize: '0.7rem',
 }));
 
 export const MapModalTitleContentWrapper = styled(Box)(() => ({
@@ -78,5 +78,6 @@ export const MapModalCContentWrapper = styled(Box)(() => ({
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'flex-start',
+  border: '1px solid #B1B2B5',
   marginTop: '5%',
 }));

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import { axiosAuth } from '@apis/routes/userAuth';
 import { AxiosHeaderOptions } from '@interfaces';
@@ -35,21 +35,23 @@ export const useUserApi = (): UserApiInstance => {
     [accessToken],
   );
 
+  const url = '/auth';
+
   const api = useMemo(() => {
     if (axiosAuth) {
       return {
         login: async () =>
           await axiosAuth(instanceHeader)
-            .getLoginUrl()
+            .getLoginUrl({ redirectUri: window.origin + '/kakaoCallback' })
             .then(({ data }) => {
               console.log('Get login url: ' + JSON.stringify(data));
               window.location.href = data.loginUrl;
             }),
-
         /**
          * VerifyUser 로직 순서
          * 1. kakao에서 발급해준 login url로 로그인을 하면, 인가 코드가 query문으로 돌아옴.
-         * 2. verifyUser는 해당 인가 코드(= kakaoCode)를 이용하여 kakao의 accessToken과 유저의 데이터를,
+         * 2. verifyUser는 해당 인가 코드(= kakaoCode)를 이용하여
+         *    kakao의 accessToken과 유저의 데이터를,
          * 3. kakao accessToken으로 땅찾고 자체 jwtToken을 발급받는다.
          *  a. 성공 200시 header에 jwtToken 파싱
          *  b. 실패 400시 회원가입 진행.
@@ -58,7 +60,7 @@ export const useUserApi = (): UserApiInstance => {
          */
         verifyUser: async (kakaoCode: string) =>
           await axiosAuth(instanceHeader)
-            .getKakaokAccessToken(kakaoCode)
+            .getKakaokAccessToken(kakaoCode, window.origin + '/kakaoCallback')
             .then(async (res) => {
               const kakaoAccessToken = res.data.accessToken;
               console.log('kakao access token', kakaoAccessToken);

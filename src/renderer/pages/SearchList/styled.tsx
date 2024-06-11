@@ -1,4 +1,5 @@
 import { styled, Box, Checkbox, Typography } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
 
 export const SearchBarWrapper = styled(Box)(() => ({
   display: 'flex',
@@ -12,6 +13,7 @@ export const SearchBox = styled(Box)(() => ({
   alignItems: 'center',
   border: '1px solid rgb(255, 140, 68)',
   width: '100%',
+  height: 'calc(var(--vh, 1vh) * 6)',
   borderRadius: '5px',
   '&:focus': {
     border: '1px solid rgb(235, 127, 56)',
@@ -49,7 +51,7 @@ export const SearchBarWrapperMobile = styled(Box)(() => ({
 export const TableWrapperMobile = styled(Box)(() => ({
   display: 'flex',
   flexDirection: 'column',
-  height: '75vh',
+  height: '75%',
   width: '100%',
   '& .MuiDataGrid-columnHeaders': {
     height: 'auto',
@@ -57,11 +59,11 @@ export const TableWrapperMobile = styled(Box)(() => ({
     border: 'none',
     borderBottom: '1px solid #B1B2B5',
     '& .MuiDataGrid-columnHeaderTitle': {
-      fontSize: '1.4rem',
+      fontSize: '0.7rem',
     },
   },
   '& .MuiDataGrid-virtualScrollerRenderZone': {
-    fontSize: '1.5rem',
+    fontSize: '0.7rem',
     backgroundColor: '#fff',
   },
   '& .MuiDataGrid-virtualScrollerContent': {
@@ -81,25 +83,27 @@ export const GrayBox = styled(Box)(() => ({
 
 export const TableHeaderBox = styled(Box)(() => ({
   width: '100%',
-  height: '7%',
+  minHeight: '25px',
   display: 'flex',
   justifyContent: 'flex-end',
 }));
 
 export const TableHeaderColumnBox = styled(Box)((props: { backgroundColor: string; width: string }) => ({
   backgroundColor: props.backgroundColor,
+  minHeight: '25px',
   width: props.width,
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  fontSize: '1.5rem',
+  fontSize: '0.6rem',
+  padding: 0,
   fontWeight: 700,
   color: '#000',
 }));
 
 export const MobileContentWrapper = styled(Box)(() => ({
   width: '100vw',
-  height: '100vh',
+  height: 'calc(var(--vh, 1vh) * 100)',
   display: 'flex',
   flexDirection: 'column',
 }));
@@ -110,18 +114,9 @@ export const NoRenderBox = styled(Box)(() => ({
   alignItems: 'center',
   backgroundColor: 'white',
   color: 'rgba(0, 0, 0, 0.6)',
-  fontSize: '1.8rem',
+  fontSize: '0.7rem',
   width: '100%',
   height: '100%',
-}));
-
-export const AccountBox = styled(Box)(() => ({
-  marginTop: '3%',
-  padding: '1%',
-  border: '1px solid #B1B2B5',
-  alignItems: 'center',
-  display: 'flex',
-  flexDirection: 'column',
 }));
 
 export const HeaderWrapperM = styled(Box)(() => ({
@@ -139,20 +134,18 @@ export const TableRootChecbox = styled(Checkbox)(() => ({
   '&.Mui-disabled': {
     color: 'gray',
     '& > svg': {
-      height: '1.5em',
-      width: '1.5em',
+      height: '1rem',
+      width: '1rem',
     },
   },
   '& > svg': {
-    height: '1.5em',
-    width: '1.5em',
+    height: '1rem',
+    width: '1rem',
     transition: 'fill 0.3s',
   },
 }));
 
 export const TableEachChecbox = styled(Checkbox)(() => ({
-  height: '1.5em',
-  width: '1.5em',
   color: '#ffbd59',
   '&.Mui-checked': {
     color: 'rgba(255, 140, 68, 0.598)',
@@ -161,25 +154,53 @@ export const TableEachChecbox = styled(Checkbox)(() => ({
   '& .Mui-disabled': {
     backgroundColor: 'gray',
     '& .MuiSvgIcon-root': {
-      height: '1.5em',
-      width: '1.5em',
+      height: '1rem',
+      width: '1rem',
     },
-    height: '1.5em',
-    width: '1.5em',
+    height: '1rem',
+    width: '1rem',
   },
   '& .MuiSvgIcon-root': {
-    height: '1.5em',
-    width: '1.5em',
+    height: '1rem',
+    width: '1rem',
   },
 }));
 
 export const NoRenderTitleTypo = styled(Typography)(() => ({
   color: 'rgba(0, 0, 0, 0.6)',
-  fontSize: '1.8rem',
+  fontSize: '0.7rem',
   fontWeight: 600,
 }));
 
 export const NoRenderContentTypo = styled(Typography)(() => ({
   color: 'rgba(0, 0, 0, 0.6)',
-  fontSize: '1.8rem',
+  fontSize: '0.7rem',
+}));
+
+export const DataGridStyled = styled(DataGrid)(() => ({
+  backgroundColor: '#f7f7f7',
+  // borderBottom: '1px solid #B1B2B5',
+  '& .MuiDataGrid-columnHeaders': {
+    '& .MuiDataGrid-columnHeaderTitle': {
+      fontSize: '0.6rem',
+    },
+  },
+  '& .checkbox-header': {
+    padding: 0,
+    overflow: 'hidden',
+  },
+  '& .checkbox-cell': {
+    padding: 0,
+    overflow: 'hidden',
+  },
+  '& .MuiDataGrid-row': {
+    overflow: 'scroll',
+    fontSize: '0.6rem',
+    '&.Mui-selected': {
+      backgroundColor: '#f6cc8d49',
+    },
+  },
+  '& .MuiDataGrid-row:not(.MuiDataGrid-row--dynamicHeight)>.MuiDataGrid-cell': {
+    overflowX: 'scroll',
+  },
 }));

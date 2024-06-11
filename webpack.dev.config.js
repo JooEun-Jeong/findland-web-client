@@ -1,31 +1,33 @@
 const { resolve } = require('path');
-
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const webpack = require('webpack');
 const { merge } = require('webpack-merge');
-
 const commonConfig = require('./webpack.common.config.js');
 
 module.exports = merge(commonConfig, {
   mode: 'development',
   entry: [
-    // 'react-hot-loader/patch', // activate HMR for React
-    'webpack-dev-server/client?http://localhost:8082', // bundle the client for webpack-dev-server and connect to the provided endpoint
+    'webpack-dev-server/client?http://localhost:40005', // bundle the client for webpack-dev-server and connect to the provided endpoint
     './src/index.tsx', // the entry point of our app
   ],
-  // entry: { app: './src/index.tsx' },
   devServer: {
-    // 개발 서버 설정
-    port: 8082, // 포트 설정
-    // hot: true, // 핫 모듈 교체(HMR) 활성화
-    compress: true, // 압축 유무
-    historyApiFallback: true,
+    port: 40005,
+    compress: true,
+    open: true,
+    historyApiFallback: {
+      rewrites: [
+        { from: /./, to: '/index.html' },
+      ],
+    },
+    client: {
+      webSocketURL: 'ws://localhost:40005/ws', // Update this if needed
+    },
   },
   output: {
     filename: '[name].[chunkhash].js',
     path: resolve(__dirname, 'dist'),
-    publicPath: 'auto',
+    publicPath: '/',
   },
   module: {
     rules: [

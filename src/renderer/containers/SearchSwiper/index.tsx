@@ -4,18 +4,18 @@ import 'swiper/css';
 import 'swiper/css/autoplay';
 import 'swiper/css/navigation';
 import '@theme/swiper.pagination.style.css';
-import { Box, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
-import logoImg from '@assets/png/logoImg.png';
+import logoImg from '@assets/png/LogoImg.png';
 import logoTypoImg from '@assets/png/logoTypo.png';
 import { ErrorFallback } from '@components';
-import { Loading } from '@pages/Loading';
 import { SwiperContentBox } from '@pages/Login/styled';
 
 import { LogoBox, MainBox } from './styled';
+import { Loading } from '../Loading';
 
 const descriptions = [
   { title: ['국가 기록원 자료를', '검색 중입니다'], des: '한자 문서를 한글로 번역해드립니다' },
@@ -31,11 +31,11 @@ export const SearchSwiper = () => {
     <>
       <SwiperContentBox>
         {props.titles.map((title, i) => (
-          <Typography key={`des-title-${i}`} sx={{ fontSize: '3rem', fontWeight: 600 }}>
+          <Typography key={`des-title-${i}`} sx={{ fontSize: '1rem', fontWeight: 600 }}>
             {title}
           </Typography>
         ))}
-        <Typography sx={{ fontSize: '1.8rem', fontWeight: 600 }}>{props.des}</Typography>
+        <Typography sx={{ fontSize: '0.7rem', fontWeight: 600 }}>{props.des}</Typography>
         <Loading />
       </SwiperContentBox>
     </>

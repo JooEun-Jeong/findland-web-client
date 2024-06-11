@@ -3,11 +3,11 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useRecoilState } from 'recoil';
 
 import { Box, Typography } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
 
 import { LotRowData } from '@interfaces';
 import { lotsAtom, productCountAtomFamily } from '@states/user';
 
+import { PaymentInpuptModal } from './PaymentInputModal';
 import {
   ComputeBoxM,
   CountBoxM,
@@ -18,6 +18,7 @@ import {
   TotalComputeBoxM,
   TotalPriceBoxM,
   PriceTypoM,
+  PaymentDataGrid,
 } from './styled';
 import { ProductSelectedColmns, ResultRow } from './TableInterface';
 
@@ -76,32 +77,13 @@ export const PaymentResult: React.FC = () => {
           <Typography sx={{ fontWeight: 700, fontSize: '16px' }}>선택한 상품</Typography>
         </Box>
         <Box sx={{ padding: '5px' }}>
-          <DataGrid
+          <PaymentDataGrid
             rows={selectedProductNumbers}
             columns={ProductSelectedColmns}
             hideFooter
             disableColumnMenu
             disableColumnFilter
             disableRowSelectionOnClick
-            sx={{
-              width: '100%',
-              height: 'auto',
-              overflowX: 'hidden',
-              overflowY: 'hidden',
-              '& .MuiDataGrid-columnHeaders': {
-                backgroundColor: '#F4F4F6',
-              },
-              '& .MuiDataGrid-columnHeaderTitle': {
-                fontWeight: 'bold',
-                fontSize: 13,
-              },
-              '& .title': {
-                backgroundColor: '#F4F4F6',
-                fontWeight: 'bold',
-                fontSize: 13,
-                border: '1px solid rgba(224, 224, 224, 1)',
-              },
-            }}
           />
         </Box>
 
@@ -149,36 +131,32 @@ export const PaymentResult: React.FC = () => {
   );
 };
 
-export const PaymentResultMobile: React.FC = () => {
-  const [lotCount, setLotCount] = useRecoilState(productCountAtomFamily('lotCount'));
-  const [totalCost, setTotalCost] = useState<number>(0);
-  const price = 20000;
+interface PayResultProps {
+  handlePayment: (bankAccountName: string) => void;
+  lotCount: number;
+  setLotCount: React.Dispatch<React.SetStateAction<number>>;
+}
 
-  const [lotRows, setLotRows] = useRecoilState<LotRowData>(lotsAtom);
+export const PaymentResultMobile: React.FC<PayResultProps> = ({ handlePayment, lotCount, setLotCount }) => {
+  const [totalCost, setTotalCost] = useState<number>(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const price = 20000;
 
   useEffect(() => {
     setTotalCost(lotCount * price);
   }, [lotCount, setTotalCost]);
 
-  const handlePayment = useCallback(() => {
-    // api 필요
-
-    // 로딩 화면 필요
-
-    // row 다시 세팅
-    setLotRows(
-      lotRows.map((lot) => {
-        return {
-          ...lot,
-          // isPaid: lot.isSelected,
-        };
-      }),
-    );
-    setLotCount(0);
-  }, [lotRows, setLotCount, setLotRows]);
-
   return (
     <>
+      <PaymentInpuptModal
+        open={isModalOpen}
+        handleClose={() => {
+          setIsModalOpen(false);
+        }}
+        lotCount={lotCount}
+        price={price}
+        handlePayment={handlePayment}
+      />
       <Box sx={{ width: '100%' }}>
         <ComputeBoxM>
           <CountBoxM>
@@ -206,7 +184,7 @@ export const PaymentResultMobile: React.FC = () => {
             </Box>
           </TotalPriceBoxM>
           <Box sx={{ width: '25%', height: '100%' }}>
-            <PayButtonM onClick={handlePayment}>결제하기</PayButtonM>
+            <PayButtonM onClick={() => setIsModalOpen(true)}>결제하기</PayButtonM>
           </Box>
         </TotalComputeBoxM>
       </Box>
