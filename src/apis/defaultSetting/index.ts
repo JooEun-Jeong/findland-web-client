@@ -4,6 +4,8 @@ import _ from 'lodash';
 
 import { baseUrl } from '@/interfaces/apis';
 
+axios.defaults.withCredentials = true;
+
 export const axiosCreateInstance = (customConfig: AxiosRequestConfig): AxiosInstance => {
   const { url = '' } = customConfig;
   const apiUrl = baseUrl + '/' + url;

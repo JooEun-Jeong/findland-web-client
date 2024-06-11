@@ -1,6 +1,6 @@
 import { atom } from 'recoil';
 
-import { DecodedJWTPayload } from '@interfaces/apis/users';
+import { UserInfo } from '@interfaces/apis/users';
 import { localStorageEffect } from '@utils';
 
 export const authenticatedStateAtom = atom<boolean>({
@@ -20,9 +20,16 @@ export const accessTokenAtom = atom<string>({
   effects: [localStorageEffect('accessToken', '')],
 });
 
-export const userStateAtom = atom<DecodedJWTPayload | undefined>({
-  key: 'userStateAtom',
+export const refreshTokenAtom = atom<string>({
+  key: 'refreshTokenAtom',
+  default: '',
+  effects: [localStorageEffect('refreshToken', '')],
+});
+
+export const userDataAtom = atom<UserInfo>({
+  key: 'userDataAtom',
   default: undefined,
+  effects: [localStorageEffect('userData', '')],
 });
 
 export const isLoginAtom = atom<boolean>({

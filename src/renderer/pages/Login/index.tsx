@@ -4,8 +4,11 @@ import 'swiper/css';
 import 'swiper/css/autoplay';
 import 'swiper/css/navigation';
 import '@theme/swiper.pagination.style.css';
+import { useRecoilValue } from 'recoil';
+
 import { Typography } from '@mui/material';
 import { ErrorBoundary } from 'react-error-boundary';
+import { useNavigate } from 'react-router-dom';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
@@ -16,6 +19,7 @@ import Des3Im from '@assets/png/FirstDes3.png';
 import logoImg from '@assets/png/logoImg.png';
 import logoTypoImg from '@assets/png/logoTypo.png';
 import { ErrorFallback } from '@components';
+import { accessTokenAtom, jwtTokenAtom } from '@states/user';
 
 import { LoginButton, LogoBox, MainBox, SwiperContentBox, SwiperContentImageWrapper } from './styled';
 
@@ -27,10 +31,22 @@ const firstDescription = [
 
 export const Login = () => {
   const userApi = useUserApi();
+  const jwtToken = useRecoilValue(jwtTokenAtom);
+  const accessToken = useRecoilValue(accessTokenAtom);
+  const navigate = useNavigate();
 
   const handleLogin = useCallback(() => {
-    userApi?.login();
-  }, [userApi]);
+    if (jwtToken !== '' && accessToken !== '') {
+      // jwtToken도 정상이고 accessToken도 정상인 경우
+      // 위에 조건문 로직 수정 필요
+      setTimeout(() => navigate(`/findLand`), 1500);
+    } else {
+      // accessToken이 만료된 경우
+      // 처음부터 인가코드 받아서 로그인 진행해야됨.
+      userApi?.login();
+    }
+  }, [accessToken, jwtToken, navigate, userApi]);
+
   const Description = (props: { titles: string[]; imageUrl: string }) => (
     <>
       <SwiperContentBox>

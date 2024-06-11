@@ -15,16 +15,16 @@ export const ProtectedRoute: React.FC = () => {
   const jwtToken = useRecoilValue(jwtTokenAtom);
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (accessToken && userApi) {
-        await userApi.getUserInfo().catch((e) => {
-          console.error('error at getting jwt(getUserInfo): ' + e);
-          <Navigate to={`/login`} />;
-        });
-      }
-    };
+    // const fetchData = async () => {
+    //   if (accessToken && userApi) {
+    //     await userApi.getUserInfo().catch((e) => {
+    //       console.error('error at getting jwt(getUserInfo): ' + e);
+    //       <Navigate to={`/login`} />;
+    //     });
+    //   }
+    // };
 
-    fetchData();
+    // fetchData();
   }, [accessToken, userApi]);
 
   // accessToken 발급 받았다고 보내면 안됨

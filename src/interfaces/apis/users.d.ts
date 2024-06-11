@@ -11,7 +11,7 @@ export interface DecodedJWTPayload {
   roles: Array<string>;
 }
 
-export interface UserInfoRes {
+export interface UserInfo {
   name: string;
   email: string;
   phoneNumber: string;
@@ -19,7 +19,6 @@ export interface UserInfoRes {
   birthyear: string;
   birthday: string;
   gender: string;
-  jwtToken?: string;
 }
 
 export interface UserSignupReq {
@@ -30,9 +29,19 @@ export interface UserSignupReq {
   birthyear: string;
   birthday: string;
   gender: string;
-  accessToken: string;
 }
 
 export interface UserSignupRes {
   jwtToken: string;
+}
+
+export interface KakaoAccRes {
+  accessToken: string;
+  data: UserInfo;
+}
+
+export interface GetJwtTokenRes {}
+
+export interface GetLoginUrlRes {
+  loginUrl: string;
 }
