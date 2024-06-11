@@ -17,7 +17,7 @@ import { HeaderM, PaymentResult, PaymentResultMobile } from '@containers';
 import { LotRowData, LotRowDatum } from '@interfaces';
 import { isMobileAtom } from '@states';
 import { lotsAtom } from '@states/user';
-import { doesNullExist } from '@utils';
+import { isUnpaid } from '@utils';
 
 import {
   MainBox,
@@ -60,7 +60,7 @@ export const Search: React.FC = () => {
     lots.map((item) => {
       return {
         id: item.id,
-        checkBoxState: !doesNullExist(item) ? true : false,
+        checkBoxState: item.isSelected,
       };
     }),
   );
@@ -69,7 +69,7 @@ export const Search: React.FC = () => {
     const newCheckBoxState = lots.map((item) => {
       return {
         id: item.id,
-        checkBoxState: !doesNullExist(item) ? true : false,
+        checkBoxState: item.isSelected,
       };
     }) as Array<checkboxProps>;
     setCheckBoxes(newCheckBoxState);

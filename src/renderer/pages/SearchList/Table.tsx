@@ -8,7 +8,7 @@ import _ from 'lodash';
 
 import { LotRowData, LotRowDatum } from '@interfaces';
 import { productCountAtomFamily } from '@states/user';
-import { doesNullExist } from '@utils';
+import { isUnpaid } from '@utils';
 
 import { TableEachChecbox, TableRootChecbox } from './styled';
 
@@ -148,11 +148,11 @@ export const SearchResultColmns = ({
       );
 
       const SearchBoxCheckbox = () =>
-        doesNullExist(selectedLot) ? (
+        isUnpaid(selectedLot) ? (
           <TableEachChecbox
             value=" "
             disableRipple
-            disabled={!doesNullExist(selectedLot)}
+            disabled={!isUnpaid(selectedLot)}
             checked={checkBoxes.find((check) => params.id === check.id)?.checkBoxState || false}
             onChange={(e) => {
               e.stopPropagation();
