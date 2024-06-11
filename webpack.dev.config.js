@@ -1,3 +1,4 @@
+// webpack.dev.config.js
 const { resolve } = require('path');
 
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
@@ -14,18 +15,19 @@ module.exports = merge(commonConfig, {
     'webpack-dev-server/client?http://localhost:8082', // bundle the client for webpack-dev-server and connect to the provided endpoint
     './src/index.tsx', // the entry point of our app
   ],
-  // entry: { app: './src/index.tsx' },
   devServer: {
-    // 개발 서버 설정
     port: 8082, // 포트 설정
-    // hot: true, // 핫 모듈 교체(HMR) 활성화
     compress: true, // 압축 유무
-    historyApiFallback: true,
+    historyApiFallback: {
+      rewrites: [
+        { from: /./, to: '/index.html' },
+      ],
+    },
   },
   output: {
     filename: '[name].[chunkhash].js',
     path: resolve(__dirname, 'dist'),
-    publicPath: 'auto',
+    publicPath: '/',
   },
   module: {
     rules: [
