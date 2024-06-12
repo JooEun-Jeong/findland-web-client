@@ -71,11 +71,10 @@ export const useUserApi = (): UserApiInstance => {
               await axiosAuth({ headers: { Authorization: 'Bearer ' + kakaoAccessToken } })
                 .getJwtToken()
                 .then((res) => {
-                  const givenJwtToken = res;
+                  const givenJwtToken = res.data.jwtToken;
                   console.log('jwt token', givenJwtToken);
-                  // Access the headers
 
-                  // setjwtToken(givenJwtToken.slice(7));
+                  setjwtToken(givenJwtToken);
                 })
                 .catch(async (e) => {
                   console.log('error in getJwtToken', e);
@@ -92,9 +91,10 @@ export const useUserApi = (): UserApiInstance => {
                             .getJwtToken()
                             .then((res) => {
                               console.log('signup and get jwtToken res', res);
-                              // const givenJwtToken = res.config.headers.Authorization as string;
-                              // console.log('jwt token', givenJwtToken);
-                              // setjwtToken(givenJwtToken.slice(7));
+                              const givenJwtToken = res.data.jwtToken;
+                              console.log('jwt token', givenJwtToken);
+
+                              setjwtToken(givenJwtToken);
                             });
                         }
                       });

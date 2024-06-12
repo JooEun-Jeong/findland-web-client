@@ -2,12 +2,12 @@ import { AxiosResponse } from 'axios';
 
 import { axiosCreateInstance } from '@apis/defaultSetting';
 import { AxiosHeaderOptions } from '@interfaces/apis';
-import { GetLoginUrlRes, KakaoAccRes, UserSignupReq } from '@interfaces/apis/users';
+import { GetJwtTokenRes, GetLoginUrlRes, KakaoAccRes, UserSignupReq } from '@interfaces/apis/users';
 
 export interface AxiosAuthReturn {
   getLoginUrl: () => Promise<AxiosResponse<GetLoginUrlRes>>; // 첫번째
   getKakaokAccessToken: (kakaoCode: string) => Promise<AxiosResponse<KakaoAccRes>>; // 두번째
-  getJwtToken: () => Promise<AxiosResponse>; // 세번째
+  getJwtToken: () => Promise<AxiosResponse<GetJwtTokenRes>>; // 세번째
   signUp: (sendData: UserSignupReq) => Promise<AxiosResponse>; // 세번째 오류나면 실행. 그 후, 다시 세번째로
   logout: () => void;
 }

@@ -40,7 +40,9 @@ export interface KakaoAccRes {
   data: UserInfo;
 }
 
-export interface GetJwtTokenRes {}
+export interface GetJwtTokenRes {
+  jwtToken: string;
+}
 
 export interface GetLoginUrlRes {
   loginUrl: string;

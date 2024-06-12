@@ -23,7 +23,6 @@ export const ProtectedRoute: React.FC = () => {
     //     });
     //   }
     // };
-
     // fetchData();
   }, [accessToken, userApi]);
 
