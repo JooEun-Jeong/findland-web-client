@@ -16,7 +16,7 @@ import { useUserApi } from '@apis/hooks/useUserApi';
 import Des1Im from '@assets/png/FirstDes1.png';
 import Des2Im from '@assets/png/FirstDes2.png';
 import Des3Im from '@assets/png/FirstDes3.png';
-import logoImg from '@assets/png/logoImg.png';
+import logoImg from '@assets/png/LogoImg.png';
 import logoTypoImg from '@assets/png/logoTypo.png';
 import { ErrorFallback } from '@components';
 import { accessTokenAtom, jwtTokenAtom } from '@states/user';

@@ -9,7 +9,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
-import logoImg from '@assets/png/logoImg.png';
+import logoImg from '@assets/png/LogoImg.png';
 import logoTypoImg from '@assets/png/logoTypo.png';
 import { ErrorFallback } from '@components';
 import { Loading } from '@pages/Loading';

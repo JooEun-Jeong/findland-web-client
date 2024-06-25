@@ -8,7 +8,7 @@ import _ from 'lodash';
 
 import { MapServiceModal } from '@/renderer/containers/MyPage';
 import { UseMypageApi } from '@apis/hooks/useMypageApi';
-import logoImg from '@assets/png/logoImg.png';
+import logoImg from '@assets/png/LogoImg.png';
 import logoTypoImg from '@assets/png/logoTypo.png';
 import { SearchButton, SearchTextField } from '@components';
 import { HeaderM } from '@containers';

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Box } from '@mui/material';
 
-import LogoIm from '@assets/png/logoImg.png';
+import LogoIm from '@assets/png/LogoImg.png';
 import LogoTypoIm from '@assets/png/logoTypo.png';
 import { MenuButton } from '@components';
 

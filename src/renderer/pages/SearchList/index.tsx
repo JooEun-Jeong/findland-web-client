@@ -10,7 +10,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { UseSearchApi } from '@apis/hooks/useSearchApi';
-import logoImg from '@assets/png/logoImg.png';
+import logoImg from '@assets/png/LogoImg.png';
 import logoTypoImg from '@assets/png/logoTypo.png';
 import { ErrorFallback, SearchButton, SearchTextField } from '@components';
 import { HeaderM, PaymentResult, PaymentResultMobile } from '@containers';
