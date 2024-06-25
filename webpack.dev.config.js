@@ -16,12 +16,17 @@ module.exports = merge(commonConfig, {
     './src/index.tsx', // the entry point of our app
   ],
   devServer: {
+    host: '0.0.0.0',
     port: 8082, // 포트 설정
     compress: true, // 압축 유무
+    open: true,
     historyApiFallback: {
       rewrites: [
         { from: /./, to: '/index.html' },
       ],
+    },
+    client: {
+      webSocketURL: 'wss://dev.findland.store:8082/ws',
     },
   },
   output: {
