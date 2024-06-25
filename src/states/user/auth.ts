@@ -36,3 +36,9 @@ export const isLoginAtom = atom<boolean>({
   key: 'isLoginAtom',
   default: false,
 });
+
+export const kakaoCodeAtom = atom<string>({
+  key: 'kakaoCodeAtom',
+  default: '',
+  effects: [localStorageEffect('kakaoCode', '')],
+});
