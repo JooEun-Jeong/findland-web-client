@@ -15,21 +15,22 @@ export interface AxiosAuthReturn {
 export const axiosAuth = (opt: AxiosHeaderOptions): AxiosAuthReturn => {
   const { headers } = opt;
   const instance = axiosCreateInstance({ headers });
+
   return {
     getLoginUrl: async () => {
-      const url = `/api/v1/auth/kakao/login`;
+      const url = `/auth/kakao/login`;
       return instance.get<GetLoginUrlRes>(url);
     },
     getKakaokAccessToken: async (kakaoCode: string) => {
-      const url = `/api/v1/auth/kakao/getToken?code=${kakaoCode}`;
+      const url = `/auth/kakao/getToken?code=${kakaoCode}`;
       return instance.get<KakaoAccRes>(url);
     },
     getJwtToken: async () => {
-      const url = `/api/v1/auth/kakaologin`;
+      const url = `/auth/kakaologin`;
       return instance.get(url);
     },
     signUp: (sendData: UserSignupReq) => {
-      const url = `/api/v1/auth/signup`;
+      const url = `/auth/signup`;
       return instance.post(url, sendData);
     },
     logout: () => localStorage.removeItem('accessToken'),

@@ -12,7 +12,7 @@ export const axiosSearch = (opt: AxiosHeaderOptions): AxiosSearchReturn => {
   const instance = axiosCreateInstance({ headers });
   return {
     getLandOwners: async (name: string) => {
-      const url = `/api/v1/product/landRegistry/findAllByName/${name}`;
+      const url = `/product/landRegistry/findAllByName/${name}`;
       return instance.get<SearchLotRes>(url);
     },
   };

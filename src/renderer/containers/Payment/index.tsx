@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 
 import { useRecoilState } from 'recoil';
 
-import { Box, Typography } from '@mui/material';
+import { Box, Button, Modal, TextField, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 
 import { LotRowData } from '@interfaces';
@@ -18,6 +18,7 @@ import {
   TotalComputeBoxM,
   TotalPriceBoxM,
   PriceTypoM,
+  PaymentDataGrid,
 } from './styled';
 import { ProductSelectedColmns, ResultRow } from './TableInterface';
 
@@ -76,32 +77,13 @@ export const PaymentResult: React.FC = () => {
           <Typography sx={{ fontWeight: 700, fontSize: '16px' }}>선택한 상품</Typography>
         </Box>
         <Box sx={{ padding: '5px' }}>
-          <DataGrid
+          <PaymentDataGrid
             rows={selectedProductNumbers}
             columns={ProductSelectedColmns}
             hideFooter
             disableColumnMenu
             disableColumnFilter
             disableRowSelectionOnClick
-            sx={{
-              width: '100%',
-              height: 'auto',
-              overflowX: 'hidden',
-              overflowY: 'hidden',
-              '& .MuiDataGrid-columnHeaders': {
-                backgroundColor: '#F4F4F6',
-              },
-              '& .MuiDataGrid-columnHeaderTitle': {
-                fontWeight: 'bold',
-                fontSize: 13,
-              },
-              '& .title': {
-                backgroundColor: '#F4F4F6',
-                fontWeight: 'bold',
-                fontSize: 13,
-                border: '1px solid rgba(224, 224, 224, 1)',
-              },
-            }}
           />
         </Box>
 
@@ -152,6 +134,7 @@ export const PaymentResult: React.FC = () => {
 export const PaymentResultMobile: React.FC = () => {
   const [lotCount, setLotCount] = useRecoilState(productCountAtomFamily('lotCount'));
   const [totalCost, setTotalCost] = useState<number>(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const price = 20000;
 
   const [lotRows, setLotRows] = useRecoilState<LotRowData>(lotsAtom);
@@ -179,6 +162,18 @@ export const PaymentResultMobile: React.FC = () => {
 
   return (
     <>
+      <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', height: '100%' }}>
+            입금자명
+            <TextField />
+          </Box>
+          <Box sx={{ display: 'flex', width: '100%' }}>
+            <Button onClick={() => setIsModalOpen(false)}>취소</Button>
+            <Button onClick={handlePayment}>신청</Button>
+          </Box>
+        </Box>
+      </Modal>
       <Box sx={{ width: '100%' }}>
         <ComputeBoxM>
           <CountBoxM>
@@ -206,7 +201,7 @@ export const PaymentResultMobile: React.FC = () => {
             </Box>
           </TotalPriceBoxM>
           <Box sx={{ width: '25%', height: '100%' }}>
-            <PayButtonM onClick={handlePayment}>결제하기</PayButtonM>
+            <PayButtonM onClick={() => setIsModalOpen(true)}>신청하기</PayButtonM>
           </Box>
         </TotalComputeBoxM>
       </Box>

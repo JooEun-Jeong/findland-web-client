@@ -1,4 +1,5 @@
 import { styled, Button, Box, Typography } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
 
 export const PayResultRootBox = styled(Box)(() => ({
   display: 'flex',
@@ -92,5 +93,25 @@ export const PayButtonM = styled(Button)(() => ({
   fontWeight: 'bold',
   '&:hover': {
     backgroundColor: 'rgb(235, 127, 56)',
+  },
+}));
+
+export const PaymentDataGrid = styled(DataGrid)(() => ({
+  width: '100%',
+  height: 'auto',
+  overflowX: 'hidden',
+  overflowY: 'hidden',
+  '& .MuiDataGrid-columnHeaders': {
+    backgroundColor: '#F4F4F6',
+  },
+  '& .MuiDataGrid-columnHeaderTitle': {
+    fontWeight: 'bold',
+    fontSize: 13,
+  },
+  '& .title': {
+    backgroundColor: '#F4F4F6',
+    fontWeight: 'bold',
+    fontSize: 13,
+    border: '1px solid rgba(224, 224, 224, 1)',
   },
 }));

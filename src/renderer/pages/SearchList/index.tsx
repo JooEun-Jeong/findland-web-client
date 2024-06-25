@@ -53,7 +53,6 @@ export const Search: React.FC = () => {
   const { name } = useParams();
 
   const directName = _.isUndefined(name) && (location.state.keyword as string);
-  console.log('name!!!!', name || directName || '정재형');
 
   const [keyword, setKeyword] = useState(name || directName || '정재형');
 

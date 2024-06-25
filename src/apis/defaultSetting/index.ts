@@ -8,7 +8,7 @@ axios.defaults.withCredentials = true;
 
 export const axiosCreateInstance = (customConfig: AxiosRequestConfig): AxiosInstance => {
   const { url = '' } = customConfig;
-  const apiUrl = baseUrl + '/' + url;
+  const apiUrl = baseUrl + '/api/v1' + url;
 
   const config: AxiosRequestConfig = {
     baseURL: apiUrl,
