@@ -4,7 +4,7 @@ const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
 const commonConfig = require('./webpack.common.config');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
+// const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 const WebpackObfuscator = require('webpack-obfuscator');
 
 const smp = new SpeedMeasurePlugin();
@@ -32,31 +32,31 @@ const config = merge(commonConfig, {
           },
         },
       }),
-      new ImageMinimizerPlugin({
-        minimizer: {
-          // Lossless optimization with custom option
-          // Feel free to experiment with options for better result for you
-          implementation: ImageMinimizerPlugin.imageminMinify,
-          options: {
-            plugins: [
-              ['gifsicle', { interlaced: true }],
-              ['jpegtran', { progressive: true }],
-              ['optipng', { optimizationLevel: 5 }],
-              [
-                'svgo',
-                {
-                  plugins: [
-                    {
-                      name: 'removeViewBox',
-                      active: false,
-                    },
-                  ],
-                },
-              ],
-            ],
-          },
-        },
-      }),
+      // new ImageMinimizerPlugin({
+      //   minimizer: {
+      //     // Lossless optimization with custom option
+      //     // Feel free to experiment with options for better result for you
+      //     implementation: ImageMinimizerPlugin.imageminMinify,
+      //     options: {
+      //       plugins: [
+      //         ['gifsicle', { interlaced: true }],
+      //         ['jpegtran', { progressive: true }],
+      //         ['optipng', { optimizationLevel: 5 }],
+      //         [
+      //           'svgo',
+      //           {
+      //             plugins: [
+      //               {
+      //                 name: 'removeViewBox',
+      //                 active: false,
+      //               },
+      //             ],
+      //           },
+      //         ],
+      //       ],
+      //     },
+      //   },
+      // }),
     ],
   },
   plugins: [
