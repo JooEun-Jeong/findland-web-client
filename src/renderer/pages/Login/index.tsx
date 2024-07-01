@@ -13,9 +13,9 @@ import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import { useUserApi } from '@apis/hooks/useUserApi';
-import Des1Im from '@assets/png/FirstDes1.png';
-import Des2Im from '@assets/png/FirstDes2.png';
-import Des3Im from '@assets/png/FirstDes3.png';
+import Des1Im from '@assets/png/FirstDes1.jpg';
+import Des2Im from '@assets/png/FirstDes2.jpg';
+import Des3Im from '@assets/png/FirstDes3.jpg';
 import logoImg from '@assets/png/LogoImg.png';
 import logoTypoImg from '@assets/png/logoTypo.png';
 import { ErrorFallback } from '@components';

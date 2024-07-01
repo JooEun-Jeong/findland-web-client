@@ -1,15 +1,30 @@
 FROM node:20-alpine as build
 
-WORKDIR /app
+# for image optimization
+RUN apk add --no-cache \
+   autoconf \
+   automake \
+   bash \
+   g++ \
+   libc6-compat \
+   libjpeg-turbo-dev \
+   libpng-dev \
+   make \
+   nasm \
+   optipng
 
-COPY . /app
+WORKDIR /usr/src/app
+
+COPY . /usr/src/app
 
 RUN yarn install \
     && yarn build
 
 FROM nginx:alpine as production
 
-COPY --from=build /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+COPY --from=build /usr/src/app/dist /usr/share/nginx/html
 
 EXPOSE 80
 
