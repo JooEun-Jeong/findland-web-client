@@ -1,5 +1,5 @@
 export interface ProductTransferReq {
-  userId: string;
+  userId: string; // user email
   productIds: Array<string>;
   bankAccountName: string;
 }

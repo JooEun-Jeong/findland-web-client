@@ -1,24 +1,20 @@
-// webpack.dev.config.js
 const { resolve } = require('path');
-
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const webpack = require('webpack');
 const { merge } = require('webpack-merge');
-
 const commonConfig = require('./webpack.common.config.js');
 
 module.exports = merge(commonConfig, {
   mode: 'development',
   entry: [
-    // 'react-hot-loader/patch', // activate HMR for React
     'webpack-dev-server/client?http://localhost:8082', // bundle the client for webpack-dev-server and connect to the provided endpoint
     './src/index.tsx', // the entry point of our app
   ],
   devServer: {
-    host: '0.0.0.0',
-    port: 8082, // 포트 설정
-    compress: true, // 압축 유무
+    host: '0.0.0.0', // Allow access from external devices
+    port: 8082,
+    compress: true,
     open: true,
     historyApiFallback: {
       rewrites: [
@@ -26,7 +22,11 @@ module.exports = merge(commonConfig, {
       ],
     },
     client: {
-      webSocketURL: 'wss://dev.findland.store:8082/ws',
+      webSocketURL: 'ws://localhost:8080/ws', // Update this if needed
+    },
+    transportMode: {
+      server: 'ws',
+      client: 'ws',
     },
   },
   output: {
