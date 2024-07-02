@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import { axiosAuth } from '@apis/routes/userAuth';
 import { AxiosHeaderOptions } from '@interfaces';
@@ -35,12 +35,14 @@ export const useUserApi = (): UserApiInstance => {
     [accessToken],
   );
 
+  const url = '/auth';
+
   const api = useMemo(() => {
     if (axiosAuth) {
       return {
         login: async () =>
           await axiosAuth(instanceHeader)
-            .getLoginUrl()
+            .getLoginUrl({ redirectUri: window.origin + '/kakaoCallback' })
             .then(({ data }) => {
               console.log('Get login url: ' + JSON.stringify(data));
               window.location.href = data.loginUrl;
@@ -58,7 +60,7 @@ export const useUserApi = (): UserApiInstance => {
          */
         verifyUser: async (kakaoCode: string) =>
           await axiosAuth(instanceHeader)
-            .getKakaokAccessToken(kakaoCode)
+            .getKakaokAccessToken(kakaoCode, window.origin + '/kakaoCallback')
             .then(async (res) => {
               const kakaoAccessToken = res.data.accessToken;
               console.log('kakao access token', kakaoAccessToken);

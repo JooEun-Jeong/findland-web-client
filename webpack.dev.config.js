@@ -12,7 +12,6 @@ module.exports = merge(commonConfig, {
     './src/index.tsx', // the entry point of our app
   ],
   devServer: {
-    host: '0.0.0.0', // Allow access from external devices
     port: 8082,
     compress: true,
     open: true,
@@ -22,7 +21,7 @@ module.exports = merge(commonConfig, {
       ],
     },
     client: {
-      webSocketURL: 'ws://localhost:8080/ws', // Update this if needed
+      webSocketURL: 'ws://localhost:8082/ws', // Update this if needed
     },
   },
   output: {
