@@ -40,10 +40,10 @@ export const MyPage = () => {
 
   const getPaidLots = useCallback(async () => {
     if (mypageApi) {
-      const lots = await mypageApi.getPaidLots(keyword);
+      const lots = await mypageApi.getPaidLots(0, 10);
       setPaidLots(lots);
     }
-  }, [keyword, mypageApi, setPaidLots]);
+  }, [mypageApi, setPaidLots]);
 
   const [rootCheckBox, setRootCheckBox] = useState<boolean>(false);
   const [checkBoxes, setCheckBoxes] = useState<Array<checkboxProps>>(
@@ -161,6 +161,10 @@ export const MyPage = () => {
       />
     );
   }, [NoRowRender, checkBoxes, getRowId, isMobile, paidLots, rootCheckBox, setPaidLots]);
+
+  useEffect(() => {
+    getPaidLots();
+  }, []);
 
   return isMobile ? (
     <>
