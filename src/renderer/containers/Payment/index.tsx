@@ -5,9 +5,11 @@ import { useRecoilState } from 'recoil';
 import { Box, Button, Modal, TextField, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 
+import { UsePaymentApi } from '@apis/hooks/userPaymentApi';
 import { LotRowData } from '@interfaces';
 import { lotsAtom, productCountAtomFamily } from '@states/user';
 
+import { PaymentInpuptModal } from './PaymentInput';
 import {
   ComputeBoxM,
   CountBoxM,
@@ -131,49 +133,29 @@ export const PaymentResult: React.FC = () => {
   );
 };
 
-export const PaymentResultMobile: React.FC = () => {
+interface PayResultProps {
+  handlePayment: (bankAccountName: string) => void;
+}
+
+export const PaymentResultMobile: React.FC<PayResultProps> = ({ handlePayment }) => {
   const [lotCount, setLotCount] = useRecoilState(productCountAtomFamily('lotCount'));
   const [totalCost, setTotalCost] = useState<number>(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const price = 20000;
 
-  const [lotRows, setLotRows] = useRecoilState<LotRowData>(lotsAtom);
-
   useEffect(() => {
     setTotalCost(lotCount * price);
   }, [lotCount, setTotalCost]);
 
-  const handlePayment = useCallback(() => {
-    // api 필요
-
-    // 로딩 화면 필요
-
-    // row 다시 세팅
-    setLotRows(
-      lotRows.map((lot) => {
-        return {
-          ...lot,
-          // isPaid: lot.isSelected,
-        };
-      }),
-    );
-    setLotCount(0);
-  }, [lotRows, setLotCount, setLotRows]);
-
   return (
     <>
-      <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', height: '100%' }}>
-            입금자명
-            <TextField />
-          </Box>
-          <Box sx={{ display: 'flex', width: '100%' }}>
-            <Button onClick={() => setIsModalOpen(false)}>취소</Button>
-            <Button onClick={handlePayment}>신청</Button>
-          </Box>
-        </Box>
-      </Modal>
+      <PaymentInpuptModal
+        open={isModalOpen}
+        handleClose={() => setIsModalOpen(false)}
+        lotCount={lotCount}
+        price={price}
+        handlePayment={handlePayment}
+      />
       <Box sx={{ width: '100%' }}>
         <ComputeBoxM>
           <CountBoxM>
@@ -201,7 +183,7 @@ export const PaymentResultMobile: React.FC = () => {
             </Box>
           </TotalPriceBoxM>
           <Box sx={{ width: '25%', height: '100%' }}>
-            <PayButtonM onClick={() => setIsModalOpen(true)}>신청하기</PayButtonM>
+            <PayButtonM onClick={() => setIsModalOpen(true)}>결제하기</PayButtonM>
           </Box>
         </TotalComputeBoxM>
       </Box>

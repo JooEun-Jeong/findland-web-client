@@ -2,13 +2,15 @@ import React, { useCallback, useMemo, useState, useEffect } from 'react';
 
 import { useRecoilState, useRecoilValue } from 'recoil';
 
+import { Instagram as InstaIcon, YouTube as YoutubeIcon, Send as SendIcon } from '@mui/icons-material';
 import SearchIcon from '@mui/icons-material/Search';
-import { Box, Checkbox, Typography } from '@mui/material';
+import { Box, Checkbox } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import _ from 'lodash';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
+import { UsePaymentApi } from '@apis/hooks/userPaymentApi';
 import { UseSearchApi } from '@apis/hooks/useSearchApi';
 import logoImg from '@assets/png/LogoImg.png';
 import logoTypoImg from '@assets/png/logoTypo.png';
@@ -16,7 +18,7 @@ import { ErrorFallback, SearchButton, SearchTextField } from '@components';
 import { HeaderM, PaymentResult, PaymentResultMobile } from '@containers';
 import { LotRowData, LotRowDatum } from '@interfaces';
 import { isMobileAtom } from '@states';
-import { lotsAtom } from '@states/user';
+import { lotsAtom, productCountAtomFamily } from '@states/user';
 import { isUnpaid } from '@utils';
 
 import {
@@ -31,10 +33,11 @@ import {
   TableHeaderColumnBox,
   MobileContentWrapper,
   NoRenderBox,
-  AccountBox,
   HeaderWrapperM,
   NoRenderTitleTypo,
   NoRenderContentTypo,
+  BottomBox,
+  IconWrapper,
 } from './styled';
 import { SearchResultColmns, checkboxProps } from './Table';
 
@@ -49,12 +52,14 @@ export const Search: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const searchApi = UseSearchApi();
+  const paymentApi = UsePaymentApi();
 
   const { name } = useParams();
 
   const directName = _.isUndefined(name) && (location.state.keyword as string);
 
   const [keyword, setKeyword] = useState(name || directName || '정재형');
+  const [lotCount, setLotCount] = useRecoilState(productCountAtomFamily('lotCount'));
 
   useEffect(() => {
     const fetchData = async () => {
@@ -144,6 +149,35 @@ export const Search: React.FC = () => {
   }, [keyword, searchApi, setLots]);
 
   const getRowId = useCallback((data: LotRowDatum) => data.id, []);
+
+  const handlePayment = useCallback(
+    (bankAccountName: string) => {
+      // api 필요
+      if (paymentApi) {
+        const productIds = checkBoxes.map((checkBox) => {
+          if (checkBox.checkBoxState) {
+            return checkBox.id;
+          }
+        }) as string[];
+
+        paymentApi.postProductTransfer({ productIds: productIds, bankAccountName: bankAccountName });
+        // 로딩 화면 필요
+
+        // row 다시 세팅
+        setLots(
+          lots.map((lot) => {
+            return {
+              ...lot,
+              // isPaid: lot.isSelected,
+            };
+          }),
+        );
+      }
+
+      setLotCount(0);
+    },
+    [checkBoxes, lots, paymentApi, setLotCount, setLots],
+  );
 
   const NoRowRender = useCallback(() => {
     return (
@@ -249,11 +283,28 @@ export const Search: React.FC = () => {
           {GridRender}
         </TableWrapperMobile>
         <Box sx={{ padding: '3%' }}>
-          <PaymentResultMobile />
-          <AccountBox>
-            <Typography sx={{ fontWeight: 700, fontSize: '1.5rem' }}>계좌번호</Typography>
-            <Typography sx={{ fontSize: '1.5rem' }}>우리 1005804492395 다시드림</Typography>
-          </AccountBox>
+          <PaymentResultMobile handlePayment={handlePayment} />
+          <BottomBox>
+            <IconWrapper
+              onClick={() =>
+                window.open(
+                  'https://www.instagram.com/dasidream_go?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==',
+                  '_blank',
+                )
+              }
+            >
+              <InstaIcon sx={{ width: '25%', height: '20%' }} />
+              인스타그램
+            </IconWrapper>
+            <IconWrapper onClick={() => window.open('https://youtu.be/xNL3vIlL0cY?si=E4xhwbmaazA8E7Gr', '_blank')}>
+              <YoutubeIcon sx={{ width: '25%', height: '20%' }} />
+              유튜브
+            </IconWrapper>
+            <IconWrapper onClick={() => window.open('https://kras.go.kr/mainView.do', '_blank')}>
+              <SendIcon sx={{ width: '20%', height: '20%' }} />
+              일사편리
+            </IconWrapper>
+          </BottomBox>
         </Box>
         <HeaderWrapperM>
           <HeaderM />
