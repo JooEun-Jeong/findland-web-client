@@ -115,13 +115,13 @@ export const NoRenderBox = styled(Box)(() => ({
   height: '100%',
 }));
 
-export const AccountBox = styled(Box)(() => ({
+export const BottomBox = styled(Box)(() => ({
   marginTop: '3%',
   padding: '1%',
   border: '1px solid #B1B2B5',
   alignItems: 'center',
+  justifyContent: 'space-evenly',
   display: 'flex',
-  flexDirection: 'column',
 }));
 
 export const HeaderWrapperM = styled(Box)(() => ({
@@ -182,4 +182,10 @@ export const NoRenderTitleTypo = styled(Typography)(() => ({
 export const NoRenderContentTypo = styled(Typography)(() => ({
   color: 'rgba(0, 0, 0, 0.6)',
   fontSize: '1.8rem',
+}));
+
+export const IconWrapper = styled(Box)(() => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
 }));

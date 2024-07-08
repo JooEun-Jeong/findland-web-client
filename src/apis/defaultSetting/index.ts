@@ -33,7 +33,7 @@ export const axiosCreateInstance = (customConfig: AxiosRequestConfig): AxiosInst
         if (error.response.status === 401 || error.response.status === 403) {
           localStorage.removeItem('accessToken');
           localStorage.removeItem('jwtToken');
-          redirect('/login');
+          window.location.reload();
         }
       } else if (error.request) {
         console.log('No response received: ', error.request);

@@ -25,7 +25,7 @@ export const HeaderM = () => {
 
   const logout = useCallback(() => {
     userApi?.logout();
-    <Navigate to={`/login`} />;
+    window.location.reload();
   }, [userApi]);
 
   return (
