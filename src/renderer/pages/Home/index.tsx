@@ -9,6 +9,7 @@ import { MainContent } from '@/renderer/containers/MainContent';
 import { SearchSwiper } from '@/renderer/containers/SearchSwiper';
 import { ErrorFallback } from '@components';
 import { Footer, HeaderM, HeaderW } from '@containers';
+import { NotReady } from '@pages/NotReady';
 import { isMobileAtom, isSearchingAtom } from '@states';
 
 export const Home: React.FC = () => {
@@ -56,7 +57,7 @@ export const Home: React.FC = () => {
   return (
     <React.Fragment>
       <ErrorBoundary FallbackComponent={ErrorFallback}>
-        {isSmallScreen || isMobile ? MobileUI : DesktopUI}
+        {isSmallScreen || isMobile ? MobileUI : <NotReady />}
       </ErrorBoundary>
     </React.Fragment>
   );

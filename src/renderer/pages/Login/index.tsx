@@ -19,6 +19,8 @@ import Des3Im from '@assets/png/FirstDes3.jpg';
 import logoImg from '@assets/png/LogoImg.png';
 import logoTypoImg from '@assets/png/logoTypo.png';
 import { ErrorFallback } from '@components';
+import { NotReady } from '@pages/NotReady';
+import { isMobileAtom } from '@states';
 import { accessTokenAtom, jwtTokenAtom } from '@states/user';
 
 import { LoginButton, LogoBox, MainBox, SwiperContentBox, SwiperContentImageWrapper } from './styled';
@@ -34,6 +36,7 @@ export const Login = () => {
   const jwtToken = useRecoilValue(jwtTokenAtom);
   const accessToken = useRecoilValue(accessTokenAtom);
   const navigate = useNavigate();
+  const isMobile = useRecoilValue(isMobileAtom);
 
   const handleLogin = useCallback(() => {
     if (jwtToken !== '' && accessToken !== '') {
@@ -64,39 +67,43 @@ export const Login = () => {
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <MainBox>
-        <LogoBox>
-          <img src={logoImg} width="18%" style={{ marginBottom: '20px' }} />
-          <img src={logoTypoImg} width="15%" />
-        </LogoBox>
-        <>
-          <Swiper
-            modules={[Navigation, Pagination, Autoplay]}
-            spaceBetween={50}
-            slidesPerView={1}
-            rewind={true}
-            pagination={{
-              clickable: true,
-            }}
-            autoplay={{
-              delay: 3000,
-              disableOnInteraction: false,
-            }}
-            onSwiper={(swiper) => console.log(swiper)}
-            style={{
-              width: '100%',
-              height: '70%',
-            }}
-          >
-            {firstDescription.map((description, idx) => (
-              <SwiperSlide key={`des-${idx}`}>
-                <Description titles={description.title} imageUrl={description.imageUrl} />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </>
-        <LoginButton onClick={handleLogin}>카카오톡으로 간편 로그인</LoginButton>
-      </MainBox>
+      {isMobile ? (
+        <MainBox>
+          <LogoBox>
+            <img src={logoImg} width="18%" style={{ marginBottom: '20px' }} />
+            <img src={logoTypoImg} width="15%" />
+          </LogoBox>
+          <>
+            <Swiper
+              modules={[Navigation, Pagination, Autoplay]}
+              spaceBetween={50}
+              slidesPerView={1}
+              rewind={true}
+              pagination={{
+                clickable: true,
+              }}
+              autoplay={{
+                delay: 3000,
+                disableOnInteraction: false,
+              }}
+              onSwiper={(swiper) => console.log(swiper)}
+              style={{
+                width: '100%',
+                height: '70%',
+              }}
+            >
+              {firstDescription.map((description, idx) => (
+                <SwiperSlide key={`des-${idx}`}>
+                  <Description titles={description.title} imageUrl={description.imageUrl} />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </>
+          <LoginButton onClick={handleLogin}>카카오톡으로 간편 로그인</LoginButton>
+        </MainBox>
+      ) : (
+        <NotReady />
+      )}
     </ErrorBoundary>
   );
 };
