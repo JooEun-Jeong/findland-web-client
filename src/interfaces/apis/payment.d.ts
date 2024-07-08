@@ -1,7 +1,6 @@
 import { Lot } from './search';
 
 export interface ProductTransferReq {
-  userId: string; // user email
   productIds: Array<string>;
   bankAccountName: string;
 }

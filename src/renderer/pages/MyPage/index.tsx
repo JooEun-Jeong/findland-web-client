@@ -18,6 +18,8 @@ import {
   HeaderWrapperM,
   MobileContentWrapper,
   NoRenderBox,
+  NoRenderContentTypo,
+  NoRenderTitleTypo,
   SearchBarWrapperMobile,
   SearchBox,
   TableHeaderBox,
@@ -27,6 +29,7 @@ import {
 import { SearchResultColmns, checkboxProps } from '@pages/SearchList/Table';
 import { isMobileAtom } from '@states';
 import { lotsPaidAtom } from '@states/user';
+import { downloadCSV } from '@utils';
 
 import { FileDownloadButton, FileDownloadTypo, FindServiceButton } from './styled';
 
@@ -115,7 +118,15 @@ export const MyPage = () => {
   }, [rootCheckBox]);
 
   const NoRowRender = useCallback(() => {
-    return <NoRenderBox>조상님의 이름을 검색해주세요!</NoRenderBox>;
+    return (
+      <NoRenderBox sx={{ flexDirection: 'column' }}>
+        <NoRenderTitleTypo sx={{ marginBottom: '5%' }}>구매하신 내역 중 일치하는 결과가 없습니다.</NoRenderTitleTypo>
+        <NoRenderTitleTypo>1. 한자 성함이 여러 발음일 수 있습니다.</NoRenderTitleTypo>
+        <NoRenderContentTypo sx={{ marginBottom: '5%' }}>{`예시) 灐 = 박진형 = 박진영`}</NoRenderContentTypo>
+        <NoRenderTitleTypo>2. 친가 외가 모두 검색해 보셨나요?</NoRenderTitleTypo>
+        <NoRenderContentTypo>{`1910년대에 살아계셨던 친척들을 확인해보세요`}</NoRenderContentTypo>
+      </NoRenderBox>
+    );
   }, []);
 
   const GridRender = useMemo(() => {
@@ -166,6 +177,12 @@ export const MyPage = () => {
     getPaidLots();
   }, []);
 
+  const handleDownloadClick = useCallback(() => {
+    const data = {};
+    const fileName = '필지';
+    downloadCSV({ data, fileName });
+  }, []);
+
   return isMobile ? (
     <>
       <MobileContentWrapper>
@@ -207,7 +224,7 @@ export const MyPage = () => {
         </TableWrapperMobile>
         <Box sx={{ padding: '3%', height: '10vh', display: 'flex', justifyContent: 'space-between' }}>
           <FindServiceButton onClick={handleOpen}>토지 현재 위치 확인하기</FindServiceButton>
-          <FileDownloadButton>
+          <FileDownloadButton onClick={handleDownloadClick}>
             <FileDownloadTypo>결제한 토지 정보</FileDownloadTypo>
             <FileDownloadTypo>다운로드</FileDownloadTypo>
           </FileDownloadButton>
