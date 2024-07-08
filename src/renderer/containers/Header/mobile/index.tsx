@@ -23,6 +23,10 @@ export const HeaderM = () => {
     navigate(`/myPage`);
   }, [navigate]);
 
+  const goContact = useCallback(() => {
+    navigate(`/contact`);
+  }, [navigate]);
+
   const logout = useCallback(() => {
     userApi?.logout();
     window.location.reload();
@@ -38,7 +42,7 @@ export const HeaderM = () => {
           <UserIcon />
           마이페이지
         </IconButton>
-        <IconButton isMobile={isMobile}>
+        <IconButton isMobile={isMobile} onClick={goContact}>
           <MessageIcon />
           문의
         </IconButton>

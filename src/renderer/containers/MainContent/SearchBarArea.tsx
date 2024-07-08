@@ -1,18 +1,8 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Box,
-  CardMedia,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
+import { CardMedia, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 import { UseSearchApi } from '@apis/hooks/useSearchApi';
@@ -22,6 +12,7 @@ import { FindMethods, OpenImDetail, TempPatentDetail } from '@constants';
 import { isMobileAtom, isSearchingAtom } from '@states';
 import { lotsAtom } from '@states/user';
 
+import { DesAccordion } from './DesAccordion';
 import { SearchMainWrapper, SearchBarWrapper, OpenImageWrapper, SearchTitleTypo, AccordionWrapper } from './styled';
 
 export const SearchBarArea = () => {
@@ -50,6 +41,15 @@ export const SearchBarArea = () => {
     }
   }, [navigate, searchApi, setIsSearching, setLots, text]);
 
+  const openImageArea = useMemo(() => {
+    return (
+      <OpenImageWrapper>
+        <CardMedia component="img" src={OpenIm} />
+        <Typography className="content">{isSmallScreen || isMobile ? TempPatentDetail : OpenImDetail}</Typography>
+      </OpenImageWrapper>
+    );
+  }, [isMobile, isSmallScreen]);
+
   return (
     <>
       {!isSearching && (
@@ -59,31 +59,7 @@ export const SearchBarArea = () => {
           <SearchBarWrapper>
             <SearchField handleSubmit={handleSubmit} setText={setText} />
           </SearchBarWrapper>
-          <AccordionWrapper>
-            <Accordion>
-              <AccordionSummary expandIcon={<ArrowDropDownIcon />} aria-controls="panel1-content" id="panel1-header">
-                <Typography className="mainTitle">조상땅 찾는 방법</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                {FindMethods.map((item, idx) => (
-                  <Box key={`find-method-${idx}`} sx={{ marginBottom: '5px' }}>
-                    <Typography key={`find-method-title-${idx}`} className="methodTitle">
-                      {item.title}
-                    </Typography>
-                    {item.content.map((con, idx2) => (
-                      <Typography key={`find-method-content-${idx}-${idx2}`} className="methodContent">
-                        {con}
-                      </Typography>
-                    ))}
-                  </Box>
-                ))}
-              </AccordionDetails>
-            </Accordion>
-            <OpenImageWrapper>
-              <CardMedia component="img" src={OpenIm} />
-              <Typography className="content">{isSmallScreen || isMobile ? TempPatentDetail : OpenImDetail}</Typography>
-            </OpenImageWrapper>
-          </AccordionWrapper>
+          <DesAccordion cons={FindMethods} more={openImageArea} />
         </SearchMainWrapper>
       )}
     </>
