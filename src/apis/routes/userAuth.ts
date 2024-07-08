@@ -33,6 +33,9 @@ export const axiosAuth = (opt: AxiosHeaderOptions): AxiosAuthReturn => {
       const url = `/auth/signup`;
       return instance.post(url, sendData);
     },
-    logout: () => localStorage.removeItem('accessToken'),
+    logout: () => {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('jwtToken');
+    },
   };
 };
