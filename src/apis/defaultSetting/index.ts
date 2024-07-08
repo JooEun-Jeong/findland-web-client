@@ -1,6 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import axiosBetterStacktrace from 'axios-better-stacktrace';
 import _ from 'lodash';
+import { redirect } from 'react-router-dom';
 
 import { baseUrl } from '@/interfaces/apis';
 
@@ -29,9 +30,10 @@ export const axiosCreateInstance = (customConfig: AxiosRequestConfig): AxiosInst
       if (error.response) {
         console.log('server responded with non 2xx code: ', error.response.status);
         console.log('Response data: ', error.response.data);
-        if (error.response.status === 401) {
+        if (error.response.status === 401 || error.response.status === 403) {
           localStorage.removeItem('accessToken');
           localStorage.removeItem('jwtToken');
+          redirect('/login');
         }
       } else if (error.request) {
         console.log('No response received: ', error.request);
