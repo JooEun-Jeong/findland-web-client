@@ -8,11 +8,12 @@ import _ from 'lodash';
 
 import { MapServiceModal } from '@/renderer/containers/MyPage';
 import { UseMypageApi } from '@apis/hooks/useMypageApi';
+import { UsePaymentApi } from '@apis/hooks/userPaymentApi';
 import logoImg from '@assets/png/LogoImg.png';
 import logoTypoImg from '@assets/png/logoTypo.png';
 import { SearchButton, SearchTextField } from '@components';
 import { HeaderM } from '@containers';
-import { LotRowDatum } from '@interfaces';
+import { LotRowDatum, ProductTransferReq } from '@interfaces';
 import {
   GrayBox,
   HeaderWrapperM,
@@ -28,7 +29,7 @@ import {
 } from '@pages/SearchList/styled';
 import { SearchResultColmns, checkboxProps } from '@pages/SearchList/Table';
 import { isMobileAtom } from '@states';
-import { lotsPaidAtom } from '@states/user';
+import { lotsPaidAtom, productCountAtomFamily } from '@states/user';
 import { downloadCSV } from '@utils';
 
 import { FileDownloadButton, FileDownloadTypo, FindServiceButton } from './styled';
@@ -38,16 +39,8 @@ export const MyPage = () => {
   const isMobile = useRecoilValue(isMobileAtom);
   const [paidLots, setPaidLots] = useRecoilState(lotsPaidAtom);
   const [isOpenModal, setIsOpenModal] = useState(false);
-
-  const mypageApi = UseMypageApi();
-
-  const getPaidLots = useCallback(async () => {
-    if (mypageApi) {
-      const lots = await mypageApi.getPaidLots(0, 10);
-      setPaidLots(lots);
-    }
-  }, [mypageApi, setPaidLots]);
-
+  const [lotCount, setLotCount] = useRecoilState(productCountAtomFamily('lotCount'));
+  const [serviceIds, setServiceIds] = useState([]);
   const [rootCheckBox, setRootCheckBox] = useState<boolean>(false);
   const [checkBoxes, setCheckBoxes] = useState<Array<checkboxProps>>(
     paidLots.map((item) => {
@@ -57,6 +50,29 @@ export const MyPage = () => {
       };
     }),
   );
+
+  const mypageApi = UseMypageApi();
+
+  const getPaidLots = useCallback(async () => {
+    if (mypageApi) {
+      const lots = await mypageApi.getPaidLots(0, 50);
+      setPaidLots(lots);
+    }
+  }, [mypageApi, setPaidLots]);
+
+  const handleDownloadClick = useCallback(() => {
+    const selectedProductIds = _.map(checkBoxes, (checkBox) => (checkBox.checkBoxState === true ? checkBox.id : false));
+    console.log('selectedProductIds', selectedProductIds);
+    const data = _.filter(paidLots, (item) => _.includes(selectedProductIds, item.id));
+    console.log(data);
+    const fileName = '필지';
+    downloadCSV({ data, fileName });
+  }, [checkBoxes, paidLots]);
+
+  useEffect(() => {
+    getPaidLots();
+  }, []);
+
   const getRowId = useCallback((data: LotRowDatum) => data.id, []);
   const handleOpen = useCallback(() => setIsOpenModal(true), []);
   const handleClose = useCallback(() => setIsOpenModal(false), []);
@@ -139,6 +155,7 @@ export const MyPage = () => {
           setCheckBoxes,
           lots: paidLots,
           setLots: setPaidLots,
+          setLotCount,
           isMypage: true,
         })}
         rows={paidLots}
@@ -171,17 +188,7 @@ export const MyPage = () => {
         }}
       />
     );
-  }, [NoRowRender, checkBoxes, getRowId, isMobile, paidLots, rootCheckBox, setPaidLots]);
-
-  useEffect(() => {
-    getPaidLots();
-  }, []);
-
-  const handleDownloadClick = useCallback(() => {
-    const data = {};
-    const fileName = '필지';
-    downloadCSV({ data, fileName });
-  }, []);
+  }, [NoRowRender, checkBoxes, getRowId, isMobile, paidLots, rootCheckBox, setLotCount, setPaidLots]);
 
   return isMobile ? (
     <>
@@ -233,7 +240,14 @@ export const MyPage = () => {
           <HeaderM />
         </HeaderWrapperM>
       </MobileContentWrapper>
-      {isOpenModal && <MapServiceModal open={isOpenModal} handleClose={handleClose} />}
+      {isOpenModal && (
+        <MapServiceModal
+          open={isOpenModal}
+          handleClose={handleClose}
+          selectedLotCount={_.filter(checkBoxes, (checkbox) => checkbox.checkBoxState).length}
+          checkBoxes={checkBoxes}
+        />
+      )}
     </>
   ) : (
     <></>

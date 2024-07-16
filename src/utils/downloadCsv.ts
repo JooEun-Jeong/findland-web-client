@@ -1,13 +1,52 @@
+import { LotRowDatum } from '@interfaces';
+
 const convertToCSV = (objArray: object) => {
   const array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray;
   let str = '';
 
-  for (let i = 0; i < array.length; i++) {
+  // Remove specified keys from the objects
+  const filteredArray = array.map((obj: LotRowDatum) => {
+    const {
+      isSelected,
+      purchaseStatus,
+      id,
+      koreanName,
+      chineseName,
+      buyerAddress,
+      purchasedGoonDong,
+      purchasedJibun,
+      purchasedArea,
+    } = obj;
+    return {
+      id,
+      koreanName,
+      chineseName,
+      buyerAddress: buyerAddress === 'X' ? purchasedGoonDong : buyerAddress,
+      purchasedGoonDong,
+      purchasedJibun,
+      purchasedArea,
+    };
+  });
+
+  // Get the column headers
+  const headers = [
+    '상품 ID',
+    '소유자 한글이름',
+    '소유자 한자이름',
+    '소유자 거주지',
+    '매수한 토지 지역',
+    '매수한 토지 번지',
+    '매수한 토지 면적',
+  ];
+  str += headers.join(',') + '\r\n';
+
+  for (let i = 0; i < filteredArray.length; i++) {
     let line = '';
-    for (const index in array[i]) {
+    for (const index in filteredArray[i]) {
       if (line !== '') line += ',';
 
-      line += array[i][index];
+      // Enclose fields in double quotes and escape any double quotes within the field
+      line += `"${filteredArray[i][index].toString().replace(/"/g, '""')}"`;
     }
     str += line + '\r\n';
   }
@@ -15,7 +54,11 @@ const convertToCSV = (objArray: object) => {
 };
 
 export const downloadCSV = (props: { data: object; fileName: string }) => {
-  const csvData = new Blob([convertToCSV(props.data)], { type: 'text/csv' });
+  const csvString = convertToCSV(props.data);
+
+  // Add BOM to ensure UTF-8 encoding
+  const utf8Bom = '\uFEFF';
+  const csvData = new Blob([utf8Bom + csvString], { type: 'text/csv;charset=utf-8;' });
   const csvURL = URL.createObjectURL(csvData);
   const link = document.createElement('a');
   link.href = csvURL;
