@@ -16,7 +16,7 @@ import logoImg from '@assets/png/LogoImg.png';
 import logoTypoImg from '@assets/png/logoTypo.png';
 import { ErrorFallback, SearchButton, SearchTextField } from '@components';
 import { HeaderM, PaymentResult, PaymentResultMobile } from '@containers';
-import { LotRowData, LotRowDatum } from '@interfaces';
+import { LotRowData, LotRowDatum, ProductTransferReq } from '@interfaces';
 import { isMobileAtom } from '@states';
 import { lotsAtom, productCountAtomFamily } from '@states/user';
 import { isUnpaid } from '@utils';
@@ -57,7 +57,7 @@ export const Search: React.FC = () => {
   const directName = _.isUndefined(name) && (location.state.keyword as string);
 
   const [keyword, setKeyword] = useState(name || directName || '정재형');
-  const [lotCount, setLotCount] = useRecoilState(productCountAtomFamily('lotCount'));
+  const [lotCount, setLotCount] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -152,13 +152,15 @@ export const Search: React.FC = () => {
     (bankAccountName: string) => {
       // api 필요
       if (paymentApi) {
-        const productIds = checkBoxes.map((checkBox) => {
-          if (checkBox.checkBoxState) {
-            return checkBox.id;
-          }
-        }) as string[];
+        const productIds = checkBoxes
+          .filter((checkBox) => checkBox.checkBoxState)
+          .map((checkbox) => checkbox.id) as string[];
 
-        paymentApi.postProductTransfer({ productIds: productIds, bankAccountName: bankAccountName });
+        const postData: ProductTransferReq = {
+          productIds: productIds,
+          bankAccountName: bankAccountName,
+        };
+        paymentApi.postProductTransfer(postData);
         // 로딩 화면 필요
 
         // // row 다시 세팅
@@ -174,7 +176,7 @@ export const Search: React.FC = () => {
 
       setLotCount(0);
     },
-    [checkBoxes, lots, paymentApi, setLotCount, setLots],
+    [checkBoxes, paymentApi, setLotCount],
   );
 
   const NoRowRender = useCallback(() => {
@@ -199,6 +201,7 @@ export const Search: React.FC = () => {
           setCheckBoxes,
           lots,
           setLots,
+          setLotCount,
           isMypage: false,
         })}
         rows={lots}
@@ -281,7 +284,7 @@ export const Search: React.FC = () => {
           {GridRender}
         </TableWrapperMobile>
         <Box sx={{ padding: '3%' }}>
-          <PaymentResultMobile handlePayment={handlePayment} />
+          <PaymentResultMobile lotCount={lotCount} handlePayment={handlePayment} />
           <FooterContacts />
         </Box>
         <HeaderWrapperM>

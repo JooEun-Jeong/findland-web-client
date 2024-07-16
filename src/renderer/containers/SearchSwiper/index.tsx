@@ -4,7 +4,7 @@ import 'swiper/css';
 import 'swiper/css/autoplay';
 import 'swiper/css/navigation';
 import '@theme/swiper.pagination.style.css';
-import { Box, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';

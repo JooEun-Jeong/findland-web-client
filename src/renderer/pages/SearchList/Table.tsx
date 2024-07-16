@@ -24,6 +24,7 @@ interface ColumnProps {
   setCheckBoxes: React.Dispatch<React.SetStateAction<checkboxProps[]>>;
   lots: LotRowData;
   setLots: React.Dispatch<React.SetStateAction<LotRowData>>;
+  setLotCount: React.Dispatch<React.SetStateAction<number>>;
   isMypage: boolean;
 }
 
@@ -73,19 +74,19 @@ function countProducts({ idx, compute }: countProps) {
   };
 }
 
-// 이중으로 하면 hook이 된다..??!!!
-function countProduct({ product, compute }: computeProps) {
-  () => {
-    const [lotCount, setLotCount] = useRecoilState(productCountAtomFamily('lotCount'));
-    if (product === 'lot') {
-      compute === 'plus'
-        ? setLotCount((prev) => prev + 1)
-        : compute === 'minus'
-          ? setLotCount((prev) => prev - 1)
-          : setLotCount((prev) => prev);
-    }
-  };
-}
+// // 이중으로 하면 hook이 된다..??!!!
+// function countProduct({ product, compute }: computeProps) {
+//   () => {
+//     const [lotCount, setLotCount] = useRecoilState(productCountAtomFamily('lotCount'));
+//     if (product === 'lot') {
+//       compute === 'plus'
+//         ? setLotCount((prev) => prev + 1)
+//         : compute === 'minus'
+//           ? setLotCount((prev) => prev - 1)
+//           : setLotCount((prev) => prev);
+//     }
+//   };
+// }
 
 export const SearchResultColmns = ({
   rootCheckBox,
@@ -94,6 +95,7 @@ export const SearchResultColmns = ({
   setCheckBoxes,
   lots,
   setLots,
+  setLotCount,
   isMypage,
 }: ColumnProps): GridColDef[] => [
   {
@@ -116,13 +118,13 @@ export const SearchResultColmns = ({
         onClick={(e) => {
           e.stopPropagation();
           setRootCheckBox(!rootCheckBox);
+          !rootCheckBox ? setLotCount(checkBoxes.length) : setLotCount(0);
         }}
       />
     ),
     renderCell: (params: GridRenderCellParams) => {
       const selectedLot = lots.find((lot) => params.id === lot.id) as LotRowDatum;
       // eslint-disable-next-line react-hooks/rules-of-hooks
-      const [lotCount, setLotCount] = useRecoilState(productCountAtomFamily('lotCount'));
 
       const MypageCheckbox = () => (
         <TableEachChecbox
@@ -131,6 +133,7 @@ export const SearchResultColmns = ({
           checked={checkBoxes.find((check) => params.id === check.id)?.checkBoxState || false}
           onChange={(e) => {
             e.stopPropagation();
+            e.preventDefault();
             console.log(checkBoxes);
 
             // 직접 체크박스 눌렀을 때 변경
@@ -149,7 +152,7 @@ export const SearchResultColmns = ({
       );
 
       const SearchBoxCheckbox = () =>
-        isUnpaid(selectedLot) ? (
+        isUnpaid(selectedLot) && selectedLot.purchaseStatus === 'NOT_PURCHASED' ? (
           <TableEachChecbox
             value=" "
             disableRipple
@@ -157,6 +160,7 @@ export const SearchResultColmns = ({
             checked={checkBoxes.find((check) => params.id === check.id)?.checkBoxState || false}
             onChange={(e) => {
               e.stopPropagation();
+              e.preventDefault();
               console.log(checkBoxes);
               const checkBoxState = checkBoxes.find((check) => params.id === check.id)?.checkBoxState;
               console.log('checkbox', checkBoxState);
