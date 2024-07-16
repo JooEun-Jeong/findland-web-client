@@ -6,19 +6,30 @@ import { Accordion, AccordionDetails, AccordionSummary, Box, CardMedia, Typograp
 import { AccordionWrapper } from './styled';
 
 interface Contents {
-  title: string;
+  title?: string;
   content: string[];
 }
 
-export const DesAccordion = (props: { cons: Array<Contents>; more?: React.JSX.Element }) => {
+interface DesAccordionProps {
+  mainTitle: string;
+  cons: Array<Contents>;
+  more?: React.JSX.Element;
+}
+
+export const DesAccordion: React.FC<DesAccordionProps> = ({ mainTitle, cons, more }) => {
   return (
     <AccordionWrapper>
       <Accordion>
-        <AccordionSummary expandIcon={<ArrowDropDownIcon />} aria-controls="panel1-content" id="panel1-header">
-          <Typography className="mainTitle">조상땅 찾는 방법</Typography>
+        <AccordionSummary
+          sx={{ padding: '15px' }}
+          expandIcon={<ArrowDropDownIcon />}
+          aria-controls="panel1-content"
+          id="panel1-header"
+        >
+          <Typography className="mainTitle">{mainTitle}</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          {props.cons.map((item, idx) => (
+          {cons.map((item, idx) => (
             <Box key={`find-method-${idx}`} sx={{ marginBottom: '5px' }}>
               <Typography key={`find-method-title-${idx}`} className="methodTitle">
                 {item.title}
@@ -32,7 +43,7 @@ export const DesAccordion = (props: { cons: Array<Contents>; more?: React.JSX.El
           ))}
         </AccordionDetails>
       </Accordion>
-      {props.more}
+      {more}
     </AccordionWrapper>
   );
 };

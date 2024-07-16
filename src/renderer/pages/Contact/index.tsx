@@ -5,8 +5,10 @@ import { useRecoilValue } from 'recoil';
 import { Box, Checkbox, Typography } from '@mui/material';
 
 import { FooterContacts } from '@/renderer/containers/Footer/Contacts';
+import { DesAccordion } from '@/renderer/containers/MainContent/DesAccordion';
 import logoImg from '@assets/png/LogoImg.png';
 import logoTypoImg from '@assets/png/logoTypo.png';
+import { QAs } from '@constants';
 import { HeaderM } from '@containers';
 import { HeaderWrapperM, MobileContentWrapper } from '@pages/SearchList/styled';
 import { isMobileAtom } from '@states';
@@ -15,7 +17,26 @@ export const Contact = () => {
   const isMobile = useRecoilValue(isMobileAtom);
 
   const FAQ = useMemo(() => {
-    return <>FAQ section</>;
+    return (
+      <Box>
+        <Typography
+          sx={{
+            fontSize: '2.2rem',
+            fontWeight: 700,
+            marginTop: '30px',
+            paddingTop: '30px',
+            borderTop: '1px solid #B1B2B5',
+          }}
+        >
+          자주 받는 질문
+        </Typography>
+        {QAs.map((qa, i) => (
+          <Box sx={{ marginTop: '20px' }} key={`BoxDes-${i}`}>
+            <DesAccordion mainTitle={qa.mainTitle} cons={qa.cons} key={`Des-${i}`} />
+          </Box>
+        ))}
+      </Box>
+    );
   }, []);
 
   return isMobile ? (

@@ -111,7 +111,7 @@ export const MainContentWrapper = styled(Box)(() => ({
 export const AccordionWrapper = styled(Box)(({ theme }) => {
   const isMobile = useRecoilValue(isMobileAtom);
   return {
-    width: theme.breakpoints.down('sm') ? '80%' : 522,
+    width: theme.breakpoints.down('sm') ? '100%' : 522,
     '& .mainTitle': {
       fontWeight: 700,
       fontSize: isMobile ? '1.7rem' : '1rem',

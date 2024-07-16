@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 
 import { useRecoilState } from 'recoil';
 
-import { Box Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 import { LotRowData } from '@interfaces';
 import { lotsAtom, productCountAtomFamily } from '@states/user';

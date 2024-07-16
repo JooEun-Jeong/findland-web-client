@@ -17,6 +17,7 @@ import logoTypoImg from '@assets/png/logoTypo.png';
 import { ErrorFallback, SearchButton, SearchTextField } from '@components';
 import { HeaderM, PaymentResult, PaymentResultMobile } from '@containers';
 import { LotRowData, LotRowDatum, ProductTransferReq } from '@interfaces';
+import { Loading } from '@pages/Loading';
 import { isMobileAtom } from '@states';
 import { lotsAtom, productCountAtomFamily } from '@states/user';
 import { isUnpaid } from '@utils';
@@ -58,6 +59,7 @@ export const Search: React.FC = () => {
 
   const [keyword, setKeyword] = useState(name || directName || '정재형');
   const [lotCount, setLotCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -138,9 +140,11 @@ export const Search: React.FC = () => {
 
   const getResult = useCallback(async () => {
     if (searchApi) {
+      setIsLoading(true);
       const landOwners: LotRowData = await searchApi.getLandOwners(keyword);
       console.log('this is landOwners', landOwners);
       setLots(landOwners);
+      setIsLoading(false);
     } else {
       setLots([]);
     }
@@ -192,7 +196,9 @@ export const Search: React.FC = () => {
   }, []);
 
   const GridRender = useMemo(() => {
-    return (
+    return isLoading ? (
+      <Loading />
+    ) : (
       <DataGrid
         columns={SearchResultColmns({
           rootCheckBox,

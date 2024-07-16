@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
-import { CardMedia, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Box, CardMedia, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 import { UseSearchApi } from '@apis/hooks/useSearchApi';
@@ -59,7 +59,9 @@ export const SearchBarArea = () => {
           <SearchBarWrapper>
             <SearchField handleSubmit={handleSubmit} setText={setText} />
           </SearchBarWrapper>
-          <DesAccordion cons={FindMethods} more={openImageArea} />
+          <Box sx={{ width: '80%' }}>
+            <DesAccordion mainTitle="조상땅 찾는 방법" cons={FindMethods} more={openImageArea} />
+          </Box>
         </SearchMainWrapper>
       )}
     </>
