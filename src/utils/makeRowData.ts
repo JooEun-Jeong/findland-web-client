@@ -11,6 +11,7 @@ export const makeLandowenersRow = (lots: Array<Lot>): LotRowData => {
       purchasedJibun: lot.purchasedJibun,
       purchasedArea: lot.purchasedArea,
       isSelected: false,
+      purchaseStatus: lot.purchaseStatus,
     };
   }) as LotRowData;
 };

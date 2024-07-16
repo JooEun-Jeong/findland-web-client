@@ -2,14 +2,12 @@ import React, { useState, useEffect, useCallback } from 'react';
 
 import { useRecoilState } from 'recoil';
 
-import { Box, Button, Modal, TextField, Typography } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
+import { Box Typography } from '@mui/material';
 
-import { UsePaymentApi } from '@apis/hooks/userPaymentApi';
 import { LotRowData } from '@interfaces';
 import { lotsAtom, productCountAtomFamily } from '@states/user';
 
-import { PaymentInpuptModal } from './PaymentInput';
+import { PaymentInpuptModal } from './PaymentInputModal';
 import {
   ComputeBoxM,
   CountBoxM,
@@ -135,10 +133,10 @@ export const PaymentResult: React.FC = () => {
 
 interface PayResultProps {
   handlePayment: (bankAccountName: string) => void;
+  lotCount: number;
 }
 
-export const PaymentResultMobile: React.FC<PayResultProps> = ({ handlePayment }) => {
-  const [lotCount, setLotCount] = useRecoilState(productCountAtomFamily('lotCount'));
+export const PaymentResultMobile: React.FC<PayResultProps> = ({ handlePayment, lotCount }) => {
   const [totalCost, setTotalCost] = useState<number>(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const price = 20000;

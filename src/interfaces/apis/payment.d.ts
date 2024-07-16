@@ -40,3 +40,8 @@ export interface LandRegiPayment {
   createdAt: string;
   updatedAt: string;
 }
+
+/////////////
+export interface PaymentRes {
+  content: Array<LandRegiPayment>;
+}

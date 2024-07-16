@@ -35,7 +35,7 @@ export const MapModalTitleWrapper = styled(Box)(() => ({
   display: 'flex',
   width: '100%',
   justifyContent: 'center',
-  marginBottom: '2%',
+  margin: '30px 0',
 }));
 
 export const MapModalTitleTypo = styled(Typography)(() => ({
@@ -78,5 +78,6 @@ export const MapModalCContentWrapper = styled(Box)(() => ({
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'flex-start',
+  border: '1px solid #B1B2B5',
   marginTop: '5%',
 }));
