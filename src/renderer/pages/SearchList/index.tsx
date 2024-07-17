@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState, useEffect } from 'react';
+import React, { useCallback, useMemo, useState, useEffect, useRef, RefObject } from 'react';
 
 import { useRecoilState, useRecoilValue } from 'recoil';
 
@@ -20,7 +20,6 @@ import { LotRowData, LotRowDatum, ProductTransferReq } from '@interfaces';
 import { Loading } from '@pages/Loading';
 import { isMobileAtom } from '@states';
 import { lotsAtom, productCountAtomFamily } from '@states/user';
-import { isUnpaid } from '@utils';
 
 import {
   MainBox,
@@ -61,15 +60,6 @@ export const Search: React.FC = () => {
   const [lotCount, setLotCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (directName === false) {
-        await getResult();
-      }
-    };
-    fetchData();
-  }, []);
-
   const [lots, setLots] = useRecoilState<LotRowData>(lotsAtom);
 
   const [rootCheckBox, setRootCheckBox] = useState<boolean>(false);
@@ -81,6 +71,49 @@ export const Search: React.FC = () => {
       };
     }),
   );
+
+  const [page, setPage] = useState<number>(0);
+  const size = 50;
+
+  const dataGridRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
+
+  const handleOnRowsScrollEnd = useCallback(async () => {
+    if (searchApi) {
+      const landOwners: LotRowData = await searchApi.getLandOwners(keyword, page + 1, size);
+      console.log('handle On row scroll end', landOwners);
+      setLots((prev) => [...prev, ...landOwners]);
+      setPage((prev) => prev + 1);
+    }
+  }, [keyword, page, searchApi, setLots]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (directName === false) {
+        await getResult();
+      }
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = (event: Event) => {
+      const target = event.target as HTMLDivElement;
+      const { scrollTop, clientHeight, scrollHeight } = target;
+      console.log('Scroll Event:', { scrollTop, clientHeight, scrollHeight });
+      if (scrollHeight - scrollTop === clientHeight) {
+        console.log('Reached bottom of the grid');
+        handleOnRowsScrollEnd();
+      }
+    };
+
+    const dataGridNode = dataGridRef.current;
+    if (dataGridNode) {
+      dataGridNode.addEventListener('scroll', handleScroll);
+      return () => {
+        dataGridNode.removeEventListener('scroll', handleScroll);
+      };
+    }
+  }, [handleOnRowsScrollEnd]);
 
   useEffect(() => {
     const newCheckBoxState = lots.map((item) => {
@@ -141,14 +174,14 @@ export const Search: React.FC = () => {
   const getResult = useCallback(async () => {
     if (searchApi) {
       setIsLoading(true);
-      const landOwners: LotRowData = await searchApi.getLandOwners(keyword);
+      const landOwners: LotRowData = await searchApi.getLandOwners(keyword, page, size);
       console.log('this is landOwners', landOwners);
       setLots(landOwners);
       setIsLoading(false);
     } else {
       setLots([]);
     }
-  }, [keyword, searchApi, setLots]);
+  }, [keyword, page, searchApi, setLots]);
 
   const getRowId = useCallback((data: LotRowDatum) => data.id, []);
 
@@ -168,14 +201,7 @@ export const Search: React.FC = () => {
         // 로딩 화면 필요
 
         // // row 다시 세팅
-        // setLots(
-        //   lots.map((lot) => {
-        //     return {
-        //       ...lot,
-        //       // isPaid: lot.isSelected,
-        //     };
-        //   }),
-        // );
+        window.location.reload();
       }
 
       setLotCount(0);
@@ -199,53 +225,56 @@ export const Search: React.FC = () => {
     return isLoading ? (
       <Loading />
     ) : (
-      <DataGrid
-        columns={SearchResultColmns({
-          rootCheckBox,
-          setRootCheckBox,
-          checkBoxes,
-          setCheckBoxes,
-          lots,
-          setLots,
-          setLotCount,
-          isMypage: false,
-        })}
-        rows={lots}
-        rowHeight={isMobile ? 50 : 30}
-        slots={{
-          noRowsOverlay: NoRowRender,
-          baseCheckbox: () => (
-            <Checkbox
-              sx={{
-                color: '#ffbd59',
-                '&.Mui-checked': {
+      <div ref={dataGridRef} style={{ height: '45vh', width: '100%', overflow: 'auto', padding: '2px' }}>
+        <DataGrid
+          columns={SearchResultColmns({
+            rootCheckBox,
+            setRootCheckBox,
+            checkBoxes,
+            setCheckBoxes,
+            lots,
+            setLots,
+            setLotCount,
+            isMypage: false,
+          })}
+          rows={lots}
+          rowHeight={isMobile ? 50 : 30}
+          slots={{
+            noRowsOverlay: NoRowRender,
+            baseCheckbox: () => (
+              <Checkbox
+                sx={{
                   color: '#ffbd59',
-                },
-              }}
-            />
-          ),
-        }}
-        onCellClick={(cell, event) => {
-          if (cell.field === 'checkbox') {
-            event.stopPropagation();
-          }
-        }}
-        hideFooter
-        getRowId={getRowId}
-        disableColumnMenu
-        pageSizeOptions={[30]}
-        sx={{
-          backgroundColor: '#f7f7f7',
-          borderRadius: '5px',
-          '& .MuiDataGrid-row': {
-            '&.Mui-selected': {
-              backgroundColor: '#f6cc8d49',
+                  '&.Mui-checked': {
+                    color: '#ffbd59',
+                  },
+                }}
+              />
+            ),
+          }}
+          onCellClick={(cell, event) => {
+            if (cell.field === 'checkbox') {
+              event.stopPropagation();
+            }
+          }}
+          hideFooter
+          getRowId={getRowId}
+          disableColumnMenu
+          disableRowSelectionOnClick
+          pageSizeOptions={[30]}
+          sx={{
+            backgroundColor: '#f7f7f7',
+            borderRadius: '5px',
+            '& .MuiDataGrid-row': {
+              '&.Mui-selected': {
+                backgroundColor: '#f6cc8d49',
+              },
             },
-          },
-        }}
-      />
+          }}
+        />
+      </div>
     );
-  }, [NoRowRender, checkBoxes, getRowId, isMobile, lots, rootCheckBox, setLots]);
+  }, [NoRowRender, checkBoxes, getRowId, isLoading, isMobile, lots, rootCheckBox, setLots]);
 
   return isMobile ? (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
@@ -287,9 +316,9 @@ export const Search: React.FC = () => {
               소유자 정보
             </TableHeaderColumnBox>
           </TableHeaderBox>
-          {GridRender}
+          <Box>{GridRender}</Box>
         </TableWrapperMobile>
-        <Box sx={{ padding: '3%' }}>
+        <Box sx={{ padding: '3%', marginTop: '1%' }}>
           <PaymentResultMobile lotCount={lotCount} handlePayment={handlePayment} />
           <FooterContacts />
         </Box>

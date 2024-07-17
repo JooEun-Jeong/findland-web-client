@@ -121,7 +121,9 @@ export const PaymentInpuptModal = (props: {
               </CopyToClipboard>
             </BankDesBox>
             <Box sx={{ display: 'flex', width: '100%', justifyContent: 'center', marginTop: '2%' }}>
-              <CancelButton onClick={props.handleClose}>취소하기</CancelButton>
+              <CancelButton sx={{ borderRadius: 5 }} onClick={props.handleClose}>
+                취소하기
+              </CancelButton>
               <YellowButton
                 sx={{ borderRadius: 5 }}
                 onClick={() => {

@@ -5,17 +5,17 @@ import { LotRowData, SearchLotRes } from '@interfaces/apis';
 import { makeLandowenersRow } from '@utils';
 
 type UseSearchApi = {
-  getLandOwners: (name: string) => Promise<LotRowData>;
+  getLandOwners: (name: string, page: number, size: number) => Promise<LotRowData>;
 } | null;
 
 export const UseSearchApi = (): UseSearchApi => {
   const instance = useMemo(() => {
     if (api) {
       return {
-        getLandOwners: async (name: string) => {
+        getLandOwners: async (name: string, page: number, size: number) => {
           try {
             const landOwners: LotRowData = await api()
-              .search.getLandOwners(name)
+              .search.getLandOwners(name, page, size)
               .then((res) => {
                 console.log('Here are data: ', res.data);
                 return makeLandowenersRow(res.data.products);

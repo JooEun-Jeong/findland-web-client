@@ -49,7 +49,7 @@ export const SearchBarWrapperMobile = styled(Box)(() => ({
 export const TableWrapperMobile = styled(Box)(() => ({
   display: 'flex',
   flexDirection: 'column',
-  height: '75vh',
+  height: '75%',
   width: '100%',
   '& .MuiDataGrid-columnHeaders': {
     height: 'auto',

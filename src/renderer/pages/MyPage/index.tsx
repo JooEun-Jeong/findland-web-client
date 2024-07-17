@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState, RefObject } from 'react';
 
 import { useRecoilState, useRecoilValue } from 'recoil';
 
@@ -42,6 +42,7 @@ export const MyPage = () => {
   const [lotCount, setLotCount] = useRecoilState(productCountAtomFamily('lotCount'));
   const [serviceIds, setServiceIds] = useState([]);
   const [rootCheckBox, setRootCheckBox] = useState<boolean>(false);
+  const [page, setPage] = useState<number>(0);
   const [checkBoxes, setCheckBoxes] = useState<Array<checkboxProps>>(
     paidLots.map((item) => {
       return {
@@ -52,10 +53,20 @@ export const MyPage = () => {
   );
 
   const mypageApi = UseMypageApi();
+  const size = 50;
+  const dataGridRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
+
+  const handleOnRowsScrollEnd = useCallback(async () => {
+    if (mypageApi) {
+      const lots = await mypageApi.getPaidLots(page + 1, size);
+      setPaidLots(lots);
+      setPage((prev) => prev + 1);
+    }
+  }, [mypageApi, page, setPaidLots]);
 
   const getPaidLots = useCallback(async () => {
     if (mypageApi) {
-      const lots = await mypageApi.getPaidLots(0, 50);
+      const lots = await mypageApi.getPaidLots(page, size);
       setPaidLots(lots);
     }
   }, [mypageApi, setPaidLots]);
@@ -133,6 +144,24 @@ export const MyPage = () => {
     }
   }, [rootCheckBox]);
 
+  useEffect(() => {
+    const handleScroll = (event: Event) => {
+      const target = event.target as HTMLDivElement;
+      const { scrollTop, clientHeight, scrollHeight } = target;
+      if (scrollHeight - scrollTop === clientHeight) {
+        handleOnRowsScrollEnd();
+      }
+    };
+
+    const dataGridNode = dataGridRef.current;
+    if (dataGridNode) {
+      dataGridNode.addEventListener('scroll', handleScroll);
+      return () => {
+        dataGridNode.removeEventListener('scroll', handleScroll);
+      };
+    }
+  }, [handleOnRowsScrollEnd]);
+
   const NoRowRender = useCallback(() => {
     return (
       <NoRenderBox sx={{ flexDirection: 'column' }}>
@@ -147,46 +176,50 @@ export const MyPage = () => {
 
   const GridRender = useMemo(() => {
     return (
-      <DataGrid
-        columns={SearchResultColmns({
-          rootCheckBox,
-          setRootCheckBox,
-          checkBoxes,
-          setCheckBoxes,
-          lots: paidLots,
-          setLots: setPaidLots,
-          setLotCount,
-          isMypage: true,
-        })}
-        rows={paidLots}
-        rowHeight={isMobile ? 50 : 30}
-        slots={{
-          noRowsOverlay: NoRowRender,
-          baseCheckbox: () => (
-            <Checkbox
-              sx={{
-                color: '#ffbd59',
-                '&.Mui-checked': {
+      <div ref={dataGridRef} style={{ height: '60vh', width: '100%', overflow: 'auto', padding: '2px' }}>
+        {' '}
+        <DataGrid
+          columns={SearchResultColmns({
+            rootCheckBox,
+            setRootCheckBox,
+            checkBoxes,
+            setCheckBoxes,
+            lots: paidLots,
+            setLots: setPaidLots,
+            setLotCount,
+            isMypage: true,
+          })}
+          rows={paidLots}
+          rowHeight={isMobile ? 50 : 30}
+          slots={{
+            noRowsOverlay: NoRowRender,
+            baseCheckbox: () => (
+              <Checkbox
+                sx={{
                   color: '#ffbd59',
-                },
-              }}
-            />
-          ),
-        }}
-        hideFooter
-        getRowId={getRowId}
-        disableColumnMenu
-        pageSizeOptions={[30]}
-        sx={{
-          backgroundColor: '#f7f7f7',
-          borderRadius: '5px',
-          '& .MuiDataGrid-row': {
-            '&.Mui-selected': {
-              backgroundColor: '#f6cc8d49',
+                  '&.Mui-checked': {
+                    color: '#ffbd59',
+                  },
+                }}
+              />
+            ),
+          }}
+          hideFooter
+          getRowId={getRowId}
+          disableColumnMenu
+          disableRowSelectionOnClick
+          pageSizeOptions={[50]}
+          sx={{
+            backgroundColor: '#f7f7f7',
+            borderRadius: '5px',
+            '& .MuiDataGrid-row': {
+              '&.Mui-selected': {
+                backgroundColor: '#f6cc8d49',
+              },
             },
-          },
-        }}
-      />
+          }}
+        />
+      </div>
     );
   }, [NoRowRender, checkBoxes, getRowId, isMobile, paidLots, rootCheckBox, setLotCount, setPaidLots]);
 

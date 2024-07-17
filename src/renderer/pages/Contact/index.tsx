@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 
 import { useRecoilValue } from 'recoil';
 
-import { Box, Checkbox, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 import { FooterContacts } from '@/renderer/containers/Footer/Contacts';
 import { DesAccordion } from '@/renderer/containers/MainContent/DesAccordion';

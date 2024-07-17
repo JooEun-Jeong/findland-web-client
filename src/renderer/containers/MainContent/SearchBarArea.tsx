@@ -31,7 +31,7 @@ export const SearchBarArea = () => {
   const handleSubmit = useCallback(async () => {
     if (searchApi) {
       setIsSearching(true);
-      const landOwners = await searchApi.getLandOwners(text);
+      const landOwners = await searchApi.getLandOwners(text, 0, 50);
       console.log('data ', landOwners);
       setLots(landOwners);
       setTimeout(function () {

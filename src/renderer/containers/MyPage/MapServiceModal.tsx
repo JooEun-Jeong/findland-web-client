@@ -26,6 +26,7 @@ import {
   MapModalWrapper,
   MapModalCContentWrapper,
 } from './styled';
+import { CancelButton } from '../Payment/styled';
 
 interface MapModalProps {
   open: boolean;
@@ -191,7 +192,12 @@ export const MapServiceModal: React.FC<MapModalProps> = ({ open, handleClose, se
               </Box>
             </MapModalCContentWrapper>
             <MapModalButtonWrapper>
-              <YellowButton onClick={handleServiceClick}>서비스 신청</YellowButton>
+              <CancelButton sx={{ borderRadius: 5 }} onClick={handleClose}>
+                취소하기
+              </CancelButton>
+              <YellowButton sx={{ borderRadius: 5 }} onClick={handleServiceClick}>
+                서비스 신청
+              </YellowButton>
             </MapModalButtonWrapper>
           </MapModalContentWrapper>
         </MapModalWrapper>

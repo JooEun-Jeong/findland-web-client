@@ -192,7 +192,6 @@ export const BankDesBox = styled(Box)(() => ({
 export const BankTypo = styled(Typography)(() => ({ fontSize: '1.5rem', display: 'flex', justifyContent: 'center' }));
 
 export const CancelButton = styled(Button)(() => ({
-  borderRadius: 5,
   backgroundColor: '#CACACA',
   width: '30vw',
   height: '100%',
