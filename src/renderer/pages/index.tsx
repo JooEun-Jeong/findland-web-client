@@ -5,6 +5,7 @@ import { ThemeProvider, StyledEngineProvider, createTheme } from '@mui/material/
 import { ErrorBoundary } from 'react-error-boundary';
 import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 
+import { Admin } from '@pages/Admin';
 import { themeSelector } from '@theme/themeSelector';
 
 import { KakaoCallback } from './Callbacks/KakaoCallback';
@@ -50,6 +51,7 @@ export const AppRoute: React.FC = () => {
             <Route path="/search/:name" element={<Search />} />
             <Route path="/myPage" element={<MyPage />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/admin" element={<Admin />} />
           </Route>
           <Route path="*" element={<Navigate to={'/findLand'} />} />
         </Routes>
