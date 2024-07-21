@@ -24,7 +24,7 @@ export const TransferRequestListComponent = ({}: TransferRequestListComponentPro
       p.set('size', size.toString());
       return p;
     });
-  }, [page, size]);
+  }, [page, size, setSearchParams]);
 
   const adminApi = useMemo(() => api().admin, []);
   const [loading, setLoading] = useState<boolean>(false);
