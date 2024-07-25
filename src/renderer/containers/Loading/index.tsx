@@ -4,13 +4,13 @@ import { CircularProgress, Box, styled } from '@mui/material';
 
 const LoadingWrapper = styled(Box)(() => ({
   display: 'flex',
-  width: '100vw',
-  height: '100vh',
+  width: '100%',
+  height: '100%',
   alignItems: 'center',
   justifyContent: 'center',
 }));
 
-export const LoadingPage: React.FC = () => {
+export const Loading: React.FC = () => {
   return (
     <LoadingWrapper>
       <CircularProgress size={90} thickness={4} disableShrink />

@@ -12,10 +12,10 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import logoImg from '@assets/png/LogoImg.png';
 import logoTypoImg from '@assets/png/logoTypo.png';
 import { ErrorFallback } from '@components';
-import { Loading } from '@pages/Loading';
 import { SwiperContentBox } from '@pages/Login/styled';
 
 import { LogoBox, MainBox } from './styled';
+import { Loading } from '../Loading';
 
 const descriptions = [
   { title: ['국가 기록원 자료를', '검색 중입니다'], des: '한자 문서를 한글로 번역해드립니다' },

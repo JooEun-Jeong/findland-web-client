@@ -15,9 +15,8 @@ import { UseSearchApi } from '@apis/hooks/useSearchApi';
 import logoImg from '@assets/png/LogoImg.png';
 import logoTypoImg from '@assets/png/logoTypo.png';
 import { ErrorFallback, SearchButton, SearchTextField } from '@components';
-import { HeaderM, PaymentResult, PaymentResultMobile } from '@containers';
+import { HeaderM, Loading, PaymentResult, PaymentResultMobile } from '@containers';
 import { LotRowData, LotRowDatum, ProductTransferReq } from '@interfaces';
-import { Loading } from '@pages/Loading';
 import { isMobileAtom } from '@states';
 import { lotsAtom, productCountAtomFamily } from '@states/user';
 
@@ -223,7 +222,9 @@ export const Search: React.FC = () => {
 
   const GridRender = useMemo(() => {
     return isLoading ? (
-      <Loading />
+      <div style={{ height: '45vh', width: '100%', overflow: 'auto', padding: '2px' }}>
+        <Loading />
+      </div>
     ) : (
       <div ref={dataGridRef} style={{ height: '45vh', width: '100%', overflow: 'auto', padding: '2px' }}>
         <DataGrid

@@ -6,7 +6,7 @@ import { Box } from '@mui/material';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { useUserApi } from '@apis/hooks/useUserApi';
-import { Loading } from '@pages/Loading';
+import { LoadingPage } from '@pages/Loading';
 import { kakaoCodeAtom } from '@states/user';
 
 export const KakaoCallback: React.FC = () => {
@@ -37,7 +37,7 @@ export const KakaoCallback: React.FC = () => {
 
   return (
     <Box sx={{ fontSize: '3rem', height: '100vh', width: '100vw' }}>
-      <Loading />
+      <LoadingPage />
     </Box>
   );
 };
