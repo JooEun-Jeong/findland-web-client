@@ -18,7 +18,6 @@ const convertToCSV = (objArray: object) => {
       purchasedArea,
     } = obj;
     return {
-      id,
       koreanName,
       chineseName,
       buyerAddress: buyerAddress === 'X' ? purchasedGoonDong : buyerAddress,
@@ -30,7 +29,6 @@ const convertToCSV = (objArray: object) => {
 
   // Get the column headers
   const headers = [
-    '상품 ID',
     '소유자 한글이름',
     '소유자 한자이름',
     '소유자 거주지',
