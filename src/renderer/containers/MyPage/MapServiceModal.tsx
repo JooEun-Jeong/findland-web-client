@@ -77,6 +77,7 @@ export const MapServiceModal: React.FC<MapModalProps> = ({
         await paymentApi.postProductTransfer(postData);
         alert(`${selectedLotCount}건의 지도서비스가 신청되었습니다.`);
         handleClose();
+        window.location.reload();
       }
     } else {
       setIsWrittenColor('2px solid #dd5515');
