@@ -252,13 +252,20 @@ export const SearchResultColmns = ({
     field: 'buyerAddress',
     headerName: '거주지',
     align: 'left',
-    resizable: false,
     minWidth: 75,
     flex: 0.2083,
     renderCell: (params: GridRenderCellParams) => {
       const id = params.row.id;
       const selectedLot = _.find(lots, (landowner) => landowner.id === id) as LotRowDatum;
-      return typeof selectedLot.buyerAddress !== 'undefined' ? selectedLot.buyerAddress || '-' : '-';
+      if (typeof selectedLot.buyerAddress !== 'undefined') {
+        if (selectedLot.buyerAddress === 'X') {
+          return selectedLot.purchasedGoonDong;
+        } else {
+          return selectedLot.buyerAddress;
+        }
+      } else {
+        return '-';
+      }
     },
   },
 ];

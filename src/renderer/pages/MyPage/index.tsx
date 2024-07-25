@@ -242,9 +242,13 @@ export const MyPage = () => {
             backgroundColor: '#f7f7f7',
             borderRadius: '5px',
             '& .MuiDataGrid-row': {
+              overflow: 'scroll',
               '&.Mui-selected': {
                 backgroundColor: '#f6cc8d49',
               },
+            },
+            '& .MuiDataGrid-row:not(.MuiDataGrid-row--dynamicHeight)>.MuiDataGrid-cell': {
+              overflowX: 'scroll',
             },
           }}
         />
