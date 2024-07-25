@@ -27,6 +27,7 @@ export interface MyPageRes {
 export interface MyPageContent {
   landRegistryPayment: LandRegiPayment;
   mapAnalysisProductId: string;
+  mapAnalysisPayment: MapAnalysisPayment | null;
 }
 
 export interface LandRegiPayment {
@@ -37,6 +38,18 @@ export interface LandRegiPayment {
   transferRequestId: string;
   amount: number;
   paymentStatus: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface MapAnalysisPayment {
+  id: string;
+  userId: string;
+  productId: string;
+  product: MapAnalysisService;
+  transferRequestId: string;
+  amount: number;
+  purchaseStatus: string; // PENDING, PURCHASED, NOT_PURCHASED
   createdAt: string;
   updatedAt: string;
 }

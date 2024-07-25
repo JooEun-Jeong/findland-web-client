@@ -30,6 +30,8 @@ export interface Lot {
   purchasedJimok: string;
   purchasedArea: string;
   purchaseStatus: string;
+  mapAnalysisProductId?: string;
+  mapAnalysisPurchaseStatus?: string;
 }
 
 export interface SearchLotRes {
@@ -50,5 +52,7 @@ export interface LotRowDatum {
   purchasedArea: string; // 24평
   isSelected: boolean;
   purchaseStatus: string; // COMPLETED, NOT_PURCHASED
+  mapAnalysisProductId?: string;
+  mapAnalysisPurchaseStatus?: string;
 }
 export type LotRowData = Array<LotRowDatum>;

@@ -3,29 +3,31 @@ import { useMemo } from 'react';
 import _ from 'lodash';
 
 import api from '@apis';
-import { Lot, LotRowData, MyPageContent } from '@interfaces/apis';
+import { LotRowData } from '@interfaces/apis';
 import { makeLandowenersRow } from '@utils';
 
 type UseMypageApi = {
-  getPaidLots: (page: number, size: number) => Promise<LotRowData>;
-  getAllLandIdbyMapId: (page: number, size: number, name: string) => Promise<Map<string, string>>; // landId: mapAnalysis Id
+  getAllPaidLots: (page: number, size: number) => Promise<LotRowData>;
+  getOneLandownerWithName: (page: number, size: number, name: string) => Promise<LotRowData>;
 } | null;
 
 export const UseMypageApi = (): UseMypageApi => {
   const instance = useMemo(() => {
     if (api) {
       return {
-        getPaidLots: async (page: number, size: number) => {
+        getAllPaidLots: async (page: number, size: number) => {
           try {
             const landOwners: LotRowData = await api()
               .mypage.getPaidLots(page, size)
               .then((res) => {
                 const products = res.data.content;
-                // const landRegistries = products.map((product) => product.landRegistryPayment.product);
-                // const mapAnalysisProductIds = products.map((product) => product.mapAnalysisProductId);
-                const landRegistries: Array<Lot> = products
-                  .filter((product) => product.product.productType === 'LAND_REGISTRY')
-                  .map((product) => product.product);
+                const landRegistries = products.map((product) => {
+                  return {
+                    ...product.landRegistryPayment.product,
+                    mapAnalysisProductId: product.mapAnalysisProductId,
+                    mapAnalysisPurchaseStatus: product.mapAnalysisPayment?.purchaseStatus,
+                  };
+                });
 
                 return makeLandowenersRow(landRegistries);
               });
@@ -35,25 +37,19 @@ export const UseMypageApi = (): UseMypageApi => {
             return [];
           }
         },
-        getAllLandIdbyMapId: async (page: number, size: number, name: string) => {
+        getOneLandownerWithName: async (page: number, size: number, name: string) => {
           try {
-            const landIdByMapId = new Map<string, string>();
-            await api()
-              .mypage.getPaymentInfo(page, size, name)
+            const landowners = await api()
+              .mypage.getPaidLots(page, size, name)
               .then((res) => {
-                const data: Array<MyPageContent> = res.data.content;
-                _.map(data, (item: MyPageContent) => {
-                  const productId = item.landRegistryPayment.productId;
-                  const mapId = item.mapAnalysisProductId;
-
-                  console.log('productId and mapId ', productId, mapId);
-                  landIdByMapId.set(productId, mapId);
-                });
+                const data = res.data.content;
+                // product가 null이 아니라는 가정 아래에
+                return _.map(data, (item) => item.landRegistryPayment.product);
               });
-            return landIdByMapId;
+            return makeLandowenersRow(landowners);
           } catch (e) {
-            console.error('Error: get all land Id by map Id', e);
-            return {} as Map<string, string>;
+            console.error(`Error: get ${name} data `, e);
+            return [];
           }
         },
       };

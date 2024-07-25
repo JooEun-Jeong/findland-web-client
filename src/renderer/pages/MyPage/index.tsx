@@ -12,7 +12,7 @@ import { UsePaymentApi } from '@apis/hooks/userPaymentApi';
 import logoImg from '@assets/png/LogoImg.png';
 import logoTypoImg from '@assets/png/logoTypo.png';
 import { SearchButton, SearchTextField } from '@components';
-import { HeaderM } from '@containers';
+import { HeaderM, Loading } from '@containers';
 import { LotRowDatum, ProductTransferReq } from '@interfaces';
 import {
   GrayBox,
@@ -40,7 +40,9 @@ export const MyPage = () => {
   const [paidLots, setPaidLots] = useRecoilState(lotsPaidAtom);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [lotCount, setLotCount] = useRecoilState(productCountAtomFamily('lotCount'));
-  const [serviceIds, setServiceIds] = useState([]);
+  const [serviceIds, setServiceIds] = useState<Array<string>>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSearchClicked, setIsSearchClicked] = useState(false);
   const [rootCheckBox, setRootCheckBox] = useState<boolean>(false);
   const [page, setPage] = useState<number>(0);
   const [checkBoxes, setCheckBoxes] = useState<Array<checkboxProps>>(
@@ -58,18 +60,36 @@ export const MyPage = () => {
 
   const handleOnRowsScrollEnd = useCallback(async () => {
     if (mypageApi) {
-      const lots = await mypageApi.getPaidLots(page + 1, size);
-      setPaidLots(lots);
+      if (isSearchClicked) {
+        // 만약 한번이라도 클릭되었다면, 해당 키워드로 무한 스크롤 준비
+        const lots = await mypageApi.getOneLandownerWithName(page + 1, size, keyword);
+        setPaidLots(lots);
+      } else {
+        // 전체 결제 내역 보여주기
+        const lots = await mypageApi.getAllPaidLots(page + 1, size);
+        setPaidLots(lots);
+      }
       setPage((prev) => prev + 1);
+    }
+  }, [isSearchClicked, keyword, mypageApi, page, setPaidLots]);
+
+  const getAllPaidLots = useCallback(async () => {
+    if (mypageApi) {
+      const lots = await mypageApi.getAllPaidLots(page, size);
+      setPaidLots(lots);
     }
   }, [mypageApi, page, setPaidLots]);
 
-  const getPaidLots = useCallback(async () => {
+  const getOneLandowner = useCallback(async () => {
     if (mypageApi) {
-      const lots = await mypageApi.getPaidLots(page, size);
+      setIsLoading(true);
+      setPage(0);
+      setIsSearchClicked(true);
+      const lots = await mypageApi.getOneLandownerWithName(0, size, keyword);
       setPaidLots(lots);
+      setIsLoading(false);
     }
-  }, [mypageApi, setPaidLots]);
+  }, [keyword, mypageApi, setPaidLots]);
 
   const handleDownloadClick = useCallback(() => {
     const selectedProductIds = _.map(checkBoxes, (checkBox) => (checkBox.checkBoxState === true ? checkBox.id : false));
@@ -81,11 +101,17 @@ export const MyPage = () => {
   }, [checkBoxes, paidLots]);
 
   useEffect(() => {
-    getPaidLots();
+    getAllPaidLots();
   }, []);
 
   const getRowId = useCallback((data: LotRowDatum) => data.id, []);
-  const handleOpen = useCallback(() => setIsOpenModal(true), []);
+  const handleOpen = useCallback(() => {
+    setIsOpenModal(true);
+    const selectedProductIds = _.map(checkBoxes, (checkBox) => (checkBox.checkBoxState === true ? checkBox.id : false));
+    const data = _.filter(paidLots, (item) => _.includes(selectedProductIds, item.id));
+    const selectedProductMapIds = _.compact(data.map((item) => item.mapAnalysisProductId));
+    setServiceIds(selectedProductMapIds);
+  }, [checkBoxes, paidLots]);
   const handleClose = useCallback(() => setIsOpenModal(false), []);
 
   useEffect(() => {
@@ -175,9 +201,12 @@ export const MyPage = () => {
   }, []);
 
   const GridRender = useMemo(() => {
-    return (
+    return isLoading ? (
+      <div style={{ height: '60vh', width: '100%', overflow: 'auto', padding: '2px' }}>
+        <Loading />
+      </div>
+    ) : (
       <div ref={dataGridRef} style={{ height: '60vh', width: '100%', overflow: 'auto', padding: '2px' }}>
-        {' '}
         <DataGrid
           columns={SearchResultColmns({
             rootCheckBox,
@@ -221,7 +250,7 @@ export const MyPage = () => {
         />
       </div>
     );
-  }, [NoRowRender, checkBoxes, getRowId, isMobile, paidLots, rootCheckBox, setLotCount, setPaidLots]);
+  }, [NoRowRender, checkBoxes, getRowId, isLoading, isMobile, paidLots, rootCheckBox, setLotCount, setPaidLots]);
 
   return isMobile ? (
     <>
@@ -239,7 +268,7 @@ export const MyPage = () => {
               />
               <SearchButton
                 type="submit"
-                onClick={getPaidLots}
+                onClick={getOneLandowner}
                 className="mobile"
                 sx={{
                   marginLeft: '10px',
@@ -278,6 +307,7 @@ export const MyPage = () => {
           open={isOpenModal}
           handleClose={handleClose}
           selectedLotCount={_.filter(checkBoxes, (checkbox) => checkbox.checkBoxState).length}
+          selectedLotMapIds={serviceIds}
           checkBoxes={checkBoxes}
         />
       )}

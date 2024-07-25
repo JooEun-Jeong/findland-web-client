@@ -12,7 +12,7 @@ import { ReactComponent as FirstIm } from '@assets/svg/example_separated.svg';
 import { YellowButton } from '@components';
 import { ProductTransferReq } from '@interfaces';
 import { checkboxProps } from '@pages/SearchList/Table';
-import { lotsPaidAtom } from '@states/user';
+import { lotsPaidAtom, userDataAtom } from '@states/user';
 
 import {
   MapModalTitleContentWrapper,
@@ -32,36 +32,27 @@ interface MapModalProps {
   open: boolean;
   handleClose: () => void;
   selectedLotCount: number;
-  checkBoxes: checkboxProps[];
+  selectedLotMapIds: Array<string>;
+  checkBoxes: Array<checkboxProps>;
 }
 
-export const MapServiceModal: React.FC<MapModalProps> = ({ open, handleClose, selectedLotCount, checkBoxes }) => {
+export const MapServiceModal: React.FC<MapModalProps> = ({
+  open,
+  handleClose,
+  selectedLotCount,
+  selectedLotMapIds,
+  checkBoxes,
+}) => {
   const estimatedDay = 2;
-  const cost = 2;
+  const cost = 10;
   const [bankAccountName, setBankAccountName] = useState('');
-  const [email, setEmail] = useState('');
   const [isWrittenColor, setIsWrittenColor] = useState('1px solid #B1B2B5');
   const paidLots = useRecoilValue(lotsPaidAtom);
 
+  const userData = useRecoilValue(userDataAtom);
+
   const paymentApi = UsePaymentApi();
   const mypageApi = UseMypageApi();
-
-  const getAllLandIdByMapIdWithNames = useCallback(
-    async (names: Array<string>) => {
-      if (mypageApi) {
-        for (const name of names) {
-          const MappedIds = await mypageApi.getAllLandIdbyMapId(0, 50, name);
-          const selectedProductIds = _.filter(checkBoxes, (checkbox) => checkbox.checkBoxState).map(
-            (checkbox) => checkbox.id,
-          );
-          console.log('MappedIds', MappedIds);
-          const mapAnalysisIds = selectedProductIds.map((productId) => MappedIds.get(productId));
-          return _.compact(mapAnalysisIds);
-        }
-      }
-    },
-    [checkBoxes, mypageApi],
-  );
 
   const handleServiceClick = useCallback(async () => {
     if (bankAccountName.length > 0) {
@@ -77,13 +68,9 @@ export const MapServiceModal: React.FC<MapModalProps> = ({ open, handleClose, se
         const uniqueNames = _.uniq(selectedNames);
         console.log(uniqueNames);
 
-        // 이름들 배열에 담아서 for loop돌며 그만큼 결과값 받아내기
-        const selectedMapIds = (await getAllLandIdByMapIdWithNames(uniqueNames)) as Array<string>;
-        console.log('result', selectedMapIds);
-
         // 신청 보내기
         const postData: ProductTransferReq = {
-          productIds: selectedMapIds,
+          productIds: selectedLotMapIds,
           bankAccountName: bankAccountName,
         };
 
@@ -94,7 +81,7 @@ export const MapServiceModal: React.FC<MapModalProps> = ({ open, handleClose, se
     } else {
       setIsWrittenColor('2px solid #dd5515');
     }
-  }, [bankAccountName, checkBoxes, getAllLandIdByMapIdWithNames, handleClose, paidLots, paymentApi, selectedLotCount]);
+  }, [bankAccountName, checkBoxes, handleClose, paidLots, paymentApi, selectedLotCount, selectedLotMapIds]);
 
   const Description = useMemo(
     () => (
@@ -106,10 +93,17 @@ export const MapServiceModal: React.FC<MapModalProps> = ({ open, handleClose, se
             현재 {<Typography sx={{ fontSize: 'inherit', color: 'red', marginLeft: '5px' }}>예상</Typography>}위치를
             알려드립니다.
           </MapModalContentFirstTypo>
+          <br />
+          <MapModalContentFirstTypo sx={{ textAlign: 'center', color: 'red' }}>
+            * 토지 예상 위치는 가입/로그인하신 이메일로 전송됩니다.
+          </MapModalContentFirstTypo>
+          <MapModalContentFirstTypo sx={{ textAlign: 'center', fontSize: '1.4rem' }}>
+            ** 가입하신 이메일: {userData.email}
+          </MapModalContentFirstTypo>
         </MapModalTitleContentWrapper>
       </Box>
     ),
-    [],
+    [userData.email],
   );
   return (
     <>
@@ -159,21 +153,6 @@ export const MapServiceModal: React.FC<MapModalProps> = ({ open, handleClose, se
                     {estimatedDay * selectedLotCount * 0.75} ~ {estimatedDay * selectedLotCount}일 소요
                   </Typography>
                 </Box>
-              </Box>
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  width: '100%',
-                  padding: '15px',
-                }}
-              >
-                <Typography sx={{ fontSize: '1.6rem' }}>전달 받을 메일</Typography>
-                <TextField
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-                  sx={{ border: isWrittenColor, width: '75%' }}
-                />
               </Box>
               <Box
                 sx={{

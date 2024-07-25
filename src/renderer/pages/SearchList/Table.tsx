@@ -126,30 +126,41 @@ export const SearchResultColmns = ({
       const selectedLot = lots.find((lot) => params.id === lot.id) as LotRowDatum;
       // eslint-disable-next-line react-hooks/rules-of-hooks
 
-      const MypageCheckbox = () => (
-        <TableEachChecbox
-          value=" "
-          disableRipple
-          checked={checkBoxes.find((check) => params.id === check.id)?.checkBoxState || false}
-          onChange={(e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            console.log(checkBoxes);
+      const MypageCheckbox = () =>
+        selectedLot?.mapAnalysisPurchaseStatus === 'NOT_PURCHASED' ? (
+          <TableEachChecbox
+            value=" "
+            disableRipple
+            checked={checkBoxes.find((check) => params.id === check.id)?.checkBoxState || false}
+            onChange={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              console.log(checkBoxes);
 
-            // 직접 체크박스 눌렀을 때 변경
-            setCheckBoxes(
-              checkBoxes.map((data) => {
-                return params.id === data.id
-                  ? {
-                      id: data.id,
-                      checkBoxState: !data.checkBoxState,
-                    }
-                  : data;
-              }),
-            );
-          }}
-        />
-      );
+              // 직접 체크박스 눌렀을 때 변경
+              setCheckBoxes(
+                checkBoxes.map((data) => {
+                  return params.id === data.id
+                    ? {
+                        id: data.id,
+                        checkBoxState: !data.checkBoxState,
+                      }
+                    : data;
+                }),
+              );
+            }}
+          />
+        ) : (
+          <Checkbox
+            disabled
+            sx={{
+              '& > svg': {
+                height: '1.5em',
+                width: '1.5em',
+              },
+            }}
+          />
+        );
 
       const SearchBoxCheckbox = () =>
         isUnpaid(selectedLot) && selectedLot.purchaseStatus === 'NOT_PURCHASED' ? (
