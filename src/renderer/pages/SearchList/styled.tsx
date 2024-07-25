@@ -99,7 +99,7 @@ export const TableHeaderColumnBox = styled(Box)((props: { backgroundColor: strin
 
 export const MobileContentWrapper = styled(Box)(() => ({
   width: '100vw',
-  height: '100vh',
+  height: 'calc(var(--vh, 1vh) * 100)',
   display: 'flex',
   flexDirection: 'column',
 }));

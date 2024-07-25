@@ -7,7 +7,7 @@ export const SearchButton = styled(Button)(({ theme }) => ({
   borderRadius: '50%',
   '& .mobile': {
     width: '8vw',
-    height: '6vh',
+    height: 'calc(var(--vh, 1vh) * 6)',
   },
   color: '#fff',
   '&:hover': {

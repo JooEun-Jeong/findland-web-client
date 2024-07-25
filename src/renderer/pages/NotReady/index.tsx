@@ -10,7 +10,7 @@ export const NotReady = () => {
       <Box
         sx={{
           width: '100vw',
-          height: '100vh',
+          height: 'calc(var(--vh, 1vh) * 100)',
         }}
       >
         <Box
@@ -20,7 +20,7 @@ export const NotReady = () => {
             justifyContent: 'center',
             flexDirection: 'column',
             alignItems: 'center',
-            paddingTop: '10vh',
+            paddingTop: '10%',
           }}
         >
           <img src={logoImg} width="15%" />

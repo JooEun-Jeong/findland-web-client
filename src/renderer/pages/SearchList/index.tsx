@@ -18,7 +18,7 @@ import { ErrorFallback, SearchButton, SearchTextField } from '@components';
 import { HeaderM, Loading, PaymentResult, PaymentResultMobile } from '@containers';
 import { LotRowData, LotRowDatum, ProductTransferReq } from '@interfaces';
 import { isMobileAtom } from '@states';
-import { lotsAtom, productCountAtomFamily } from '@states/user';
+import { lotsAtom } from '@states/user';
 
 import {
   MainBox,
@@ -222,11 +222,14 @@ export const Search: React.FC = () => {
 
   const GridRender = useMemo(() => {
     return isLoading ? (
-      <div style={{ height: '45vh', width: '100%', overflow: 'auto', padding: '2px' }}>
+      <div style={{ height: 'calc(var(--vh, 1vh) * 43)', width: '100%', overflow: 'auto', padding: '2px' }}>
         <Loading />
       </div>
     ) : (
-      <div ref={dataGridRef} style={{ height: '45vh', width: '100%', overflow: 'auto', padding: '2px' }}>
+      <div
+        ref={dataGridRef}
+        style={{ height: 'calc(var(--vh, 1vh) * 43)', width: '100%', overflow: 'auto', padding: '2px' }}
+      >
         <DataGrid
           columns={SearchResultColmns({
             rootCheckBox,
@@ -319,7 +322,7 @@ export const Search: React.FC = () => {
           </TableHeaderBox>
           <Box>{GridRender}</Box>
         </TableWrapperMobile>
-        <Box sx={{ padding: '3%', marginTop: '1%' }}>
+        <Box sx={{ padding: '3%' }}>
           <PaymentResultMobile lotCount={lotCount} handlePayment={handlePayment} />
           <FooterContacts />
         </Box>

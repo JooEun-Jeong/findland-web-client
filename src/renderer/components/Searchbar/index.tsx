@@ -13,7 +13,7 @@ export const SearchTextField = styled(TextField)(({ theme }) => {
   const isMobile = useRecoilValue(isMobileAtom);
   return {
     backgroundColor: 'transparent',
-    height: isMobile ? '5vh' : '45px',
+    height: isMobile ? 'calc(var(--vh, 1vh) * 5)' : '45px',
     width: isMobile || theme.breakpoints.down('sm') ? '95%' : '350px',
     '& > .MuiInputBase-root': {
       fontSize: isMobile ? '2rem' : '14px',

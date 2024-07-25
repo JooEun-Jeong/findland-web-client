@@ -5,7 +5,7 @@ import { Box, styled } from '@mui/material';
 const AccessDeniedWrapper = styled(Box)(() => ({
   display: 'flex',
   width: '100vw',
-  height: '100vh',
+  height: 'calc(var(--vh, 1vh) * 100)',
   alignItems: 'center',
   justifyContent: 'center',
   color: '#ff7777',

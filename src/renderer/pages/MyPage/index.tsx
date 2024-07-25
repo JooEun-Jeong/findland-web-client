@@ -202,11 +202,14 @@ export const MyPage = () => {
 
   const GridRender = useMemo(() => {
     return isLoading ? (
-      <div style={{ height: '60vh', width: '100%', overflow: 'auto', padding: '2px' }}>
+      <div style={{ height: 'calc(var(--vh, 1vh) * 60)', width: '100%', overflow: 'auto', padding: '2px' }}>
         <Loading />
       </div>
     ) : (
-      <div ref={dataGridRef} style={{ height: '60vh', width: '100%', overflow: 'auto', padding: '2px' }}>
+      <div
+        ref={dataGridRef}
+        style={{ height: 'calc(var(--vh, 1vh) * 60)', width: '100%', overflow: 'auto', padding: '2px' }}
+      >
         <DataGrid
           columns={SearchResultColmns({
             rootCheckBox,
@@ -295,7 +298,7 @@ export const MyPage = () => {
           </TableHeaderBox>
           {GridRender}
         </TableWrapperMobile>
-        <Box sx={{ padding: '3%', height: '10vh', display: 'flex', justifyContent: 'space-between' }}>
+        <Box sx={{ padding: '3%', height: '10%', display: 'flex', justifyContent: 'space-between' }}>
           <FindServiceButton onClick={handleOpen}>토지 현재 위치 확인하기</FindServiceButton>
           <FileDownloadButton onClick={handleDownloadClick}>
             <FileDownloadTypo>결제한 토지 정보</FileDownloadTypo>

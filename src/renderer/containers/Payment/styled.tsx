@@ -86,7 +86,7 @@ export const PayButtonM = styled(Button)(() => ({
   backgroundColor: '#ffbd59',
   color: '#000',
   borderRadius: '5px',
-  height: '5vh',
+  height: 'calc(var(--vh, 1vh) * 5)',
   width: '100%',
   padding: '3%',
   fontSize: '1.5rem',

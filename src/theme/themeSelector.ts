@@ -1,3 +1,4 @@
+// themeSelector.ts
 import TitleFont from '@assets/fonts/HakgyoansimSamulhamR.ttf';
 import ContentBoldFont from '@assets/fonts/KingSejongInstitute-Bold.ttf';
 import ContentFont from '@assets/fonts/KingSejongInstitute-Regular.ttf';
@@ -6,24 +7,27 @@ export const themeSelector = (mode: string) => ({
   components: {
     MuiCssBaseline: {
       styleOverrides: {
+        '#root': {
+          margin: '0',
+          width: '100%',
+          height: 'calc(var(--vh, 1vh) * 100)', // Use the --vh variable
+        },
         html: {
           margin: '0',
           position: 'relative',
           width: '100%',
-          height: '100%',
+          height: '100%', // Ensure html takes full height
         },
         body: {
+          margin: '0',
           width: '100%',
-          height: '100%',
+          height: '100%', // Ensure body takes full height
+          minHeight: 'calc(var(--vh, 1vh) * 100)', // Use the --vh variable
+          // touchAction: 'none',
+          // overflow: 'hidden',
         },
         img: {
           userSelect: 'none',
-        },
-        '#root': {
-          margin: '0',
-          width: '100%',
-          height: '100%',
-          // minWidth: 1920,
         },
         '.hide': {
           visibility: 'hidden',

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 
 import { CssBaseline } from '@mui/material';
 import { ThemeProvider, StyledEngineProvider, createTheme } from '@mui/material/styles';
@@ -21,10 +21,16 @@ import { SearchSwiper } from '../containers/SearchSwiper';
 const AppRenderer: React.FC = () => {
   const themeMode = useMemo(() => createTheme(themeSelector('light')), []);
 
-  useEffect(() => {
+  const setScreenSize = useCallback(() => {
     const vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`);
   }, []);
+
+  useEffect(() => {
+    setScreenSize();
+    window.addEventListener('resize', setScreenSize);
+    return () => window.removeEventListener('resize', setScreenSize);
+  }, [setScreenSize]);
 
   return (
     <StyledEngineProvider injectFirst>
