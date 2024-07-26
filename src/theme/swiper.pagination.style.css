@@ -8,9 +8,9 @@
   --swiper-pagination-fraction-color: inherit;
   --swiper-pagination-progressbar-bg-color: rgba(0,0,0,0.25);
   --swiper-pagination-progressbar-size: 20px;
-  --swiper-pagination-bullet-size: 20px;
-  --swiper-pagination-bullet-width: 20px;
-  --swiper-pagination-bullet-height: 20px;
+  --swiper-pagination-bullet-size: 10px;
+  --swiper-pagination-bullet-width: 10px;
+  --swiper-pagination-bullet-height: 10px;
   --swiper-pagination-bullet-border-radius: 50%;
   --swiper-pagination-bullet-inactive-color: #000;
   --swiper-pagination-bullet-inactive-opacity: 0.2;
@@ -72,8 +72,8 @@
   transform: scale(0.33);
 }
 .swiper-pagination-bullet {
-  width: var(--swiper-pagination-bullet-width, var(--swiper-pagination-bullet-size, 20px));
-  height: var(--swiper-pagination-bullet-height, var(--swiper-pagination-bullet-size, 20px));
+  width: var(--swiper-pagination-bullet-width, var(--swiper-pagination-bullet-size, 10px));
+  height: var(--swiper-pagination-bullet-height, var(--swiper-pagination-bullet-size, 10px));
   display: inline-block;
   border-radius: var(--swiper-pagination-bullet-border-radius, 50%);
   background: var(--swiper-pagination-bullet-inactive-color, #000);
