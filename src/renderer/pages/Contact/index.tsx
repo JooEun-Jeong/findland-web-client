@@ -21,7 +21,7 @@ export const Contact = () => {
       <Box>
         <Typography
           sx={{
-            fontSize: '2.2rem',
+            fontSize: '1rem',
             fontWeight: 700,
             marginTop: '30px',
             paddingTop: '30px',
@@ -47,9 +47,7 @@ export const Contact = () => {
           <img src={logoTypoImg} width="15%" />
         </Box>
         <Box sx={{ width: '100%' }}>
-          <Typography variant="h3" sx={{ margin: '15px' }}>
-            문의 창구
-          </Typography>
+          <Typography sx={{ margin: '15px 0', fontSize: '1rem', fontWeight: 700 }}>문의 창구</Typography>
           <FooterContacts />
         </Box>
         <Box>{FAQ}</Box>

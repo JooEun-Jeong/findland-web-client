@@ -31,11 +31,11 @@ export const SearchSwiper = () => {
     <>
       <SwiperContentBox>
         {props.titles.map((title, i) => (
-          <Typography key={`des-title-${i}`} sx={{ fontSize: '3rem', fontWeight: 600 }}>
+          <Typography key={`des-title-${i}`} sx={{ fontSize: '1rem', fontWeight: 600 }}>
             {title}
           </Typography>
         ))}
-        <Typography sx={{ fontSize: '1.8rem', fontWeight: 600 }}>{props.des}</Typography>
+        <Typography sx={{ fontSize: '0.6rem', fontWeight: 600 }}>{props.des}</Typography>
         <Loading />
       </SwiperContentBox>
     </>

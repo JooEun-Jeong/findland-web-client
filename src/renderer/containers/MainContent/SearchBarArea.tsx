@@ -59,7 +59,7 @@ export const SearchBarArea = () => {
           <SearchBarWrapper>
             <SearchField handleSubmit={handleSubmit} setText={setText} />
           </SearchBarWrapper>
-          <Box sx={{ width: '80%' }}>
+          <Box sx={{ width: '80%', overflow: 'auto' }}>
             <DesAccordion mainTitle="조상땅 찾는 방법" cons={FindMethods} more={openImageArea} />
           </Box>
         </SearchMainWrapper>

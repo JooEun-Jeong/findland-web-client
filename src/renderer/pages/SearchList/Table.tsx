@@ -105,8 +105,9 @@ export const SearchResultColmns = ({
     headerName: ' ',
     sortable: false,
     resizable: false,
-
     align: 'center',
+    headerClassName: 'checkbox-header',
+    cellClassName: 'checkbox-cell',
     headerAlign: 'center',
     renderHeader: () => (
       <TableRootChecbox
@@ -114,6 +115,13 @@ export const SearchResultColmns = ({
         value=" "
         // icon={<CheckBoxBlankIcon />}
         // checkedIcon={<CheckBoxIcon sx={{ color: '#ffbd59' }} />}
+        disabled={lots.every((lot) => {
+          if (isMypage) {
+            return lot?.mapAnalysisPurchaseStatus !== 'NOT_PURCHASED';
+          } else {
+            return lot.purchaseStatus !== 'NOT_PURCHASED';
+          }
+        })}
         checked={rootCheckBox}
         onClick={(e) => {
           e.stopPropagation();
@@ -155,8 +163,8 @@ export const SearchResultColmns = ({
             disabled
             sx={{
               '& > svg': {
-                height: '1.5em',
-                width: '1.5em',
+                height: '1rem',
+                width: '1rem',
               },
             }}
           />
@@ -193,8 +201,8 @@ export const SearchResultColmns = ({
             disabled
             sx={{
               '& > svg': {
-                height: '1.5em',
-                width: '1.5em',
+                height: '1rem',
+                width: '1rem',
               },
             }}
           />
@@ -208,6 +216,7 @@ export const SearchResultColmns = ({
     headerName: '매수 군',
     align: 'left',
     minWidth: 80,
+    sortable: false,
     flex: 0.2778,
   },
   {
@@ -216,6 +225,7 @@ export const SearchResultColmns = ({
     align: 'left',
     minWidth: 40,
     flex: 0.1111,
+    sortable: false,
     renderCell: (params: GridRenderCellParams) => {
       const id = params.row.id;
       const selectedLot = _.find(lots, (landowner) => landowner.id === id) as LotRowDatum;
@@ -228,6 +238,7 @@ export const SearchResultColmns = ({
     align: 'left',
     minWidth: 40,
     flex: 0.1111,
+    sortable: false,
     renderCell: (params: GridRenderCellParams) => {
       const id = params.row.id;
       const selectedLot = _.find(lots, (landowner) => landowner.id === id) as LotRowDatum;
@@ -241,6 +252,7 @@ export const SearchResultColmns = ({
     align: 'left',
     minWidth: 60,
     flex: 0.1667,
+    sortable: false,
     renderCell: (params: GridRenderCellParams) => {
       const id = params.row.id;
       const selectedLot = _.find(lots, (landowner) => landowner.id === id) as LotRowDatum;
@@ -254,6 +266,7 @@ export const SearchResultColmns = ({
     align: 'left',
     minWidth: 75,
     flex: 0.2083,
+    sortable: false,
     renderCell: (params: GridRenderCellParams) => {
       const id = params.row.id;
       const selectedLot = _.find(lots, (landowner) => landowner.id === id) as LotRowDatum;

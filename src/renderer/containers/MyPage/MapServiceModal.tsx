@@ -95,10 +95,10 @@ export const MapServiceModal: React.FC<MapModalProps> = ({
             알려드립니다.
           </MapModalContentFirstTypo>
           <br />
-          <MapModalContentFirstTypo sx={{ textAlign: 'center', color: 'red' }}>
+          <MapModalContentFirstTypo sx={{ textAlign: 'center', color: 'red', fontSize: '0.6rem' }}>
             * 토지 예상 위치는 가입/로그인하신 이메일로 전송됩니다.
           </MapModalContentFirstTypo>
-          <MapModalContentFirstTypo sx={{ textAlign: 'center', fontSize: '1.4rem' }}>
+          <MapModalContentFirstTypo sx={{ textAlign: 'center', fontSize: '0.6rem' }}>
             ** 가입하신 이메일: {userData.email}
           </MapModalContentFirstTypo>
         </MapModalTitleContentWrapper>
@@ -135,8 +135,8 @@ export const MapServiceModal: React.FC<MapModalProps> = ({
                     borderRight: '1px solid #B1B2B5',
                   }}
                 >
-                  <Typography sx={{ fontSize: '1.6rem' }}>상품 가격:</Typography>
-                  <Typography sx={{ fontSize: '1.6rem', marginRight: '10px' }}>
+                  <Typography sx={{ fontSize: '0.6rem' }}>상품 가격:</Typography>
+                  <Typography sx={{ fontSize: '0.6rem', marginRight: '10px' }}>
                     {cost * selectedLotCount}만 원
                   </Typography>
                 </Box>
@@ -146,11 +146,11 @@ export const MapServiceModal: React.FC<MapModalProps> = ({
                     justifyContent: 'space-between',
                     alignItems: 'center',
                     width: '50%',
-                    padding: '10px',
+                    // padding: 'px',
                   }}
                 >
-                  <Typography sx={{ fontSize: '1.6rem' }}>예상 시간:</Typography>
-                  <Typography sx={{ fontSize: '1.6rem' }}>
+                  <Typography sx={{ fontSize: '0.6rem' }}>예상 시간:</Typography>
+                  <Typography sx={{ fontSize: '0.6rem' }}>
                     {estimatedDay * selectedLotCount * 0.75} ~ {estimatedDay * selectedLotCount}일 소요
                   </Typography>
                 </Box>
@@ -161,13 +161,23 @@ export const MapServiceModal: React.FC<MapModalProps> = ({
                   justifyContent: 'space-between',
                   alignItems: 'center',
                   width: '100%',
-                  padding: '15px',
+                  padding: '5px',
                 }}
               >
-                <Typography sx={{ fontSize: '1.6rem' }}>입금자명</Typography>
+                <Typography sx={{ fontSize: '0.6rem' }}>입금자명</Typography>
                 <TextField
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBankAccountName(e.target.value)}
-                  sx={{ border: isWrittenColor, width: '75%' }}
+                  sx={{
+                    border: isWrittenColor,
+                    width: '75%',
+                    '& > input': {
+                      padding: '2px',
+                    },
+                    '& .MuiInputBase-input': {
+                      padding: '6px',
+                      fontSize: '0.7rem',
+                    },
+                  }}
                 />
               </Box>
             </MapModalCContentWrapper>

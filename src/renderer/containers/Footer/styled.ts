@@ -13,5 +13,5 @@ export const IconWrapper = styled(Box)(() => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  fontSize: '1.4rem',
+  fontSize: '0.6rem',
 }));

@@ -61,7 +61,7 @@ export const YellowButton = styled(Button)(() => ({
   borderRadius: 5,
   width: '30vw',
   height: '100%',
-  fontSize: '2rem',
+  fontSize: '0.8rem',
   fontWeight: 700,
   color: '#000',
   '&:hover': {

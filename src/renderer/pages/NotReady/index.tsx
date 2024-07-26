@@ -24,8 +24,8 @@ export const NotReady = () => {
           }}
         >
           <img src={logoImg} width="15%" />
-          <Typography sx={{ fontSize: '1.5rem' }}>PC버전은 준비 중입니다.</Typography>
-          <Typography sx={{ fontSize: '1.5rem' }}>모바일로 확인 부탁드립니다.</Typography>
+          <Typography sx={{ fontSize: '1rem' }}>PC버전은 준비 중입니다.</Typography>
+          <Typography sx={{ fontSize: '1rem' }}>모바일로 확인 부탁드립니다.</Typography>
         </Box>
       </Box>
     </>

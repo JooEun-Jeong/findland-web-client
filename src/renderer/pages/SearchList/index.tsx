@@ -2,7 +2,6 @@ import React, { useCallback, useMemo, useState, useEffect, useRef, RefObject } f
 
 import { useRecoilState, useRecoilValue } from 'recoil';
 
-import SearchIcon from '@mui/icons-material/Search';
 import { Box, Checkbox } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import _ from 'lodash';
@@ -14,7 +13,7 @@ import { UsePaymentApi } from '@apis/hooks/userPaymentApi';
 import { UseSearchApi } from '@apis/hooks/useSearchApi';
 import logoImg from '@assets/png/LogoImg.png';
 import logoTypoImg from '@assets/png/logoTypo.png';
-import { ErrorFallback, SearchButton, SearchTextField } from '@components';
+import { ErrorFallback, SearchButton, SearchIcon, SearchTextField } from '@components';
 import { HeaderM, Loading, PaymentResult, PaymentResultMobile } from '@containers';
 import { LotRowData, LotRowDatum, ProductTransferReq } from '@interfaces';
 import { isMobileAtom } from '@states';
@@ -35,6 +34,7 @@ import {
   HeaderWrapperM,
   NoRenderTitleTypo,
   NoRenderContentTypo,
+  DataGridStyled,
 } from './styled';
 import { SearchResultColmns, checkboxProps } from './Table';
 
@@ -222,15 +222,15 @@ export const Search: React.FC = () => {
 
   const GridRender = useMemo(() => {
     return isLoading ? (
-      <div style={{ height: 'calc(var(--vh, 1vh) * 43)', width: '100%', overflow: 'auto', padding: '2px' }}>
+      <div style={{ height: 'calc(var(--vh, 1vh) * 45)', width: '100%', overflow: 'auto', padding: '2px' }}>
         <Loading />
       </div>
     ) : (
       <div
         ref={dataGridRef}
-        style={{ height: 'calc(var(--vh, 1vh) * 43)', width: '100%', overflow: 'auto', padding: '2px' }}
+        style={{ height: 'calc(var(--vh, 1vh) * 45)', width: '100%', overflow: 'auto', padding: '2px' }}
       >
-        <DataGrid
+        <DataGridStyled
           columns={SearchResultColmns({
             rootCheckBox,
             setRootCheckBox,
@@ -242,7 +242,8 @@ export const Search: React.FC = () => {
             isMypage: false,
           })}
           rows={lots}
-          rowHeight={isMobile ? 50 : 30}
+          rowHeight={isMobile ? 25 : 30}
+          columnHeaderHeight={30}
           slots={{
             noRowsOverlay: NoRowRender,
             baseCheckbox: () => (
@@ -262,23 +263,17 @@ export const Search: React.FC = () => {
             }
           }}
           hideFooter
-          getRowId={getRowId}
+          // getRowId={getRowId}
+          sx={{
+            boxShadow: 3,
+          }}
           disableColumnMenu
           disableRowSelectionOnClick
           pageSizeOptions={[30]}
-          sx={{
-            backgroundColor: '#f7f7f7',
-            borderRadius: '5px',
-            '& .MuiDataGrid-row': {
-              '&.Mui-selected': {
-                backgroundColor: '#f6cc8d49',
-              },
-            },
-          }}
         />
       </div>
     );
-  }, [NoRowRender, checkBoxes, getRowId, isLoading, isMobile, lots, rootCheckBox, setLots]);
+  }, [NoRowRender, checkBoxes, isLoading, isMobile, lots, rootCheckBox, setLots]);
 
   return isMobile ? (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
@@ -305,7 +300,7 @@ export const Search: React.FC = () => {
                   marginLeft: '10px',
                 }}
               >
-                <SearchIcon sx={{ color: 'rgb(255, 140, 68)', height: '5vh', width: '5vw' }} />
+                <SearchIcon />
               </SearchButton>
             </SearchBox>
           </SearchBarWrapperMobile>

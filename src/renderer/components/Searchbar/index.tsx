@@ -2,12 +2,12 @@ import React from 'react';
 
 import { useRecoilValue } from 'recoil';
 
-import SearchIcon from '@mui/icons-material/Search';
 import { Box, styled, TextField } from '@mui/material';
 
 import { isMobileAtom } from '@states';
 
 import { SearchButton } from '../Button';
+import { SearchIcon } from '../Icons';
 
 export const SearchTextField = styled(TextField)(({ theme }) => {
   const isMobile = useRecoilValue(isMobileAtom);
@@ -16,7 +16,7 @@ export const SearchTextField = styled(TextField)(({ theme }) => {
     height: isMobile ? 'calc(var(--vh, 1vh) * 5)' : '45px',
     width: isMobile || theme.breakpoints.down('sm') ? '95%' : '350px',
     '& > .MuiInputBase-root': {
-      fontSize: isMobile ? '2rem' : '14px',
+      fontSize: isMobile ? '0.8rem' : '14px',
       lineHeight: '30px',
       height: '100%',
       color: '#000',
@@ -44,7 +44,7 @@ const SearchBox = styled(Box)(({ theme }) => {
     border: '1px solid rgb(255, 140, 68)',
     borderRadius: '5px',
     width: theme.breakpoints.down('sm') ? '80%' : '100%',
-    height: isMobile ? '20%' : 'auto',
+    height: isMobile ? 'calc(var(--vh, 1vh) * 7)' : 'auto',
     display: 'flex',
     alignItems: 'center',
     '&:focus': {
@@ -67,9 +67,7 @@ export const SearchField = (props: {
           sx={{ marginRight: '1px' }}
         />
         <SearchButton type="submit" onClick={props.handleSubmit}>
-          <SearchIcon
-            sx={{ height: isMobile ? '50px' : 'auto', width: isMobile ? '50px' : 'auto', color: 'rgb(255, 140, 68)' }}
-          />
+          <SearchIcon />
         </SearchButton>
       </SearchBox>
     </>

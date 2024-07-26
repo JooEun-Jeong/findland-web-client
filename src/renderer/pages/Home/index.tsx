@@ -44,6 +44,7 @@ export const Home: React.FC = () => {
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
+              overflow: 'auto',
             }}
           >
             <MainContent />

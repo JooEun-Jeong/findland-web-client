@@ -39,7 +39,7 @@ export const MapModalTitleWrapper = styled(Box)(() => ({
 }));
 
 export const MapModalTitleTypo = styled(Typography)(() => ({
-  fontSize: '2rem',
+  fontSize: '1rem',
   fontWeight: 600,
 }));
 
@@ -63,7 +63,7 @@ export const MapModalButtonWrapper = styled(Box)(() => ({
 }));
 
 export const MapModalContentFirstTypo = styled(Typography)(() => ({
-  fontSize: '1.8rem',
+  fontSize: '0.7rem',
 }));
 
 export const MapModalTitleContentWrapper = styled(Box)(() => ({

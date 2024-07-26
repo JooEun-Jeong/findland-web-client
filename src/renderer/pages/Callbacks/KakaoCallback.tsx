@@ -36,7 +36,7 @@ export const KakaoCallback: React.FC = () => {
   }, []);
 
   return (
-    <Box sx={{ fontSize: '3rem', height: 'calc(var(--vh, 1vh) * 100)', width: '100vw' }}>
+    <Box sx={{ fontSize: '1.5rem', height: 'calc(var(--vh, 1vh) * 100)', width: '100vw' }}>
       <LoadingPage />
     </Box>
   );

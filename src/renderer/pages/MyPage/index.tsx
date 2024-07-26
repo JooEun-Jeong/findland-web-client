@@ -3,18 +3,17 @@ import React, { useCallback, useEffect, useMemo, useRef, useState, RefObject } f
 import { useRecoilState, useRecoilValue } from 'recoil';
 
 import { Box, Checkbox } from '@mui/material';
-import { DataGrid, GridSearchIcon } from '@mui/x-data-grid';
 import _ from 'lodash';
 
 import { MapServiceModal } from '@/renderer/containers/MyPage';
 import { UseMypageApi } from '@apis/hooks/useMypageApi';
-import { UsePaymentApi } from '@apis/hooks/userPaymentApi';
 import logoImg from '@assets/png/LogoImg.png';
 import logoTypoImg from '@assets/png/logoTypo.png';
-import { SearchButton, SearchTextField } from '@components';
+import { SearchButton, SearchIcon, SearchTextField } from '@components';
 import { HeaderM, Loading } from '@containers';
-import { LotRowDatum, ProductTransferReq } from '@interfaces';
+import { LotRowDatum } from '@interfaces';
 import {
+  DataGridStyled,
   GrayBox,
   HeaderWrapperM,
   MobileContentWrapper,
@@ -202,15 +201,15 @@ export const MyPage = () => {
 
   const GridRender = useMemo(() => {
     return isLoading ? (
-      <div style={{ height: 'calc(var(--vh, 1vh) * 60)', width: '100%', overflow: 'auto', padding: '2px' }}>
+      <div style={{ height: 'calc(var(--vh, 1vh) * 57)', width: '100%', overflow: 'auto', padding: '2px' }}>
         <Loading />
       </div>
     ) : (
       <div
         ref={dataGridRef}
-        style={{ height: 'calc(var(--vh, 1vh) * 60)', width: '100%', overflow: 'auto', padding: '2px' }}
+        style={{ height: 'calc(var(--vh, 1vh) * 57)', width: '100%', overflow: 'auto', padding: '2px' }}
       >
-        <DataGrid
+        <DataGridStyled
           columns={SearchResultColmns({
             rootCheckBox,
             setRootCheckBox,
@@ -222,7 +221,8 @@ export const MyPage = () => {
             isMypage: true,
           })}
           rows={paidLots}
-          rowHeight={isMobile ? 50 : 30}
+          rowHeight={isMobile ? 25 : 30}
+          columnHeaderHeight={30}
           slots={{
             noRowsOverlay: NoRowRender,
             baseCheckbox: () => (
@@ -237,27 +237,14 @@ export const MyPage = () => {
             ),
           }}
           hideFooter
-          getRowId={getRowId}
+          // getRowId={getRowId}
           disableColumnMenu
           disableRowSelectionOnClick
           pageSizeOptions={[50]}
-          sx={{
-            backgroundColor: '#f7f7f7',
-            borderRadius: '5px',
-            '& .MuiDataGrid-row': {
-              overflow: 'scroll',
-              '&.Mui-selected': {
-                backgroundColor: '#f6cc8d49',
-              },
-            },
-            '& .MuiDataGrid-row:not(.MuiDataGrid-row--dynamicHeight)>.MuiDataGrid-cell': {
-              overflowX: 'scroll',
-            },
-          }}
         />
       </div>
     );
-  }, [NoRowRender, checkBoxes, getRowId, isLoading, isMobile, paidLots, rootCheckBox, setLotCount, setPaidLots]);
+  }, [NoRowRender, checkBoxes, isLoading, isMobile, paidLots, rootCheckBox, setLotCount, setPaidLots]);
 
   return isMobile ? (
     <>
@@ -281,7 +268,7 @@ export const MyPage = () => {
                   marginLeft: '10px',
                 }}
               >
-                <GridSearchIcon sx={{ color: 'rgb(255, 140, 68)', height: '5vh', width: '5vw' }} />
+                <SearchIcon />
               </SearchButton>
             </SearchBox>
           </SearchBarWrapperMobile>

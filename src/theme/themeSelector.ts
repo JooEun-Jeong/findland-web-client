@@ -42,14 +42,14 @@ export const themeSelector = (mode: string) => ({
           fontFamily: 'ConFont',
           fontStyle: 'normal',
           fontWeight: 'normal',
-          fontSize: '1.6rem',
+          fontSize: '1rem',
           src: `url(${ContentFont}) format('truetype')`,
         },
         h3: {
           fontFamily: 'ConFont',
           fontStyle: 'normal',
           fontWeight: 'bold',
-          fontSize: '1.8rem',
+          fontSize: '1rem',
           src: `url(${TitleFont}) format('truetype')`,
         },
         fallbacks: [

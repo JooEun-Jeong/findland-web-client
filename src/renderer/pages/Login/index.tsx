@@ -54,7 +54,7 @@ export const Login = () => {
     <>
       <SwiperContentBox>
         {props.titles.map((title, i) => (
-          <Typography key={`des-title-${i}`} sx={{ fontSize: '3rem', fontWeight: 700 }}>
+          <Typography key={`des-title-${i}`} sx={{ fontSize: '1.2rem', fontWeight: 700 }}>
             {title}
           </Typography>
         ))}

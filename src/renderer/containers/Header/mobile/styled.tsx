@@ -35,7 +35,7 @@ export const IconButton = styled(Button)((props: { isMobile: boolean }) => ({
   flexDirection: 'column',
   alignItems: 'center',
   color: 'black',
-  fontSize: props.isMobile ? '1.6rem' : '1rem',
+  fontSize: props.isMobile ? '0.7rem' : '1rem',
 }));
 
 export const HeaderWrapper = styled(Box)(() => ({

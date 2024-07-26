@@ -13,7 +13,7 @@ const LoadingWrapper = styled(Box)(() => ({
 export const Loading: React.FC = () => {
   return (
     <LoadingWrapper>
-      <CircularProgress size={90} thickness={4} disableShrink />
+      <CircularProgress size={40} thickness={3} disableShrink />
     </LoadingWrapper>
   );
 };

@@ -95,12 +95,12 @@ export const PaymentInpuptModal = (props: {
         >
           <ModalContentBox>
             <ModalTitleBox>
-              <Typography sx={{ fontSize: '2rem', fontWeight: 600 }}>결제 정보 입력하기</Typography>
+              <Typography sx={{ fontSize: '1rem', fontWeight: 600 }}>결제 정보 입력하기</Typography>
             </ModalTitleBox>
 
             <ModalDesBox>{Description}</ModalDesBox>
             <Box sx={{ margin: '2% 0' }} />
-            <Typography sx={{ fontSize: '1.6rem' }}>
+            <Typography sx={{ fontSize: '0.7rem' }}>
               위에 작성된 내용이 맞는지 확인해주시고, 계좌에 입금할 분의 이름을 작성해주세요. 그 후, 아래 계좌에 입금
               부탁드립니다.
             </Typography>
@@ -108,11 +108,21 @@ export const PaymentInpuptModal = (props: {
               입금자 성함:
               <TextField
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBankAccountName(e.target.value)}
-                sx={{ border: isWrittenColor, width: '80%' }}
+                sx={{
+                  border: isWrittenColor,
+                  width: '80%',
+                  '& > input': {
+                    padding: '2px',
+                  },
+                  '& .MuiInputBase-input': {
+                    padding: '6px',
+                    fontSize: '0.7rem',
+                  },
+                }}
               />
             </BankAccountBox>
             <BankDesBox>
-              <Typography sx={{ fontWeight: 700, fontSize: '1.5rem' }}>계좌번호</Typography>
+              <Typography sx={{ fontWeight: 700, fontSize: '0.7rem' }}>계좌번호</Typography>
               <CopyToClipboard text="우리은행 1005804492395" onCopy={() => alert('계좌번호를 복사했습니다.')}>
                 <BankTypo>
                   <CopyIcon sx={{ marginRight: '20px', width: '5%', height: '5%' }} />

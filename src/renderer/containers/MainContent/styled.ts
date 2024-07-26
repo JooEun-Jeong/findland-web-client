@@ -54,12 +54,13 @@ export const SearchMainWrapper = styled(Box)(({ theme }) => ({
   justifyContent: 'flex-start',
   marginBottom: '20px',
   flexDirection: 'column',
+  overflow: 'auto',
 }));
 
 export const SearchTitleTypo = styled(Typography)(({ theme }) => {
   const isMobile = useRecoilValue(isMobileAtom);
   return {
-    fontSize: isMobile ? '3.5rem' : theme.breakpoints.down('sm') ? '1.6rem' : 36,
+    fontSize: isMobile ? '1.4rem' : theme.breakpoints.down('sm') ? '1.4rem' : 36,
   };
 });
 
@@ -70,7 +71,7 @@ export const OpenImageWrapper = styled(Box)(({ theme }) => {
     marginTop: '10px',
     height: '10%',
     '& .content': {
-      fontSize: isMobile ? '1.5rem' : 12,
+      fontSize: isMobile ? '0.6rem' : 12,
       display: 'flex',
       alignItems: 'center',
     },
@@ -94,7 +95,6 @@ export const AdvertiseMentWrapper = styled(Box)(() => ({
 
 export const MainContentWrapper = styled(Box)(() => ({
   width: '100vw',
-  height: '80%',
   '&.mainGrid': {
     padding: '25px',
     width: '100%',
@@ -112,16 +112,19 @@ export const AccordionWrapper = styled(Box)(({ theme }) => {
   const isMobile = useRecoilValue(isMobileAtom);
   return {
     width: theme.breakpoints.down('sm') ? '100%' : 522,
+    '& .MuiButtonBase-root': {
+      height: '7vh',
+    },
     '& .mainTitle': {
       fontWeight: 700,
-      fontSize: isMobile ? '1.7rem' : '1rem',
+      fontSize: isMobile ? '0.7rem' : '1rem',
     },
     '& .methodTitle': {
-      fontSize: isMobile ? '1.5rem' : '0.7rem',
+      fontSize: isMobile ? '0.6rem' : '0.7rem',
       fontWeight: 'bold',
     },
     '& .methodContent': {
-      fontSize: isMobile ? '1.5rem' : '0.7rem',
+      fontSize: isMobile ? '0.6rem' : '0.7rem',
     },
   };
 });

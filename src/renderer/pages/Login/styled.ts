@@ -39,7 +39,7 @@ export const LoginButton = styled(Button)(() => ({
   color: '#000',
   width: '60%',
   padding: '3%',
-  fontSize: '1.8rem',
+  fontSize: '0.8rem',
   fontWeight: 'bold',
   borderRadius: 5,
   '&:hover': {
