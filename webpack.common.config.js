@@ -37,10 +37,10 @@ module.exports = {
         test: /\.js$/,
         use: ['source-map-loader'],
       },
-      // {
-      //   test: /\.css$/i,
-      //   use: ['style-loader', 'css-loader'],
-      // },
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+      },
       {
         test: /\.(woff|woff2|ttf|eot)$/i,
         use: ['file-loader'],

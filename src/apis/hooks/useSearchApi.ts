@@ -1,18 +1,14 @@
 import { useMemo } from 'react';
 
-import { useSetRecoilState } from 'recoil';
-
 import api from '@apis';
-import { LotRowData, Lots } from '@interfaces/apis';
-import { lotsAtom } from '@states/user';
+import { LotRowData, SearchLotRes } from '@interfaces/apis';
 import { makeLandowenersRow } from '@utils';
 
 type UseSearchApi = {
-  getLandOwners: (name: string) => void;
+  getLandOwners: (name: string) => Promise<LotRowData>;
 } | null;
 
 export const UseSearchApi = (): UseSearchApi => {
-  const setLots = useSetRecoilState(lotsAtom);
   const instance = useMemo(() => {
     if (api) {
       return {
@@ -20,9 +16,12 @@ export const UseSearchApi = (): UseSearchApi => {
           try {
             const landOwners: LotRowData = await api()
               .search.getLandOwners(name)
-              .then((lots) => makeLandowenersRow(lots));
-            setLots(landOwners);
-            return;
+              .then((res) => {
+                console.log('Here are data: ', res.data);
+                return makeLandowenersRow(res.data.products);
+              });
+
+            return landOwners;
           } catch (e) {
             console.error('Error: get land owners data', e);
             return [];

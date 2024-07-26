@@ -1,16 +1,21 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import { useRecoilValue } from 'recoil';
 
 import { Box, useMediaQuery, useTheme } from '@mui/material';
+import { ErrorBoundary } from 'react-error-boundary';
 
 import { MainContent } from '@/renderer/containers/MainContent';
+import { SearchSwiper } from '@/renderer/containers/SearchSwiper';
+import { ErrorFallback } from '@components';
 import { Footer, HeaderM, HeaderW } from '@containers';
-import { isMobileAtom } from '@states';
+import { isMobileAtom, isSearchingAtom } from '@states';
 
 export const Home: React.FC = () => {
   const theme = useTheme();
   const isMobile = useRecoilValue(isMobileAtom);
+
+  const isSearching = useRecoilValue(isSearchingAtom);
 
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -27,21 +32,32 @@ export const Home: React.FC = () => {
 
   const MobileUI = useMemo(
     () => (
-      <Box
-        sx={{
-          width: '100vw',
-          height: '100vh',
-          // padding: '10% 0 5% 0',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-        }}
-      >
-        <MainContent />
-        <HeaderM />
-      </Box>
+      <>
+        {isSearching ? (
+          <SearchSwiper />
+        ) : (
+          <Box
+            sx={{
+              width: '100vw',
+              height: '100vh',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+            }}
+          >
+            <MainContent />
+            <HeaderM />
+          </Box>
+        )}
+      </>
     ),
-    [],
+    [isSearching],
   );
-  return <React.Fragment>{isSmallScreen || isMobile ? MobileUI : DesktopUI}</React.Fragment>;
+  return (
+    <React.Fragment>
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        {isSmallScreen || isMobile ? MobileUI : DesktopUI}
+      </ErrorBoundary>
+    </React.Fragment>
+  );
 };

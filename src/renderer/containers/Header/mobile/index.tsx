@@ -15,14 +15,16 @@ export const HeaderM = () => {
     navigate(`/`);
   }, [navigate]);
 
-  const goMyPage = useCallback(() => {}, []);
+  const goMyPage = useCallback(() => {
+    navigate(`/myPage`);
+  }, [navigate]);
   return (
     <>
       <HeaderWrapper>
         <IconButton isMobile={isMobile} onClick={goHome}>
           <HomeIcon />홈
         </IconButton>
-        <IconButton isMobile={isMobile}>
+        <IconButton isMobile={isMobile} onClick={goMyPage}>
           <UserIcon />
           마이페이지
         </IconButton>

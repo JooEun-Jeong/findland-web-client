@@ -18,7 +18,7 @@ export interface ResultRow {
   id: number;
 }
 
-export const ResultColumn: GridColDef[] = [
+export const ProductSelectedColmns: GridColDef[] = [
   {
     field: 'count',
     headerName: ' ',

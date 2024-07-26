@@ -10,3 +10,8 @@ export const keywordAtom = atom<keyword>({
   key: 'keywordAtom',
   default: { keyword: '' },
 });
+
+export const isSearchingAtom = atom<boolean>({
+  key: 'isSearchingAtom',
+  default: false,
+});

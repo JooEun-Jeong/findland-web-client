@@ -1,4 +1,4 @@
-import { styled, Box } from '@mui/material';
+import { styled, Box, Checkbox, Typography } from '@mui/material';
 
 export const SearchBarWrapper = styled(Box)(() => ({
   display: 'flex',
@@ -49,7 +49,7 @@ export const SearchBarWrapperMobile = styled(Box)(() => ({
 export const TableWrapperMobile = styled(Box)(() => ({
   display: 'flex',
   flexDirection: 'column',
-  height: '75%',
+  height: '75vh',
   width: '100%',
   '& .MuiDataGrid-columnHeaders': {
     height: 'auto',
@@ -108,8 +108,9 @@ export const NoRenderBox = styled(Box)(() => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  color: 'rgba(255, 255, 255, 0.5)',
-  fontSize: '14px',
+  backgroundColor: 'white',
+  color: 'rgba(0, 0, 0, 0.6)',
+  fontSize: '1.8rem',
   width: '100%',
   height: '100%',
 }));
@@ -126,4 +127,59 @@ export const AccountBox = styled(Box)(() => ({
 export const HeaderWrapperM = styled(Box)(() => ({
   position: 'sticky',
   borderTop: '1px solid #BBB',
+}));
+
+export const TableRootChecbox = styled(Checkbox)(() => ({
+  color: '#ffbd59',
+  height: '100%',
+  '&.Mui-checked': {
+    color: '#ffbd59',
+    transition: 'fill 0.3s',
+  },
+  '&.Mui-disabled': {
+    color: 'gray',
+    '& > svg': {
+      height: '1.5em',
+      width: '1.5em',
+    },
+  },
+  '& > svg': {
+    height: '1.5em',
+    width: '1.5em',
+    transition: 'fill 0.3s',
+  },
+}));
+
+export const TableEachChecbox = styled(Checkbox)(() => ({
+  height: '1.5em',
+  width: '1.5em',
+  color: '#ffbd59',
+  '&.Mui-checked': {
+    color: 'rgba(255, 140, 68, 0.598)',
+    transition: 'fill 0.3s',
+  },
+  '& .Mui-disabled': {
+    backgroundColor: 'gray',
+    '& .MuiSvgIcon-root': {
+      height: '1.5em',
+      width: '1.5em',
+    },
+    height: '1.5em',
+    width: '1.5em',
+  },
+  '& .MuiSvgIcon-root': {
+    height: '1.5em',
+    width: '1.5em',
+  },
+}));
+
+export const NoRenderTitleTypo = styled(Typography)(() => ({
+  color: 'rgba(0, 0, 0, 0.6)',
+  fontSize: '1.8rem',
+  fontWeight: 600,
+}));
+
+export const NoRenderContentTypo = styled(Typography)(() => ({
+  color: 'rgba(0, 0, 0, 0.6)',
+  fontSize: '1.8rem',
 }));

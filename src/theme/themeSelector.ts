@@ -38,6 +38,7 @@ export const themeSelector = (mode: string) => ({
           fontFamily: 'ConFont',
           fontStyle: 'normal',
           fontWeight: 'normal',
+          fontSize: '1rem',
           src: `url(${ContentFont}) format('truetype')`,
         },
         // h2: {

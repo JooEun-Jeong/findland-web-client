@@ -1,9 +1,10 @@
+import { AxiosResponse } from 'axios';
+
 import { axiosCreateInstance } from '@apis/defaultSetting';
-import { TmpResult } from '@constants';
-import { AxiosHeaderOptions, Lots } from '@interfaces/apis';
+import { AxiosHeaderOptions, SearchLotRes } from '@interfaces/apis';
 
 export interface AxiosSearchReturn {
-  getLandOwners: (name: string) => Promise<Lots>;
+  getLandOwners: (name: string) => Promise<AxiosResponse<SearchLotRes>>;
 }
 
 export const axiosSearch = (opt: AxiosHeaderOptions): AxiosSearchReturn => {
@@ -11,9 +12,8 @@ export const axiosSearch = (opt: AxiosHeaderOptions): AxiosSearchReturn => {
   const instance = axiosCreateInstance({ headers });
   return {
     getLandOwners: async (name: string) => {
-      const url = `search/${name}`;
-      // return instance.get(url);
-      return TmpResult;
+      const url = `/api/v1/product/landRegistry/findAllByName/${name}`;
+      return instance.get<SearchLotRes>(url);
     },
   };
 };

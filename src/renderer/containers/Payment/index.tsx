@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 
 import { LotRowData } from '@interfaces';
@@ -19,7 +19,7 @@ import {
   TotalPriceBoxM,
   PriceTypoM,
 } from './styled';
-import { ResultColumn, ResultRow } from './TableInterface';
+import { ProductSelectedColmns, ResultRow } from './TableInterface';
 
 export const PaymentResult: React.FC = () => {
   const [cNameCount, setCNameCount] = useRecoilState(productCountAtomFamily('lotCount'));
@@ -78,7 +78,7 @@ export const PaymentResult: React.FC = () => {
         <Box sx={{ padding: '5px' }}>
           <DataGrid
             rows={selectedProductNumbers}
-            columns={ResultColumn}
+            columns={ProductSelectedColmns}
             hideFooter
             disableColumnMenu
             disableColumnFilter

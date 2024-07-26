@@ -6,17 +6,18 @@ import SearchIcon from '@mui/icons-material/Search';
 import { Box, Checkbox, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import _ from 'lodash';
+import { ErrorBoundary } from 'react-error-boundary';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { UseSearchApi } from '@apis/hooks/useSearchApi';
 import logoImg from '@assets/png/logoImg.png';
 import logoTypoImg from '@assets/png/logoTypo.png';
-import { SearchButton, SearchTextField } from '@components';
+import { ErrorFallback, SearchButton, SearchTextField } from '@components';
 import { HeaderM, PaymentResult, PaymentResultMobile } from '@containers';
 import { LotRowData, LotRowDatum } from '@interfaces';
 import { isMobileAtom } from '@states';
 import { lotsAtom } from '@states/user';
-import { doesNullExist } from '@utils';
+import { isUnpaid } from '@utils';
 
 import {
   MainBox,
@@ -32,8 +33,10 @@ import {
   NoRenderBox,
   AccountBox,
   HeaderWrapperM,
+  NoRenderTitleTypo,
+  NoRenderContentTypo,
 } from './styled';
-import { ResultColumn, checkboxProps } from './Table';
+import { SearchResultColmns, checkboxProps } from './Table';
 
 export interface countProps {
   idx: number;
@@ -50,32 +53,14 @@ export const Search: React.FC = () => {
   const { name } = useParams();
   const [keyword, setKeyword] = useState(name || '정재형');
 
-  // console.log('name: ' + name);
-
   const [lots, setLots] = useRecoilState<LotRowData>(lotsAtom);
-
-  // const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
-
-  // selectionModel:: number[]. shows only selected one.
-  // const handleSelectionModelChange = useCallback(
-  //   (selectionModel: any) => {
-  //     console.log('selectionModel', selectionModel);
-  //     console.log('selectedRowIds', selectedRowIds);
-  //     const findRow = _.find(selectedRowIds, (id) => id === selectionModel[0]);
-
-  //     findRow
-  //       ? setSelectedRowIds(selectedRowIds.filter((id) => id === selectionModel[0]))
-  //       : setSelectedRowIds([...selectedRowIds, ...selectionModel]);
-  //   },
-  //   [selectedRowIds],
-  // );
 
   const [rootCheckBox, setRootCheckBox] = useState<boolean>(false);
   const [checkBoxes, setCheckBoxes] = useState<Array<checkboxProps>>(
     lots.map((item) => {
       return {
         id: item.id,
-        checkBoxState: !doesNullExist(item) ? true : false,
+        checkBoxState: item.isSelected,
       };
     }),
   );
@@ -84,7 +69,7 @@ export const Search: React.FC = () => {
     const newCheckBoxState = lots.map((item) => {
       return {
         id: item.id,
-        checkBoxState: !doesNullExist(item) ? true : false,
+        checkBoxState: item.isSelected,
       };
     }) as Array<checkboxProps>;
     setCheckBoxes(newCheckBoxState);
@@ -138,28 +123,39 @@ export const Search: React.FC = () => {
 
   const getResult = useCallback(async () => {
     if (searchApi) {
-      searchApi.getLandOwners(keyword);
+      const landOwners: LotRowData = await searchApi.getLandOwners(keyword);
+      console.log('this is landOwners', landOwners);
+      setLots(landOwners);
     } else {
       setLots([]);
     }
   }, [keyword, searchApi, setLots]);
 
-  const getRowId = (data: LotRowDatum) => data.id;
+  const getRowId = useCallback((data: LotRowDatum) => data.id, []);
 
   const NoRowRender = useCallback(() => {
-    return <NoRenderBox>No Results</NoRenderBox>;
+    return (
+      <NoRenderBox sx={{ flexDirection: 'column' }}>
+        <NoRenderTitleTypo sx={{ marginBottom: '5%' }}>검색된 결과가 없습니다.</NoRenderTitleTypo>
+        <NoRenderTitleTypo>1. 한자 성함이 여러 발음일 수 있습니다.</NoRenderTitleTypo>
+        <NoRenderContentTypo sx={{ marginBottom: '5%' }}>{`예시) 灐 = 박진형 = 박진영`}</NoRenderContentTypo>
+        <NoRenderTitleTypo>2. 친가 외가 모두 검색해 보셨나요?</NoRenderTitleTypo>
+        <NoRenderContentTypo>{`1910년대에 살아계셨던 친척들을 확인해보세요`}</NoRenderContentTypo>
+      </NoRenderBox>
+    );
   }, []);
 
   const GridRender = useMemo(() => {
     return (
       <DataGrid
-        columns={ResultColumn({
+        columns={SearchResultColmns({
           rootCheckBox,
           setRootCheckBox,
           checkBoxes,
           setCheckBoxes,
           lots,
           setLots,
+          isMypage: false,
         })}
         rows={lots}
         rowHeight={isMobile ? 50 : 30}
@@ -176,8 +172,6 @@ export const Search: React.FC = () => {
             />
           ),
         }}
-        // rowSelectionModel={selectedRowIds}
-        // onRowSelectionModelChange={handleSelectionModelChange}
         hideFooter
         getRowId={getRowId}
         disableColumnMenu
@@ -193,10 +187,10 @@ export const Search: React.FC = () => {
         }}
       />
     );
-  }, [NoRowRender, checkBoxes, isMobile, lots, rootCheckBox, setLots]);
+  }, [NoRowRender, checkBoxes, getRowId, isMobile, lots, rootCheckBox, setLots]);
 
   return isMobile ? (
-    <>
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
       <MobileContentWrapper>
         <Box sx={{ padding: '5% 3% 0 3%' }}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -248,9 +242,9 @@ export const Search: React.FC = () => {
           <HeaderM />
         </HeaderWrapperM>
       </MobileContentWrapper>
-    </>
+    </ErrorBoundary>
   ) : (
-    <>
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
       <MainBox>
         <SearchBarWrapper>
           <SearchBox>
@@ -280,6 +274,6 @@ export const Search: React.FC = () => {
           </PaymentBox>
         </Box>
       </MainBox>
-    </>
+    </ErrorBoundary>
   );
 };
