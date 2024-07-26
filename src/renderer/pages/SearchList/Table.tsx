@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { MouseEventHandler } from 'react';
 
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
@@ -15,6 +15,7 @@ import { TableEachChecbox, TableRootChecbox } from './styled';
 export type checkboxProps = {
   id: string;
   checkBoxState: boolean;
+  purchaseStatus: string; // PENDING, NOT_PURCHASED, PURCHASED
 };
 
 interface ColumnProps {
@@ -109,106 +110,69 @@ export const SearchResultColmns = ({
     headerClassName: 'checkbox-header',
     cellClassName: 'checkbox-cell',
     headerAlign: 'center',
-    renderHeader: () => (
-      <TableRootChecbox
-        disableRipple
-        value=" "
-        // icon={<CheckBoxBlankIcon />}
-        // checkedIcon={<CheckBoxIcon sx={{ color: '#ffbd59' }} />}
-        disabled={lots.every((lot) => {
-          if (isMypage) {
-            return lot?.mapAnalysisPurchaseStatus !== 'NOT_PURCHASED';
-          } else {
-            return lot.purchaseStatus !== 'NOT_PURCHASED';
-          }
-        })}
-        checked={rootCheckBox}
-        onClick={(e) => {
-          e.stopPropagation();
-          setRootCheckBox(!rootCheckBox);
-          !rootCheckBox ? setLotCount(checkBoxes.length) : setLotCount(0);
-        }}
-      />
-    ),
+    renderHeader: () => {
+      const allDisabled = lots.every((lot) =>
+        isMypage ? !_.isUndefined(lot.mapAnalysisPurchaseStatus) : lot.purchaseStatus !== 'NOT_PURCHASED',
+      );
+
+      const handleRootCheckBoxClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.stopPropagation();
+        const newState = !rootCheckBox;
+        setRootCheckBox(newState);
+        const filteredBoxes = checkBoxes.filter(
+          (box) => box.purchaseStatus === 'NOT_PURCHASED' || _.isUndefined(box.purchaseStatus),
+        );
+        setLotCount(newState ? filteredBoxes.length : 0);
+      };
+
+      return (
+        <TableRootChecbox
+          disableRipple
+          value=" "
+          disabled={allDisabled}
+          checked={rootCheckBox}
+          onClick={handleRootCheckBoxClick}
+        />
+      );
+    },
     renderCell: (params: GridRenderCellParams) => {
       const selectedLot = lots.find((lot) => params.id === lot.id) as LotRowDatum;
-      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const checkboxState = checkBoxes.find((check) => params.id === check.id)?.checkBoxState || false;
 
-      const MypageCheckbox = () =>
-        selectedLot?.mapAnalysisPurchaseStatus === 'NOT_PURCHASED' ? (
-          <TableEachChecbox
-            value=" "
-            disableRipple
-            checked={checkBoxes.find((check) => params.id === check.id)?.checkBoxState || false}
-            onChange={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              console.log(checkBoxes);
-
-              // 직접 체크박스 눌렀을 때 변경
-              setCheckBoxes(
-                checkBoxes.map((data) => {
-                  return params.id === data.id
-                    ? {
-                        id: data.id,
-                        checkBoxState: !data.checkBoxState,
-                      }
-                    : data;
-                }),
-              );
-            }}
-          />
-        ) : (
-          <Checkbox
-            disabled
-            sx={{
-              '& > svg': {
-                height: '1rem',
-                width: '1rem',
-              },
-            }}
-          />
+      const handleCheckBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        e.stopPropagation();
+        e.preventDefault();
+        setCheckBoxes((prevCheckBoxes) =>
+          prevCheckBoxes.map((data) => {
+            if (params.id === data.id) {
+              setLotCount((prev) => (checkboxState ? prev - 1 : prev + 1));
+              return { ...data, checkBoxState: !data.checkBoxState };
+            }
+            return data;
+          }),
         );
+      };
 
-      const SearchBoxCheckbox = () =>
-        isUnpaid(selectedLot) && selectedLot.purchaseStatus === 'NOT_PURCHASED' ? (
-          <TableEachChecbox
-            value=" "
-            disableRipple
-            disabled={!isUnpaid(selectedLot)}
-            checked={checkBoxes.find((check) => params.id === check.id)?.checkBoxState || false}
-            onChange={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              console.log(checkBoxes);
-              const checkBoxState = checkBoxes.find((check) => params.id === check.id)?.checkBoxState;
-              console.log('checkbox', checkBoxState);
+      const isDisabled = isMypage
+        ? !(
+            selectedLot?.mapAnalysisPurchaseStatus === 'NOT_PURCHASED' ||
+            _.isUndefined(selectedLot.mapAnalysisPurchaseStatus)
+          )
+        : !(isUnpaid(selectedLot) && selectedLot.purchaseStatus === 'NOT_PURCHASED');
 
-              setCheckBoxes((prevCheckBoxes) => {
-                const updatedCheckBoxes = prevCheckBoxes.map((data) => {
-                  if (params.id === data.id) {
-                    checkBoxState ? setLotCount((prev) => prev - 1) : setLotCount((prev) => prev + 1);
-                    return { id: data.id, checkBoxState: !data.checkBoxState };
-                  }
-                  return data;
-                });
-                return updatedCheckBoxes;
-              });
-            }}
-          />
-        ) : (
-          <Checkbox
-            disabled
-            sx={{
-              '& > svg': {
-                height: '1rem',
-                width: '1rem',
-              },
-            }}
-          />
-        );
-
-      return isMypage ? <MypageCheckbox /> : <SearchBoxCheckbox />;
+      return isDisabled ? (
+        <Checkbox
+          disabled
+          sx={{
+            '& > svg': {
+              height: '1rem',
+              width: '1rem',
+            },
+          }}
+        />
+      ) : (
+        <TableEachChecbox value=" " disableRipple checked={checkboxState} onChange={handleCheckBoxChange} />
+      );
     },
   },
   {

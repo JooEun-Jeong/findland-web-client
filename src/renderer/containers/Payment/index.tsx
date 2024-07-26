@@ -134,9 +134,10 @@ export const PaymentResult: React.FC = () => {
 interface PayResultProps {
   handlePayment: (bankAccountName: string) => void;
   lotCount: number;
+  setLotCount: React.Dispatch<React.SetStateAction<number>>;
 }
 
-export const PaymentResultMobile: React.FC<PayResultProps> = ({ handlePayment, lotCount }) => {
+export const PaymentResultMobile: React.FC<PayResultProps> = ({ handlePayment, lotCount, setLotCount }) => {
   const [totalCost, setTotalCost] = useState<number>(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const price = 20000;
@@ -149,7 +150,9 @@ export const PaymentResultMobile: React.FC<PayResultProps> = ({ handlePayment, l
     <>
       <PaymentInpuptModal
         open={isModalOpen}
-        handleClose={() => setIsModalOpen(false)}
+        handleClose={() => {
+          setIsModalOpen(false);
+        }}
         lotCount={lotCount}
         price={price}
         handlePayment={handlePayment}

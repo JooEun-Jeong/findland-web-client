@@ -38,7 +38,7 @@ export const MyPage = () => {
   const isMobile = useRecoilValue(isMobileAtom);
   const [paidLots, setPaidLots] = useRecoilState(lotsPaidAtom);
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [lotCount, setLotCount] = useRecoilState(productCountAtomFamily('lotCount'));
+  const [lotCount, setLotCount] = useState<number>(0);
   const [serviceIds, setServiceIds] = useState<Array<string>>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSearchClicked, setIsSearchClicked] = useState(false);
@@ -49,6 +49,7 @@ export const MyPage = () => {
       return {
         id: item.id,
         checkBoxState: false,
+        purchaseStatus: item?.mapAnalysisPurchaseStatus || 'NOT_PURCHASED',
       };
     }),
   );
@@ -118,6 +119,7 @@ export const MyPage = () => {
       return {
         id: item.id,
         checkBoxState: false,
+        purchaseStatus: item?.mapAnalysisPurchaseStatus || 'NOT_PURCHASED',
       };
     }) as Array<checkboxProps>;
     setCheckBoxes(newCheckBoxState);
@@ -149,6 +151,7 @@ export const MyPage = () => {
           return {
             id: item.id,
             checkBoxState: true,
+            purchaseStatus: item.purchaseStatus,
           };
         }),
       );
@@ -159,10 +162,11 @@ export const MyPage = () => {
       })
     ) {
       setCheckBoxes(
-        checkBoxes.map((device) => {
+        checkBoxes.map((item) => {
           return {
-            id: device.id,
+            id: item.id,
             checkBoxState: false,
+            purchaseStatus: item.purchaseStatus,
           };
         }),
       );
@@ -246,6 +250,10 @@ export const MyPage = () => {
     );
   }, [NoRowRender, checkBoxes, isLoading, isMobile, paidLots, rootCheckBox, setLotCount, setPaidLots]);
 
+  useEffect(() => {
+    console.log('lotCount', lotCount);
+  }, [lotCount]);
+
   return isMobile ? (
     <>
       <MobileContentWrapper>
@@ -299,8 +307,9 @@ export const MyPage = () => {
       {isOpenModal && (
         <MapServiceModal
           open={isOpenModal}
+          setLotCount={setLotCount}
           handleClose={handleClose}
-          selectedLotCount={_.filter(checkBoxes, (checkbox) => checkbox.checkBoxState).length}
+          selectedLotCount={lotCount}
           selectedLotMapIds={serviceIds}
           checkBoxes={checkBoxes}
         />

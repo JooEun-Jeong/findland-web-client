@@ -67,6 +67,7 @@ export const Search: React.FC = () => {
       return {
         id: item.id,
         checkBoxState: item.isSelected,
+        purchaseStatus: item.purchaseStatus,
       };
     }),
   );
@@ -119,6 +120,7 @@ export const Search: React.FC = () => {
       return {
         id: item.id,
         checkBoxState: item.isSelected,
+        purchaseStatus: item.purchaseStatus,
       };
     }) as Array<checkboxProps>;
     setCheckBoxes(newCheckBoxState);
@@ -150,6 +152,7 @@ export const Search: React.FC = () => {
           return {
             id: item.id,
             checkBoxState: true,
+            purchaseStatus: item.purchaseStatus,
           };
         }),
       );
@@ -160,10 +163,11 @@ export const Search: React.FC = () => {
       })
     ) {
       setCheckBoxes(
-        checkBoxes.map((device) => {
+        checkBoxes.map((item) => {
           return {
-            id: device.id,
+            id: item.id,
             checkBoxState: false,
+            purchaseStatus: item.purchaseStatus,
           };
         }),
       );
@@ -185,18 +189,20 @@ export const Search: React.FC = () => {
   const getRowId = useCallback((data: LotRowDatum) => data.id, []);
 
   const handlePayment = useCallback(
-    (bankAccountName: string) => {
+    async (bankAccountName: string) => {
       // api 필요
       if (paymentApi) {
         const productIds = checkBoxes
-          .filter((checkBox) => checkBox.checkBoxState)
-          .map((checkbox) => checkbox.id) as string[];
+          .filter((checkBox) => checkBox.checkBoxState && checkBox.purchaseStatus === 'NOT_PURCHASED')
+          .map((checkbox) => checkbox.id);
+
+        console.log('productIds: ' + productIds);
 
         const postData: ProductTransferReq = {
           productIds: productIds,
           bankAccountName: bankAccountName,
         };
-        paymentApi.postProductTransfer(postData);
+        await paymentApi.postProductTransfer(postData);
         // 로딩 화면 필요
 
         // // row 다시 세팅
@@ -318,7 +324,7 @@ export const Search: React.FC = () => {
           <Box>{GridRender}</Box>
         </TableWrapperMobile>
         <Box sx={{ padding: '3%' }}>
-          <PaymentResultMobile lotCount={lotCount} handlePayment={handlePayment} />
+          <PaymentResultMobile lotCount={lotCount} handlePayment={handlePayment} setLotCount={setLotCount} />
           <FooterContacts />
         </Box>
         <HeaderWrapperM>

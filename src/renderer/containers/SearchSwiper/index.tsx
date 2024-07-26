@@ -35,7 +35,7 @@ export const SearchSwiper = () => {
             {title}
           </Typography>
         ))}
-        <Typography sx={{ fontSize: '0.6rem', fontWeight: 600 }}>{props.des}</Typography>
+        <Typography sx={{ fontSize: '0.7rem', fontWeight: 600 }}>{props.des}</Typography>
         <Loading />
       </SwiperContentBox>
     </>

@@ -32,6 +32,7 @@ interface MapModalProps {
   open: boolean;
   handleClose: () => void;
   selectedLotCount: number;
+  setLotCount: React.Dispatch<React.SetStateAction<number>>;
   selectedLotMapIds: Array<string>;
   checkBoxes: Array<checkboxProps>;
 }
@@ -40,6 +41,7 @@ export const MapServiceModal: React.FC<MapModalProps> = ({
   open,
   handleClose,
   selectedLotCount,
+  setLotCount,
   selectedLotMapIds,
   checkBoxes,
 }) => {
@@ -79,10 +81,20 @@ export const MapServiceModal: React.FC<MapModalProps> = ({
         handleClose();
         window.location.reload();
       }
+      setLotCount(0);
     } else {
       setIsWrittenColor('2px solid #dd5515');
     }
-  }, [bankAccountName, checkBoxes, handleClose, paidLots, paymentApi, selectedLotCount, selectedLotMapIds]);
+  }, [
+    bankAccountName,
+    checkBoxes,
+    handleClose,
+    paidLots,
+    paymentApi,
+    selectedLotCount,
+    selectedLotMapIds,
+    setLotCount,
+  ]);
 
   const Description = useMemo(
     () => (

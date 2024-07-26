@@ -54,6 +54,15 @@ export interface MapAnalysisPayment {
   updatedAt: string;
 }
 
+export interface MapAnalysisService {
+  id: string;
+  itemType: string;
+  productType: string;
+  amount: number;
+  name: null;
+  purchaseStatus: string;
+}
+
 /////////////
 export interface PaymentRes {
   content: Array<LandRegiPayment>;

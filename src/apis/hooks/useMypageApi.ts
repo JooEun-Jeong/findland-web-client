@@ -25,7 +25,7 @@ export const UseMypageApi = (): UseMypageApi => {
                   return {
                     ...product.landRegistryPayment.product,
                     mapAnalysisProductId: product.mapAnalysisProductId,
-                    mapAnalysisPurchaseStatus: product.mapAnalysisPayment?.purchaseStatus,
+                    mapAnalysisPurchaseStatus: product.mapAnalysisPayment?.product.purchaseStatus,
                   };
                 });
 
