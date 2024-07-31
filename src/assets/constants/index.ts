@@ -51,7 +51,7 @@ const QA3 = {
 };
 
 const QA4 = {
-  mainTitle: 'Q4. 옛날 땅이 지금 어디인지 도저히 못찾겠어요',
+  mainTitle: 'Q4. 옛날 땅이 지금 어디에 있는지 도저히 못찾겠어요',
   cons: [
     {
       content: [

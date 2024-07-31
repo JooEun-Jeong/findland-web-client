@@ -48,6 +48,6 @@ export interface GetLoginUrlRes {
   loginUrl: string;
 }
 
-export interface GetLoginUrlReq {
+export interface GetRedirictUrlReq {
   redirectUri: string;
 }

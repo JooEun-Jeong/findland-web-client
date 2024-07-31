@@ -12,22 +12,22 @@ import { isMobileAtom } from '@states';
 
 export const HomeIcon = () => {
   const isMobile = useRecoilValue(isMobileAtom);
-  return <HomeImg style={{ height: isMobile ? '20%' : 22, width: isMobile ? '21%' : 21 }} />;
+  return <HomeImg style={{ height: isMobile ? '30%' : 22, width: isMobile ? '31%' : 21 }} />;
 };
 
 export const MessageIcon = () => {
   const isMobile = useRecoilValue(isMobileAtom);
-  return <MessageImg style={{ color: 'black', width: isMobile ? '26%' : 25, height: isMobile ? '25%' : 24 }} />;
+  return <MessageImg style={{ color: 'black', width: isMobile ? '36%' : 25, height: isMobile ? '35%' : 24 }} />;
 };
 
 export const UserIcon = () => {
   const isMobile = useRecoilValue(isMobileAtom);
-  return <UserImg style={{ width: isMobile ? '25%' : 24, height: isMobile ? '25%' : 24 }} />;
+  return <UserImg style={{ width: isMobile ? '35%' : 24, height: isMobile ? '35%' : 24 }} />;
 };
 
 export const LoginIcon = () => {
   const isMobile = useRecoilValue(isMobileAtom);
-  return <LoginImg style={{ height: isMobile ? '25%' : 24, width: isMobile ? '25%' : 24 }} />;
+  return <LoginImg style={{ height: isMobile ? '35%' : 24, width: isMobile ? '35%' : 24 }} />;
 };
 
 export const IconButton = styled(Button)((props: { isMobile: boolean }) => ({

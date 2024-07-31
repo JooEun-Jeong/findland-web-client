@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 
 import { useRecoilValue } from 'recoil';
 
-import { Logout as LogoutIcon } from '@mui/icons-material';
+import { Logout as LogoutIcon, Business as BusinIcon } from '@mui/icons-material';
 import { Navigate, useNavigate } from 'react-router-dom';
 
 import { useUserApi } from '@apis/hooks/useUserApi';
@@ -27,8 +27,12 @@ export const HeaderM = () => {
     navigate(`/contact`);
   }, [navigate]);
 
+  const goAboutBusiness = useCallback(() => {
+    navigate(`/aboutBusniess`);
+  }, [navigate]);
+
   const logout = useCallback(() => {
-    userApi?.logout();
+    userApi?.kakaoLogout();
     window.location.reload();
   }, [userApi]);
 
@@ -46,8 +50,12 @@ export const HeaderM = () => {
           <MessageIcon />
           문의
         </IconButton>
+        <IconButton isMobile={isMobile} onClick={goAboutBusiness}>
+          <BusinIcon sx={{ height: isMobile ? '35%' : 24, width: isMobile ? '35%' : 24 }} />
+          회사정보
+        </IconButton>
         <IconButton isMobile={isMobile} onClick={logout}>
-          <LogoutIcon sx={{ height: isMobile ? '25%' : 24, width: isMobile ? '25%' : 24 }} />
+          <LogoutIcon sx={{ height: isMobile ? '35%' : 24, width: isMobile ? '35%' : 24 }} />
           로그아웃
         </IconButton>
       </HeaderWrapper>

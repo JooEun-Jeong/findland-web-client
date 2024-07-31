@@ -8,6 +8,7 @@ import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-d
 import { Admin } from '@pages/Admin';
 import { themeSelector } from '@theme/themeSelector';
 
+import { AboutBusinessPage } from './AboutBusiness';
 import { KakaoCallback } from './Callbacks/KakaoCallback';
 import { Contact } from './Contact';
 import { Home } from './Home';
@@ -57,6 +58,7 @@ export const AppRoute: React.FC = () => {
             <Route path="/search/:name" element={<Search />} />
             <Route path="/myPage" element={<MyPage />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/aboutBusniess" element={<AboutBusinessPage />} />
             <Route path="/admin" element={<Admin />} />
           </Route>
           <Route path="*" element={<Navigate to={'/findLand'} />} />

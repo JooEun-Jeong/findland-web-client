@@ -10,6 +10,7 @@ type UserApiInstance = {
   login: () => Promise<void>;
   verifyUser: (kakaoCode: string) => Promise<void>;
   logout: () => void;
+  kakaoLogout: () => Promise<void>;
 } | null;
 
 export const useUserApi = (): UserApiInstance => {
@@ -107,6 +108,7 @@ export const useUserApi = (): UserApiInstance => {
               console.error('error in getting kakao access token', e);
             }),
         logout: () => axiosAuth(instanceHeader).logout(),
+        kakaoLogout: () => axiosAuth(instanceHeader).kakaoLogout({ redirectUri: window.origin + `/login` }),
       };
     } else {
       return null;
