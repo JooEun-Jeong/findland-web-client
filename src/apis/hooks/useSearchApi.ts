@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
 
 import api from '@apis';
-import { LotRowData, SearchLotRes } from '@interfaces/apis';
+import { LotRowData, SearchLotRes, TotalLotInfo } from '@interfaces/apis';
 import { makeLandowenersRow } from '@utils';
 
 type UseSearchApi = {
-  getLandOwners: (name: string, page: number, size: number) => Promise<LotRowData>;
+  getLandOwners: (name: string, page: number, size: number) => Promise<TotalLotInfo>;
 } | null;
 
 export const UseSearchApi = (): UseSearchApi => {
@@ -14,17 +14,17 @@ export const UseSearchApi = (): UseSearchApi => {
       return {
         getLandOwners: async (name: string, page: number, size: number) => {
           try {
-            const landOwners: LotRowData = await api()
+            const landOwnersInfo: TotalLotInfo = await api()
               .search.getLandOwners(name, page, size)
               .then((res) => {
                 console.log('Here are data: ', res.data);
-                return makeLandowenersRow(res.data.products);
+                return { landOwners: makeLandowenersRow(res.data.products), totalElement: res.data.totalElement };
               });
 
-            return landOwners;
+            return landOwnersInfo;
           } catch (e) {
             console.error('Error: get land owners data', e);
-            return [];
+            return { landOwners: [], totalElement: 0 };
           }
         },
       };

@@ -55,7 +55,7 @@ export const MyPage = () => {
   );
 
   const mypageApi = UseMypageApi();
-  const size = 50;
+  const size = 500;
   const dataGridRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
 
   const handleOnRowsScrollEnd = useCallback(async () => {

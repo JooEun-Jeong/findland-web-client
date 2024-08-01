@@ -21,14 +21,16 @@ const IconWrapper = styled(Box)(() => ({
 }));
 
 const Typo = styled(Typography)(() => ({
-  fontSize: '1.8rem',
+  fontSize: '1rem',
   fontWeight: 600,
   color: '#f75454',
 }));
 
 const AgainButton = styled(Button)(() => ({
-  width: '200px',
+  width: '40%',
   padding: '4%',
+  fontSize: '0.8rem',
+  fontWeight: 'bold',
   backgroundColor: 'yellow',
 }));
 
@@ -36,10 +38,10 @@ export const ErrorFallback: React.FC<FallbackProps> = ({ error, resetErrorBounda
   return (
     <ErrorWrapper>
       <IconWrapper>
-        <WarningIcon />
+        <WarningIcon sx={{ height: '50px', width: '50px' }} />
       </IconWrapper>
-      <Typo sx={{ marginTop: '20px' }}>Something went wrong</Typo>
-      <Typo sx={{ marginTop: '5px' }}>{error.message}</Typo>
+      <Typo sx={{ marginTop: '15px' }}>Something went wrong</Typo>
+      <Typo sx={{ marginTop: '8px' }}>{error.message}</Typo>
       <AgainButton onClick={resetErrorBoundary} sx={{ marginTop: '20px' }}>
         Try again
       </AgainButton>

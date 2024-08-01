@@ -56,3 +56,8 @@ export interface LotRowDatum {
   mapAnalysisPurchaseStatus?: string;
 }
 export type LotRowData = Array<LotRowDatum>;
+
+export interface TotalLotInfo {
+  landOwners: LotRowData;
+  totalElement: number;
+}
