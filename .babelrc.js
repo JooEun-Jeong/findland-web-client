@@ -16,6 +16,10 @@ module.exports = function (api) {
     plugins.push('react-refresh/babel');
   }
 
+  if (process.env.NODE_ENV === 'production') {
+    plugins.push('transform-remove-console');
+  }
+
   return {
     presets,
     plugins,

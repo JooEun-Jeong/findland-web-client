@@ -4,9 +4,9 @@
   "description": "findLand's web client project",
   "main": "index.js",
   "scripts": {
-    "start": "webpack server -c ./webpack.dev.config.js --mode development",
+    "start": "NODE_ENV=development webpack server -c ./webpack.dev.config.js --mode development",
     "start:prod": "yarn run build && npx serve -s dist -l 8082",
-    "build": "webpack --mode production -c ./webpack.prod.config.js",
+    "build": "NODE_ENV=production webpack --mode production -c ./webpack.prod.config.js",
     "lint": "prettier --write \"src/**/*.{ts,tsx,js,jsx}\" && eslint --fix \"src/**/*.{ts,tsx,js,jsx}\"",
     "prepare": "husky"
   },
