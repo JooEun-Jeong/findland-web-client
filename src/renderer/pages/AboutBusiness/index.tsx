@@ -31,7 +31,7 @@ export const AboutBusinessPage = () => {
               <Typo08rem>직접 조상땅을 찾으며 체득한 노하우로</Typo08rem>
               <Typo08rem>우리 가문의 땅을 찾아드립니다</Typo08rem>
               <Typo08rem>숨겨진 내 땅을 찾아 다시 꿈꾸는 그날까지,</Typo08rem>
-              <Typography sx={{ fontSize: '0.9rem', fontWeight: 600 }}>땅찾GO</Typography>
+              <Typography sx={{ fontSize: '0.8rem', fontWeight: 600 }}>땅찾GO</Typography>
               <FooterContacts />
             </TypoWrapper>
             <Box

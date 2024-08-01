@@ -33,7 +33,6 @@ export const HeaderM = () => {
 
   const logout = useCallback(() => {
     userApi?.kakaoLogout();
-    window.location.reload();
   }, [userApi]);
 
   return (

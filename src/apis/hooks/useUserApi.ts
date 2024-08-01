@@ -108,7 +108,15 @@ export const useUserApi = (): UserApiInstance => {
               console.error('error in getting kakao access token', e);
             }),
         logout: () => axiosAuth(instanceHeader).logout(),
-        kakaoLogout: () => axiosAuth(instanceHeader).kakaoLogout({ redirectUri: window.origin + `/login` }),
+        kakaoLogout: () =>
+          axiosAuth(instanceHeader)
+            .kakaoLogout({ redirectUri: window.origin + `/login` })
+            .then(({ data }) => {
+              console.log('Get logout url: ' + JSON.stringify(data));
+              window.location.href = data;
+              localStorage.removeItem('jwtToken');
+              localStorage.removeItem('kakaoCode');
+            }),
       };
     } else {
       return null;

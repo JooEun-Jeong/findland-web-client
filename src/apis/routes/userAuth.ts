@@ -10,7 +10,7 @@ export interface AxiosAuthReturn {
   getJwtToken: () => Promise<AxiosResponse<GetJwtTokenRes>>; // 세번째
   signUp: (sendData: UserSignupReq) => Promise<AxiosResponse>; // 세번째 오류나면 실행. 그 후, 다시 세번째로
   logout: () => void;
-  kakaoLogout: (params: GetRedirictUrlReq) => Promise<void>;
+  kakaoLogout: (params: GetRedirictUrlReq) => Promise<AxiosResponse<string>>;
 }
 
 export const axiosAuth = (opt: AxiosHeaderOptions): AxiosAuthReturn => {
@@ -40,8 +40,6 @@ export const axiosAuth = (opt: AxiosHeaderOptions): AxiosAuthReturn => {
     },
     kakaoLogout: (params) => {
       const url = `auth/kakao/logout`;
-      localStorage.removeItem('jwtToken');
-      localStorage.removeItem('kakaoCode');
       return instance.get(url, { params: { redirectUri: params.redirectUri } });
     },
   };
