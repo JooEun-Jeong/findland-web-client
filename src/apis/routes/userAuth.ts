@@ -36,6 +36,7 @@ export const axiosAuth = (opt: AxiosHeaderOptions): AxiosAuthReturn => {
     },
     logout: () => {
       localStorage.removeItem('jwtToken');
+      localStorage.removeItem('accessToken');
       localStorage.removeItem('kakaoCode');
     },
     kakaoLogout: (params) => {

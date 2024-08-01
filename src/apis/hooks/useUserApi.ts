@@ -75,6 +75,8 @@ export const useUserApi = (): UserApiInstance => {
                 .getJwtToken()
                 .then((res) => {
                   const givenJwtToken = res.data.jwtToken;
+                  console.log('kakao access token2', kakaoAccessToken);
+
                   console.log('jwt token', givenJwtToken);
 
                   setjwtToken(givenJwtToken);
@@ -87,6 +89,7 @@ export const useUserApi = (): UserApiInstance => {
                       .signUp(userData)
                       .then(async (res) => {
                         console.log('signUp status: ' + res.status);
+                        console.log('kakao access token3', kakaoAccessToken);
                         if (res.status === 200) {
                           await axiosAuth({
                             headers: { Authorization: `Bearer ${kakaoAccessToken}` },
@@ -96,6 +99,7 @@ export const useUserApi = (): UserApiInstance => {
                               console.log('signup and get jwtToken res', res);
                               const givenJwtToken = res.data.jwtToken;
                               console.log('jwt token', givenJwtToken);
+                              console.log('kakao access token4', kakaoAccessToken);
 
                               setjwtToken(givenJwtToken);
                             });
@@ -115,6 +119,7 @@ export const useUserApi = (): UserApiInstance => {
               console.log('Get logout url: ' + JSON.stringify(data));
               window.location.href = data;
               localStorage.removeItem('jwtToken');
+              localStorage.removeItem('accessToken');
               localStorage.removeItem('kakaoCode');
             }),
       };
