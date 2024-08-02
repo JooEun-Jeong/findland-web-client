@@ -92,6 +92,7 @@ export const MyPage = () => {
           }
           if (newLandOwners.length > 0) {
             setPaidLots((prev) => [...prev, ...newLandOwners]);
+            setLotCount(0);
           }
           setIsMore(false);
         }
@@ -130,9 +131,12 @@ export const MyPage = () => {
   }, [keyword, mypageApi, setPaidLots]);
 
   const handleDownloadClick = useCallback(() => {
+    // 체크박스 아무것도 선택하지 않았을 경우는 전체 출력, 혹은  일부 선택했을 경우 일부만 출력
+    // format in csv
     const selectedProductIds = _.map(checkBoxes, (checkBox) => (checkBox.checkBoxState === true ? checkBox.id : false));
+    const isNoneSelected = _.every(checkBoxes, (checkBox) => checkBox.checkBoxState === false);
     console.log('selectedProductIds', selectedProductIds);
-    const data = _.filter(paidLots, (item) => _.includes(selectedProductIds, item.id));
+    const data = isNoneSelected ? paidLots : _.filter(paidLots, (item) => _.includes(selectedProductIds, item.id));
     const fileName = '필지';
     downloadCSV({ data, fileName });
   }, [checkBoxes, paidLots]);

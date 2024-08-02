@@ -99,6 +99,7 @@ export const Search: React.FC = () => {
           }
           if (landOwners.length > 0) {
             setLots((prev) => [...prev, ...landOwners]);
+            setLotCount(0);
           }
           setIsMore(false);
         }
