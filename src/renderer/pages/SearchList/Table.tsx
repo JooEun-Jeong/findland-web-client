@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { MouseEventHandler } from 'react';
 
 import { Checkbox } from '@mui/material';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
