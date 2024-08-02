@@ -6,6 +6,7 @@ import { Box } from '@mui/material';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { useUserApi } from '@apis/hooks/useUserApi';
+import { LoginStatus } from '@interfaces/apis/users';
 import { LoadingPage } from '@pages/Loading';
 import { kakaoCodeAtom } from '@states/user';
 
@@ -24,8 +25,12 @@ export const KakaoCallback: React.FC = () => {
 
       // kakao의 accessCode, 땅찾고 자체 jwtToken 발급
       // 회원정보 없다면 회원가입까지 진행
-      await userApi.verifyUser(kakaoAuthCode);
-      navigate(`findLand`);
+      const result: LoginStatus = await userApi.verifyUser(kakaoAuthCode);
+      if (result === 'LOGIN_SUCCESS') {
+        navigate(`findLand`);
+      } else {
+        navigate(`login`);
+      }
     }
   }, [navigate, query, setKakaoCode, userApi]);
 

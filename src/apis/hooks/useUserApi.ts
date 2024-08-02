@@ -4,11 +4,12 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import { axiosAuth } from '@apis/routes/userAuth';
 import { AxiosHeaderOptions } from '@interfaces';
+import { LoginStatus } from '@interfaces/apis/users';
 import { accessTokenAtom, jwtTokenAtom, userDataAtom } from '@states/user';
 
 type UserApiInstance = {
   login: () => Promise<void>;
-  verifyUser: (kakaoCode: string) => Promise<void>;
+  verifyUser: (kakaoCode: string) => Promise<LoginStatus>;
   logout: () => void;
   kakaoLogout: () => Promise<void>;
 } | null;
@@ -80,6 +81,7 @@ export const useUserApi = (): UserApiInstance => {
                   console.log('jwt token', givenJwtToken);
 
                   setjwtToken(givenJwtToken);
+                  return 'LOGIN_SUCCESS';
                 })
                 .catch(async (e) => {
                   console.log('error in getJwtToken', e);
@@ -90,26 +92,31 @@ export const useUserApi = (): UserApiInstance => {
                       .then(async (res) => {
                         console.log('signUp status: ' + res.status);
                         console.log('kakao access token3', kakaoAccessToken);
-                        if (res.status === 200) {
-                          await axiosAuth({
-                            headers: { Authorization: `Bearer ${kakaoAccessToken}` },
-                          })
-                            .getJwtToken()
-                            .then((res) => {
-                              console.log('signup and get jwtToken res', res);
-                              const givenJwtToken = res.data.jwtToken;
-                              console.log('jwt token', givenJwtToken);
-                              console.log('kakao access token4', kakaoAccessToken);
+                        alert('회원가입되었습니다. 다시 로그인 부탁드립니다.');
+                        // if (res.status === 200) {
+                        //   await axiosAuth({
+                        //     headers: { Authorization: `Bearer ${kakaoAccessToken}` },
+                        //   })
+                        //     .getJwtToken()
+                        //     .then((res) => {
+                        //       console.log('signup and get jwtToken res', res);
+                        //       const givenJwtToken = res.data.jwtToken;
+                        //       console.log('jwt token', givenJwtToken);
+                        //       console.log('kakao access token4', kakaoAccessToken);
 
-                              setjwtToken(givenJwtToken);
-                            });
-                        }
+                        //       setjwtToken(givenJwtToken);
+                        //     });
+                        // }
+                        return 'SIGNUP_SUCCESS';
                       });
+                    return 'SIGNUP_FAILED';
                   }
                 });
+              return 'LOGIN_FAILED';
             })
             .catch((e) => {
               console.error('error in getting kakao access token', e);
+              return 'KAKAO_ACCESS_TOKEN_FAILED';
             }),
         logout: () => axiosAuth(instanceHeader).logout(),
         kakaoLogout: () =>

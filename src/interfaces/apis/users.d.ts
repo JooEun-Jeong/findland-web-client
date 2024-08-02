@@ -51,3 +51,13 @@ export interface GetLoginUrlRes {
 export interface GetRedirictUrlReq {
   redirectUri: string;
 }
+
+const LoginStatus_detail = {
+  KATF: 'KAKAO_ACCESS_TOKEN_FAILED',
+  LS: 'LOGIN_SUCCESS',
+  LF: 'LOGIN_FAILED',
+  SS: 'SIGNUP_SUCCESS',
+  SF: 'SIGNUP_FAILED',
+} as const;
+
+export type LoginStatus = (typeof LoginStatus_detail)[keyof typeof LoginStatus];
