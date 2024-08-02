@@ -18,7 +18,7 @@ export interface ProductTransferRes {
 
 /// my page
 export interface MyPageRes {
-  totalElement: number;
+  totalElements: number;
   totalPages: number;
   size: number;
   content: Array<MyPageContent>;

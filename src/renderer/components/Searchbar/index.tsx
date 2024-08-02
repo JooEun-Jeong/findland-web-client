@@ -14,7 +14,7 @@ export const SearchTextField = styled(TextField)(({ theme }) => {
   return {
     backgroundColor: 'transparent',
     height: isMobile ? 'calc(var(--vh, 1vh) * 5)' : '45px',
-    width: isMobile || theme.breakpoints.down('sm') ? '95%' : '350px',
+    width: isMobile ? '70%' : '350px',
     '& > .MuiInputBase-root': {
       fontSize: isMobile ? '0.8rem' : '14px',
       lineHeight: '30px',
@@ -64,7 +64,7 @@ export const SearchField = (props: {
       <SearchBox>
         <SearchTextField
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => props.setText(e.target.value)}
-          sx={{ marginRight: '1px' }}
+          sx={{ marginRight: '1px', width: '85%' }}
         />
         <SearchButton type="submit" onClick={props.handleSubmit}>
           <SearchIcon />

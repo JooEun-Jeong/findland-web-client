@@ -1,8 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState, RefObject } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useRecoilState, useRecoilValue } from 'recoil';
 
 import { Box, Checkbox } from '@mui/material';
+import { useGridApiRef } from '@mui/x-data-grid';
 import _ from 'lodash';
 
 import { MapServiceModal } from '@/renderer/containers/MyPage';
@@ -11,7 +12,6 @@ import logoImg from '@assets/png/LogoImg.png';
 import logoTypoImg from '@assets/png/logoTypo.png';
 import { SearchButton, SearchIcon, SearchTextField } from '@components';
 import { HeaderM, Loading } from '@containers';
-import { LotRowDatum } from '@interfaces';
 import {
   DataGridStyled,
   GrayBox,
@@ -28,15 +28,22 @@ import {
 } from '@pages/SearchList/styled';
 import { SearchResultColmns, checkboxProps } from '@pages/SearchList/Table';
 import { isMobileAtom } from '@states';
-import { lotsPaidAtom, productCountAtomFamily } from '@states/user';
+import { lotsPaidAtom } from '@states/user';
 import { downloadCSV } from '@utils';
 
 import { FileDownloadButton, FileDownloadTypo, FindServiceButton } from './styled';
 
 export const MyPage = () => {
-  const [keyword, setKeyword] = useState('');
   const isMobile = useRecoilValue(isMobileAtom);
+
+  const mypageApi = UseMypageApi();
+  const size = 500;
+  const dataGridRef = useGridApiRef();
+  const fetchedParamsSet = useRef(new Set<string>()); // Set to track fetched parameters
+
   const [paidLots, setPaidLots] = useRecoilState(lotsPaidAtom);
+
+  const [keyword, setKeyword] = useState('');
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [lotCount, setLotCount] = useState<number>(0);
   const [serviceIds, setServiceIds] = useState<Array<string>>([]);
@@ -44,6 +51,8 @@ export const MyPage = () => {
   const [isSearchClicked, setIsSearchClicked] = useState(false);
   const [rootCheckBox, setRootCheckBox] = useState<boolean>(false);
   const [page, setPage] = useState<number>(0);
+  const [totalAmount, setTotalAmount] = useState<number>(0);
+  const [isMore, setIsMore] = useState(false);
   const [checkBoxes, setCheckBoxes] = useState<Array<checkboxProps>>(
     paidLots.map((item) => {
       return {
@@ -54,29 +63,54 @@ export const MyPage = () => {
     }),
   );
 
-  const mypageApi = UseMypageApi();
-  const size = 500;
-  const dataGridRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
+  const handleScroll = useCallback(
+    async (event: Event) => {
+      const target = event.target as HTMLElement;
+      const { scrollTop, clientHeight, scrollHeight } = target;
 
-  const handleOnRowsScrollEnd = useCallback(async () => {
-    if (mypageApi) {
-      if (isSearchClicked) {
-        // 만약 한번이라도 클릭되었다면, 해당 키워드로 무한 스크롤 준비
-        const lots = await mypageApi.getOneLandownerWithName(page + 1, size, keyword);
-        setPaidLots(lots);
-      } else {
-        // 전체 결제 내역 보여주기
-        const lots = await mypageApi.getAllPaidLots(page + 1, size);
-        setPaidLots(lots);
+      if (scrollHeight - scrollTop <= clientHeight) {
+        const paramsKey = `${keyword}_${page + 1}_${size}`;
+        if (fetchedParamsSet.current.has(paramsKey)) {
+          return;
+        }
+
+        setIsMore(true);
+        if (!isMore && mypageApi) {
+          // 만약 한번이라도 클릭되었다면, 해당 키워드로 무한 스크롤 준비
+          // 아니라면 전체 결제 내역 보여주기
+          const landOwnersInfo = isSearchClicked
+            ? await mypageApi.getOneLandownerWithName(page + 1, size, keyword)
+            : await mypageApi.getAllPaidLots(page + 1, size);
+          // console.log('!!!!!!! ', isSearchClicked);
+
+          const newLandOwners = landOwnersInfo.landOwners;
+
+          fetchedParamsSet.current.add(paramsKey); // Add to fetched params set
+
+          if (newLandOwners.length === size) {
+            setPage((prev) => prev + 1);
+          }
+          if (newLandOwners.length > 0) {
+            setPaidLots((prev) => [...prev, ...newLandOwners]);
+          }
+          setIsMore(false);
+        }
       }
-      setPage((prev) => prev + 1);
-    }
-  }, [isSearchClicked, keyword, mypageApi, page, setPaidLots]);
+    },
+    [keyword, page, isMore, mypageApi, isSearchClicked, setPaidLots],
+  );
+
+  useEffect(() => {
+    console.log('paidLots', paidLots);
+  }, [paidLots]);
 
   const getAllPaidLots = useCallback(async () => {
     if (mypageApi) {
-      const lots = await mypageApi.getAllPaidLots(page, size);
-      setPaidLots(lots);
+      const landOwnersInfo = await mypageApi.getAllPaidLots(page, size);
+      const landOwners = landOwnersInfo.landOwners;
+      const newTotalElementAmount = landOwnersInfo.totalElement;
+      setTotalAmount(newTotalElementAmount);
+      setPaidLots(landOwners);
     }
   }, [mypageApi, page, setPaidLots]);
 
@@ -85,8 +119,12 @@ export const MyPage = () => {
       setIsLoading(true);
       setPage(0);
       setIsSearchClicked(true);
-      const lots = await mypageApi.getOneLandownerWithName(0, size, keyword);
-      setPaidLots(lots);
+      fetchedParamsSet.current.clear();
+      const landOwnersInfo = await mypageApi.getOneLandownerWithName(0, size, keyword);
+      const newLandOwners = landOwnersInfo.landOwners;
+      const newTotalElementAmount = landOwnersInfo.totalElement;
+      setTotalAmount(newTotalElementAmount);
+      setPaidLots(newLandOwners);
       setIsLoading(false);
     }
   }, [keyword, mypageApi, setPaidLots]);
@@ -95,7 +133,6 @@ export const MyPage = () => {
     const selectedProductIds = _.map(checkBoxes, (checkBox) => (checkBox.checkBoxState === true ? checkBox.id : false));
     console.log('selectedProductIds', selectedProductIds);
     const data = _.filter(paidLots, (item) => _.includes(selectedProductIds, item.id));
-    console.log(data);
     const fileName = '필지';
     downloadCSV({ data, fileName });
   }, [checkBoxes, paidLots]);
@@ -104,7 +141,6 @@ export const MyPage = () => {
     getAllPaidLots();
   }, []);
 
-  const getRowId = useCallback((data: LotRowDatum) => data.id, []);
   const handleOpen = useCallback(() => {
     setIsOpenModal(true);
     const selectedProductIds = _.map(checkBoxes, (checkBox) => (checkBox.checkBoxState === true ? checkBox.id : false));
@@ -174,22 +210,23 @@ export const MyPage = () => {
   }, [rootCheckBox]);
 
   useEffect(() => {
-    const handleScroll = (event: Event) => {
-      const target = event.target as HTMLDivElement;
-      const { scrollTop, clientHeight, scrollHeight } = target;
-      if (scrollHeight - scrollTop === clientHeight) {
-        handleOnRowsScrollEnd();
+    // Delay attaching the event listener to ensure the DataGrid is rendered
+    const timeoutId = setTimeout(() => {
+      const gridContainer = document.querySelector('.MuiDataGrid-virtualScroller');
+      if (gridContainer) {
+        console.log('Attaching scroll event listener');
+        gridContainer.addEventListener('scroll', handleScroll);
+        return () => {
+          console.log('Removing scroll event listener');
+          gridContainer.removeEventListener('scroll', handleScroll);
+        };
+      } else {
+        console.log('Grid container not found');
       }
-    };
+    }, 1500); // Adjust the timeout delay as needed
 
-    const dataGridNode = dataGridRef.current;
-    if (dataGridNode) {
-      dataGridNode.addEventListener('scroll', handleScroll);
-      return () => {
-        dataGridNode.removeEventListener('scroll', handleScroll);
-      };
-    }
-  }, [handleOnRowsScrollEnd]);
+    return () => clearTimeout(timeoutId);
+  }, [handleScroll]);
 
   const NoRowRender = useCallback(() => {
     return (
@@ -209,11 +246,9 @@ export const MyPage = () => {
         <Loading />
       </div>
     ) : (
-      <div
-        ref={dataGridRef}
-        style={{ height: 'calc(var(--vh, 1vh) * 57)', width: '100%', overflow: 'auto', padding: '2px' }}
-      >
+      <div style={{ height: 'calc(var(--vh, 1vh) * 57)', width: '100%', overflow: 'auto', padding: '2px' }}>
         <DataGridStyled
+          apiRef={dataGridRef}
           columns={SearchResultColmns({
             rootCheckBox,
             setRootCheckBox,
@@ -248,11 +283,7 @@ export const MyPage = () => {
         />
       </div>
     );
-  }, [NoRowRender, checkBoxes, isLoading, isMobile, paidLots, rootCheckBox, setLotCount, setPaidLots]);
-
-  useEffect(() => {
-    console.log('lotCount', lotCount);
-  }, [lotCount]);
+  }, [NoRowRender, checkBoxes, dataGridRef, isLoading, isMobile, paidLots, rootCheckBox, setPaidLots]);
 
   return isMobile ? (
     <>
@@ -268,14 +299,10 @@ export const MyPage = () => {
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setKeyword(e.target.value)}
                 defaultValue={keyword}
               />
-              <SearchButton
-                type="submit"
-                onClick={getOneLandowner}
-                className="mobile"
-                sx={{
-                  marginLeft: '10px',
-                }}
-              >
+              <Box sx={{ fontSize: '0.7rem', width: '60px', display: 'flex', justifyContent: 'flex-end' }}>
+                총 {totalAmount} 필지
+              </Box>
+              <SearchButton type="submit" onClick={getOneLandowner} className="mobile">
                 <SearchIcon />
               </SearchButton>
             </SearchBox>

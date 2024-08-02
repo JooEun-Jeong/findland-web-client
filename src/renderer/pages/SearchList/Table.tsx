@@ -1,13 +1,10 @@
-import React, { MouseEventHandler } from 'react';
-
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import React from 'react';
 
 import { Checkbox } from '@mui/material';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import _ from 'lodash';
 
 import { LotRowData, LotRowDatum } from '@interfaces';
-import { productCountAtomFamily } from '@states/user';
 import { isUnpaid } from '@utils';
 
 import { TableEachChecbox, TableRootChecbox } from './styled';
@@ -32,47 +29,6 @@ interface ColumnProps {
 interface countProps {
   idx: number;
   compute: string; // plus, minus
-}
-
-interface computeProps {
-  product: string;
-  compute: string; // plus, minus
-}
-
-// 이중으로 하면 hook이 된다..??!!!
-function countProducts({ idx, compute }: countProps) {
-  () => {
-    const setCNameCount = useSetRecoilState(productCountAtomFamily('cNameCount'));
-    const setJibunCount = useSetRecoilState(productCountAtomFamily('jibunCount'));
-    const setAreaCount = useSetRecoilState(productCountAtomFamily('areaCount'));
-    const setAddrCount = useSetRecoilState(productCountAtomFamily('addrCount'));
-    if (idx === 0) {
-      // cname
-      compute === 'plus' ? setCNameCount((prev) => prev + 1) : setCNameCount((prev) => prev - 1);
-    } else if (idx === 1) {
-      // jibun
-      compute === 'plus' ? setJibunCount((prev) => prev + 1) : setJibunCount((prev) => prev - 1);
-    } else if (idx === 2) {
-      // area
-      compute === 'plus' ? setAreaCount((prev) => prev + 1) : setAreaCount((prev) => prev - 1);
-    } else if (idx === 3) {
-      // addr
-      compute === 'plus' ? setAddrCount((prev) => prev + 1) : setAddrCount((prev) => prev - 1);
-    } else if (idx === 4) {
-      // all
-      if (compute === 'plus') {
-        setCNameCount((prev) => prev + 1);
-        setJibunCount((prev) => prev + 1);
-        setAreaCount((prev) => prev + 1);
-        setAddrCount((prev) => prev + 1);
-      } else {
-        setCNameCount((prev) => prev - 1);
-        setJibunCount((prev) => prev - 1);
-        setAreaCount((prev) => prev - 1);
-        setAddrCount((prev) => prev - 1);
-      }
-    }
-  };
 }
 
 // // 이중으로 하면 hook이 된다..??!!!
@@ -102,7 +58,7 @@ export const SearchResultColmns = ({
   {
     field: 'checkbox',
     minWidth: 30,
-    flex: 0.0972,
+    flex: 0.0872,
     headerName: ' ',
     sortable: false,
     resizable: false,
@@ -235,7 +191,7 @@ export const SearchResultColmns = ({
       const id = params.row.id;
       const selectedLot = _.find(lots, (landowner) => landowner.id === id) as LotRowDatum;
       if (typeof selectedLot.buyerAddress !== 'undefined') {
-        if (selectedLot.buyerAddress === 'X') {
+        if (selectedLot.buyerAddress === 'X' || selectedLot.buyerAddress === 'x' || selectedLot.buyerAddress === '×') {
           return selectedLot.purchasedGoonDong;
         } else {
           return selectedLot.buyerAddress;

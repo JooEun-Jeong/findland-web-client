@@ -3,12 +3,12 @@ import { useMemo } from 'react';
 import _ from 'lodash';
 
 import api from '@apis';
-import { LotRowData } from '@interfaces/apis';
+import { TotalLotInfo } from '@interfaces/apis';
 import { makeLandowenersRow } from '@utils';
 
 type UseMypageApi = {
-  getAllPaidLots: (page: number, size: number) => Promise<LotRowData>;
-  getOneLandownerWithName: (page: number, size: number, name: string) => Promise<LotRowData>;
+  getAllPaidLots: (page: number, size: number) => Promise<TotalLotInfo>;
+  getOneLandownerWithName: (page: number, size: number, name: string) => Promise<TotalLotInfo>;
 } | null;
 
 export const UseMypageApi = (): UseMypageApi => {
@@ -17,7 +17,7 @@ export const UseMypageApi = (): UseMypageApi => {
       return {
         getAllPaidLots: async (page: number, size: number) => {
           try {
-            const landOwners: LotRowData = await api()
+            const landOwnersInfo = await api()
               .mypage.getPaidLots(page, size)
               .then((res) => {
                 const products = res.data.content;
@@ -29,27 +29,32 @@ export const UseMypageApi = (): UseMypageApi => {
                   };
                 });
 
-                return makeLandowenersRow(landRegistries);
+                return { landOwners: makeLandowenersRow(landRegistries), totalElement: res.data.totalElements };
               });
-            return landOwners;
+            return landOwnersInfo;
           } catch (e) {
             console.error('Error: get paid land owners data', e);
-            return [];
+            return { landOwners: [], totalElement: 0 };
           }
         },
         getOneLandownerWithName: async (page: number, size: number, name: string) => {
           try {
-            const landowners = await api()
+            const landOwnersInfo = await api()
               .mypage.getPaidLots(page, size, name)
               .then((res) => {
                 const data = res.data.content;
                 // product가 null이 아니라는 가정 아래에
-                return _.map(data, (item) => item.landRegistryPayment.product);
+                const landRegistries = _.map(data, (item) => ({
+                  ...item.landRegistryPayment.product,
+                  mapAnalysisProductId: item.mapAnalysisProductId,
+                  mapAnalysisPurchaseStatus: item.mapAnalysisPayment?.product.purchaseStatus,
+                }));
+                return { landOwners: makeLandowenersRow(landRegistries), totalElement: res.data.totalElements };
               });
-            return makeLandowenersRow(landowners);
+            return landOwnersInfo;
           } catch (e) {
             console.error(`Error: get ${name} data `, e);
-            return [];
+            return { landOwners: [], totalElement: 0 };
           }
         },
       };

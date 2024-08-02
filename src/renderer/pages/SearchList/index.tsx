@@ -3,7 +3,7 @@ import React, { useCallback, useMemo, useState, useEffect, useRef } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil';
 
 import { Box, Checkbox } from '@mui/material';
-import { DataGrid, useGridApiRef } from '@mui/x-data-grid';
+import { useGridApiRef } from '@mui/x-data-grid';
 import _ from 'lodash';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -15,7 +15,7 @@ import logoImg from '@assets/png/LogoImg.png';
 import logoTypoImg from '@assets/png/logoTypo.png';
 import { ErrorFallback, SearchButton, SearchIcon, SearchTextField } from '@components';
 import { HeaderM, Loading, PaymentResult, PaymentResultMobile } from '@containers';
-import { LotRowData, LotRowDatum, ProductTransferReq } from '@interfaces';
+import { LotRowData, ProductTransferReq } from '@interfaces';
 import { isMobileAtom } from '@states';
 import { lotsAtom } from '@states/user';
 
@@ -44,25 +44,26 @@ export interface countProps {
 }
 
 export const Search: React.FC = () => {
-  const isMobile = useRecoilValue(isMobileAtom);
-
   const location = useLocation();
   const navigate = useNavigate();
   const searchApi = UseSearchApi();
   const paymentApi = UsePaymentApi();
 
   const { name } = useParams();
-
+  const size = 500;
   const directName = _.isUndefined(name) && (location.state.keyword as string);
+
+  const fetchedParamsSet = useRef(new Set<string>()); // Set to track fetched parameters
+  const gridApiRef = useGridApiRef();
+
+  const isMobile = useRecoilValue(isMobileAtom);
+  const [lots, setLots] = useRecoilState<LotRowData>(lotsAtom);
 
   const [keyword, setKeyword] = useState(name || directName || '');
   const [lotCount, setLotCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [isMore, setIsMore] = useState(false);
   const [totalAmount, setTotalAmount] = useState<number>(0);
-
-  const [lots, setLots] = useRecoilState<LotRowData>(lotsAtom);
-
   const [rootCheckBox, setRootCheckBox] = useState<boolean>(false);
   const [checkBoxes, setCheckBoxes] = useState<Array<checkboxProps>>(
     lots.map((item) => {
@@ -73,30 +74,25 @@ export const Search: React.FC = () => {
       };
     }),
   );
-
   const [page, setPage] = useState<number>(0);
-  const size = 300;
-
-  const gridApiRef = useGridApiRef();
 
   const handleScroll = useCallback(
     async (event: Event) => {
       const target = event.target as HTMLElement;
       const { scrollTop, clientHeight, scrollHeight } = target;
 
-      // Add console logs for debugging
-      // console.log('Scroll event triggered');
-      // console.log('scrollTop:', scrollTop);
-      // console.log('clientHeight:', clientHeight);
-      // console.log('scrollHeight:', scrollHeight);
-      // console.log('lots.length:', lots.length);
-      // console.log('totalAmount:', totalAmount);
-
       if (scrollHeight - scrollTop <= clientHeight && lots.length < totalAmount) {
+        const paramsKey = `${keyword}_${page + 1}_${size}`;
+        if (fetchedParamsSet.current.has(paramsKey)) {
+          return;
+        }
+
         setIsMore(true);
         if (!isMore && searchApi) {
           const searchResult = await searchApi.getLandOwners(keyword, page + 1, size);
           const landOwners: LotRowData = searchResult.landOwners;
+
+          fetchedParamsSet.current.add(paramsKey); // Add to fetched params set
 
           if (landOwners.length === size) {
             setPage((prev) => prev + 1);
@@ -189,6 +185,7 @@ export const Search: React.FC = () => {
     if (searchApi) {
       setIsLoading(true);
       const searchResult = await searchApi.getLandOwners(keyword, page, size);
+      fetchedParamsSet.current.clear();
       const landOwners: LotRowData = searchResult.landOwners;
       const totalAmount: number = searchResult.totalElement;
       setTotalAmount(totalAmount);
@@ -198,8 +195,6 @@ export const Search: React.FC = () => {
       setLots([]);
     }
   }, [keyword, page, searchApi, setLots]);
-
-  const getRowId = useCallback((data: LotRowDatum) => data.id, []);
 
   const handlePayment = useCallback(
     async (bankAccountName: string) => {
@@ -304,6 +299,9 @@ export const Search: React.FC = () => {
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setKeyword(e.target.value)}
                 defaultValue={keyword}
               />
+              <Box sx={{ fontSize: '0.7rem', width: '60px', display: 'flex', justifyContent: 'flex-end' }}>
+                총 {totalAmount} 필지
+              </Box>
               <SearchButton
                 type="submit"
                 onClick={async () => {
