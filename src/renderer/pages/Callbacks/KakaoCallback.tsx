@@ -22,6 +22,7 @@ export const KakaoCallback: React.FC = () => {
     if (userApi) {
       const kakaoAuthCode = query[0][1];
       setKakaoCode(kakaoAuthCode);
+      console.log('Kakao callback: ' + kakaoAuthCode);
 
       // kakao의 accessCode, 땅찾고 자체 jwtToken 발급
       // 회원정보 없다면 회원가입까지 진행

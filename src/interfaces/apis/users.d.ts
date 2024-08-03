@@ -52,7 +52,7 @@ export interface GetRedirictUrlReq {
   redirectUri: string;
 }
 
-const LoginStatus_detail = {
+export const LoginStatus_detail = {
   KATF: 'KAKAO_ACCESS_TOKEN_FAILED',
   LS: 'LOGIN_SUCCESS',
   LF: 'LOGIN_FAILED',
