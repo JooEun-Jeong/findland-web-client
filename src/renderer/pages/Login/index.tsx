@@ -6,12 +6,13 @@ import 'swiper/css/navigation';
 import '@theme/swiper.pagination.style.css';
 import { useRecoilValue } from 'recoil';
 
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useNavigate } from 'react-router-dom';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
+import DisplayGoogleAds from '@/renderer/components/GoogleAds';
 import { useUserApi } from '@apis/hooks/useUserApi';
 import Des1Im from '@assets/png/FirstDes1.jpg';
 import Des2Im from '@assets/png/FirstDes2.jpg';
@@ -100,6 +101,14 @@ export const Login = () => {
             </Swiper>
           </>
           <LoginButton onClick={handleLogin}>카카오톡으로 간편 로그인</LoginButton>
+          <div style={{ paddingTop: '5px', width: '100%' }}>
+            <div
+              className="grid place-content-center"
+              style={{ minHeight: '30px', width: '100%', border: '1px solid #BABABA' }}
+            >
+              <DisplayGoogleAds />
+            </div>
+          </div>
         </MainBox>
       ) : (
         <NotReady />
