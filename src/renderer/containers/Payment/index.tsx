@@ -184,7 +184,9 @@ export const PaymentResultMobile: React.FC<PayResultProps> = ({ handlePayment, l
             </Box>
           </TotalPriceBoxM>
           <Box sx={{ width: '25%', height: '100%' }}>
-            <PayButtonM onClick={() => setIsModalOpen(true)}>결제하기</PayButtonM>
+            <PayButtonM onClick={() => setIsModalOpen(true)} disabled={lotCount === 0}>
+              결제하기
+            </PayButtonM>
           </Box>
         </TotalComputeBoxM>
       </Box>

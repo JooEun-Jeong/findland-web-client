@@ -54,7 +54,6 @@ export const MapServiceModal: React.FC<MapModalProps> = ({
   const userData = useRecoilValue(userDataAtom);
 
   const paymentApi = UsePaymentApi();
-  const mypageApi = UseMypageApi();
 
   const handleServiceClick = useCallback(async () => {
     if (bankAccountName.length > 0) {

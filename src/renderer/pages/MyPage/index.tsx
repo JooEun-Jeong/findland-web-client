@@ -130,6 +130,11 @@ export const MyPage = () => {
     }
   }, [keyword, mypageApi, setPaidLots]);
 
+  const isCheckBoxNoneSelected = useCallback(
+    () => _.every(checkBoxes, (checkBox) => checkBox.checkBoxState === false),
+    [checkBoxes],
+  );
+
   const handleDownloadClick = useCallback(() => {
     // 체크박스 아무것도 선택하지 않았을 경우는 전체 출력, 혹은  일부 선택했을 경우 일부만 출력
     // format in csv
@@ -325,7 +330,9 @@ export const MyPage = () => {
           {GridRender}
         </TableWrapperMobile>
         <Box sx={{ padding: '3%', height: '10%', display: 'flex', justifyContent: 'space-between' }}>
-          <FindServiceButton onClick={handleOpen}>토지 현재 위치 확인하기</FindServiceButton>
+          <FindServiceButton onClick={handleOpen} disabled={isCheckBoxNoneSelected()}>
+            토지 현재 위치 확인하기
+          </FindServiceButton>
           <FileDownloadButton onClick={handleDownloadClick}>
             <FileDownloadTypo>결제한 토지 정보</FileDownloadTypo>
             <FileDownloadTypo>다운로드</FileDownloadTypo>
