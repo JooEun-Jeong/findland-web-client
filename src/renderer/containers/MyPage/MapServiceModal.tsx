@@ -149,7 +149,7 @@ export const MapServiceModal: React.FC<MapModalProps> = ({
                 >
                   <Typography sx={{ fontSize: '0.6rem' }}>상품 가격:</Typography>
                   <Typography sx={{ fontSize: '0.6rem', marginRight: '10px' }}>
-                    {cost * selectedLotCount}만 원
+                    {(cost * selectedLotCount).toLocaleString()}만 원
                   </Typography>
                 </Box>
                 <Box

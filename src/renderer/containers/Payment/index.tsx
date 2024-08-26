@@ -165,7 +165,7 @@ export const PaymentResultMobile: React.FC<PayResultProps> = ({ handlePayment, l
           </CountBoxM>
           <CountBoxM>
             <PriceTypoM>금액</PriceTypoM>
-            <PriceTypoM sx={{ color: 'green' }}>{price}</PriceTypoM>
+            <PriceTypoM sx={{ color: 'green' }}>{price.toLocaleString()}원</PriceTypoM>
           </CountBoxM>
         </ComputeBoxM>
 
@@ -178,7 +178,7 @@ export const PaymentResultMobile: React.FC<PayResultProps> = ({ handlePayment, l
                   marginRight: '5px',
                 }}
               >
-                {totalCost}
+                {totalCost.toLocaleString()}
               </PriceTypoM>
               <PriceTypoM>원</PriceTypoM>
             </Box>
