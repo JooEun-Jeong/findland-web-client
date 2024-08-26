@@ -14,6 +14,6 @@ export const TypoWrapper = styled(Box)(() => ({
   width: '100%',
   display: 'flex',
   flexDirection: 'column',
-  paddingLeft: '20px',
+  paddingLeft: '10px',
   paddingTop: '10px',
 }));

@@ -2,6 +2,8 @@ import React from 'react';
 
 import { Instagram as InstaIcon, YouTube as YoutubeIcon, Send as SendIcon } from '@mui/icons-material';
 
+import ArchieveIconPath from '@assets/png/fArchieveLogo.png';
+
 import { BottomBox, IconWrapper } from './styled';
 
 export const FooterContacts = () => {
@@ -23,9 +25,9 @@ export const FooterContacts = () => {
           <YoutubeIcon sx={{ width: '25%', height: '20%' }} />
           유튜브
         </IconWrapper>
-        <IconWrapper onClick={() => window.open('https://kras.go.kr/mainView.do', '_blank')}>
-          <SendIcon sx={{ width: '20%', height: '20%' }} />
-          일사편리
+        <IconWrapper onClick={() => window.open('https://www.archives.go.kr/next/viewMainNew.do', '_blank')}>
+          <img src={ArchieveIconPath} style={{ width: '27%', height: '25%' }} />
+          국가기록원
         </IconWrapper>
       </BottomBox>
     </>

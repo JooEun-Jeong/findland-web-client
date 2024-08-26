@@ -1,3 +1,6 @@
+import lotImg from '@assets/png/fLotMap.jpg';
+import landArchieveImg from '@assets/png/landArchieve.png';
+
 export const FindMethods = [
   {
     title: '1. 조상님의 이름을 검색해보세요.',
@@ -46,6 +49,7 @@ const QA3 = {
       content: [
         '일제강점 초기, 총독부 임시토지조사국이 토지조사사업(1910-1918)과 임야조사사업(1916-1924)을 실시했습니다. 그 결과 만들어진 서류가 토지조사부, 임야조사부입니다. 이 서류들은 현재 대법원에서 인정하는 조상땅찾기 소송관련 가장 강력한 법적효력을 지닌 문서입니다.',
       ],
+      img: landArchieveImg,
     },
   ],
 };
@@ -57,6 +61,7 @@ const QA4 = {
       content: [
         '땅찾GO에서 “현재예상지역 지도서비스”를 활용하시면 비교적 쉽게 찾으실 수 있습니다. 행정구역 변천과 토지 지번의 지속적인 변경으로 인해 100년전 할아버지 땅이 지금 어디인지 정확히 찾아내는 작업은 매우 복잡합니다. 이 과정을 지도 서비스를 활용해서 큰 도움을 받으실 수 있습니다.',
       ],
+      img: lotImg,
     },
   ],
 };

@@ -120,11 +120,11 @@ export const AccordionWrapper = styled(Box)(({ theme }) => {
       fontSize: isMobile ? '0.7rem' : '1rem',
     },
     '& .methodTitle': {
-      fontSize: isMobile ? '0.6rem' : '0.7rem',
+      fontSize: isMobile ? '0.7rem' : '0.7rem',
       fontWeight: 'bold',
     },
     '& .methodContent': {
-      fontSize: isMobile ? '0.6rem' : '0.7rem',
+      fontSize: isMobile ? '0.7rem' : '0.7rem',
     },
   };
 });
