@@ -28,9 +28,26 @@ export const KakaoCallback: React.FC = () => {
       // 회원정보 없다면 회원가입까지 진행
       const result: LoginStatus = await userApi.verifyUser(kakaoAuthCode);
       if (result === 'LOGIN_SUCCESS') {
-        navigate(`findLand`);
+        const referrer = document.referrer;
+        const isLogout = localStorage.getItem('isLogout');
+        isLogout === 'true' && localStorage.setItem('isLogout', 'false');
+        const isFindLandReferrer =
+          referrer &&
+          (referrer.indexOf('https://dev.findland.store/findLand') !== -1 ||
+            referrer.indexOf('http://localhost:40005/findLand') !== -1);
+
+        if (isFindLandReferrer) {
+          console.log('Redirecting to findLand');
+          navigate('findLand'); // Redirect to findLand
+        } else if (referrer && isLogout !== 'true') {
+          console.log('Going back two pages in the history');
+          history.go(-2); // Go back two pages in the history
+        } else {
+          console.log('No valid referrer, redirecting to findLand');
+          navigate('findLand'); // Default to findLand if no valid referrer
+        }
       } else {
-        navigate(`login`);
+        navigate('login'); // In case of login failure
       }
     }
   }, [navigate, query, setKakaoCode, userApi]);

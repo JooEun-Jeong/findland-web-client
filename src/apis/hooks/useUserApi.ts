@@ -117,7 +117,7 @@ export const useUserApi = (): UserApiInstance => {
             }),
         verifyUser: verifyUser,
         logout: () => axiosAuth(instanceHeader).logout(),
-        kakaoLogout: () =>
+        kakaoLogout: async () =>
           axiosAuth(instanceHeader)
             .kakaoLogout({ redirectUri: window.origin + `/login` })
             .then(({ data }) => {
@@ -126,6 +126,7 @@ export const useUserApi = (): UserApiInstance => {
               localStorage.removeItem('jwtToken');
               localStorage.removeItem('accessToken');
               localStorage.removeItem('kakaoCode');
+              localStorage.setItem('isLogout', 'true');
             }),
       };
     } else {
