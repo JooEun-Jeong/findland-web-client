@@ -63,8 +63,8 @@ module.exports = {
       process: 'process/browser',
     }),
     new Dotenv({
-      defaults: './.env',
-      // path: `./.env.${process.env.STAGE}`,
+      // defaults: './.env',
+      path: `./.env.${process.env.NODE_ENV}`,
       // safe: './.env.sample',
       // systemvars: true,
     }),
