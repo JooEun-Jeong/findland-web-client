@@ -1,7 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import axiosBetterStacktrace from 'axios-better-stacktrace';
 import _ from 'lodash';
-import { redirect } from 'react-router-dom';
 
 import { baseUrl } from '@/interfaces/apis';
 
@@ -33,7 +32,9 @@ export const axiosCreateInstance = (customConfig: AxiosRequestConfig): AxiosInst
         if (error.response.status === 401 || error.response.status === 403) {
           localStorage.removeItem('accessToken');
           localStorage.removeItem('jwtToken');
+          localStorage.removeItem('kakaoCode');
           window.location.reload();
+          return Promise.reject(error);
         }
       } else if (error.request) {
         console.log('No response received: ', error.request);
@@ -41,7 +42,8 @@ export const axiosCreateInstance = (customConfig: AxiosRequestConfig): AxiosInst
         console.log('Error setting up request: ', error.message);
       }
 
-      return Promise.reject(error);
+      // Return the error as a resolved promise for other errors (non-401, non-403)
+      return error;
     },
   );
 

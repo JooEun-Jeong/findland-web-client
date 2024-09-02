@@ -1,13 +1,14 @@
 import React from 'react';
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { Accordion, AccordionDetails, AccordionSummary, Box, CardMedia, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Typography } from '@mui/material';
 
 import { AccordionWrapper } from './styled';
 
 interface Contents {
   title?: string;
   content: string[];
+  img?: string;
 }
 
 interface DesAccordionProps {
@@ -39,6 +40,9 @@ export const DesAccordion: React.FC<DesAccordionProps> = ({ mainTitle, cons, mor
                   {con}
                 </Typography>
               ))}
+              <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+                <img src={item.img} alt="" style={{ width: '60%', height: '100%' }} />
+              </Box>
             </Box>
           ))}
         </AccordionDetails>

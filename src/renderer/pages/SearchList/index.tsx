@@ -209,14 +209,14 @@ export const Search: React.FC = () => {
           bankAccountName,
         };
         await paymentApi.postProductTransfer(postData);
-
+        alert(`${lotCount}건의 필지 열람 서비스가 신청되었습니다.`);
         // row 다시 세팅
         window.location.reload();
       }
 
       setLotCount(0);
     },
-    [checkBoxes, paymentApi, setLotCount],
+    [checkBoxes, lotCount, paymentApi],
   );
 
   const NoRowRender = useCallback(

@@ -94,6 +94,9 @@ export const PayButtonM = styled(Button)(() => ({
   '&:hover': {
     backgroundColor: 'rgb(235, 127, 56)',
   },
+  '&.Mui-disabled': {
+    backgroundColor: '#FFE9C2',
+  },
 }));
 
 export const PaymentDataGrid = styled(DataGrid)(() => ({

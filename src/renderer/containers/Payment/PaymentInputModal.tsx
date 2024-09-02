@@ -49,7 +49,7 @@ export const PaymentInpuptModal = (props: {
           </CountBoxM>
           <CountBoxM>
             <PriceTypoM>금액</PriceTypoM>
-            <PriceTypoM sx={{ color: 'green' }}>{props.price}</PriceTypoM>
+            <PriceTypoM sx={{ color: 'green' }}>{props.price.toLocaleString()}원</PriceTypoM>
           </CountBoxM>
         </ComputeBoxM>
         <ComputeBoxM sx={{ border: 'none', padding: '2% 3%' }}>
@@ -61,7 +61,7 @@ export const PaymentInpuptModal = (props: {
                   marginRight: '5px',
                 }}
               >
-                {props.price * props.lotCount}
+                {(props.price * props.lotCount).toLocaleString()}
               </PriceTypoM>
               <PriceTypoM>원</PriceTypoM>
             </Box>
