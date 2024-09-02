@@ -11,7 +11,7 @@ export const BottomBox = styled(Box)(() => ({
 
 export const IconWrapper = styled(Box)(() => ({
   display: 'flex',
-  minWidth: '33%',
+  minWidth: '25%',
   flexDirection: 'column',
   alignItems: 'center',
   fontSize: '0.6rem',

@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { Instagram as InstaIcon, YouTube as YoutubeIcon, Send as SendIcon } from '@mui/icons-material';
+import { Instagram as InstaIcon, YouTube as YoutubeIcon, Email as EmailIcon } from '@mui/icons-material';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import ArchieveIconPath from '@assets/png/fArchieveLogo.png';
 
@@ -25,6 +26,15 @@ export const FooterContacts = () => {
           <YoutubeIcon sx={{ width: '25%', height: '20%' }} />
           유튜브
         </IconWrapper>
+        <CopyToClipboard
+          text="dasidreamgo@gmail.com"
+          onCopy={() => alert('이메일(dasidreamgo@gmail.com)을 복사했습니다.')}
+        >
+          <IconWrapper>
+            <EmailIcon sx={{ width: '25%', height: '20%' }} />
+            이메일
+          </IconWrapper>
+        </CopyToClipboard>
         <IconWrapper onClick={() => window.open('https://www.archives.go.kr/next/viewMainNew.do', '_blank')}>
           <img src={ArchieveIconPath} style={{ width: '27%', height: '25%' }} />
           국가기록원
