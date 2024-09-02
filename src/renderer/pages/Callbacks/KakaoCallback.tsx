@@ -31,19 +31,11 @@ export const KakaoCallback: React.FC = () => {
         const referrer = document.referrer;
         const isLogout = localStorage.getItem('isLogout');
         isLogout === 'true' && localStorage.setItem('isLogout', 'false');
-        const isFindLandReferrer =
-          referrer &&
-          (referrer.indexOf('https://dev.findland.store/findLand') !== -1 ||
-            referrer.indexOf('http://localhost:40005/findLand') !== -1);
 
-        if (isFindLandReferrer) {
-          console.log('Redirecting to findLand');
-          navigate('findLand'); // Redirect to findLand
-        } else if (referrer && isLogout !== 'true') {
+        if (referrer && isLogout !== 'true') {
           console.log('Going back two pages in the history');
           history.go(-2); // Go back two pages in the history
         } else {
-          console.log('No valid referrer, redirecting to findLand');
           navigate('findLand'); // Default to findLand if no valid referrer
         }
       } else {
