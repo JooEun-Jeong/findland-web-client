@@ -5,6 +5,7 @@ import { useRecoilValue } from 'recoil';
 import { Box, Typography } from '@mui/material';
 
 import { FooterContacts } from '@/renderer/containers/Footer/Contacts';
+import { Terms } from '@/renderer/containers/Footer/Terms';
 import { DesAccordion } from '@/renderer/containers/MainContent/DesAccordion';
 import logoImg from '@assets/png/LogoImg.png';
 import logoTypoImg from '@assets/png/logoTypo.png';
@@ -18,23 +19,23 @@ export const Contact = () => {
 
   const FAQ = useMemo(() => {
     return (
-      <Box>
+      <Box sx={{ height: '100%' }}>
         <Typography
           sx={{
             fontSize: '1rem',
             fontWeight: 700,
-            marginTop: '30px',
-            paddingTop: '30px',
-            borderTop: '1px solid #B1B2B5',
+            paddingTop: '10px',
           }}
         >
-          자주 받는 질문
+          예상 질문과 답변
         </Typography>
-        {QAs.map((qa, i) => (
-          <Box sx={{ marginTop: '20px' }} key={`BoxDes-${i}`}>
-            <DesAccordion mainTitle={qa.mainTitle} cons={qa.cons} key={`Des-${i}`} />
-          </Box>
-        ))}
+        <Box sx={{ overflowY: 'scroll', height: '100%' }}>
+          {QAs.map((qa, i) => (
+            <Box sx={{ marginTop: '20px' }} key={`BoxDes-${i}`}>
+              <DesAccordion mainTitle={qa.mainTitle} cons={qa.cons} key={`Des-${i}`} />
+            </Box>
+          ))}
+        </Box>
       </Box>
     );
   }, []);
@@ -50,9 +51,10 @@ export const Contact = () => {
           <Typography sx={{ margin: '15px 0', fontSize: '1rem', fontWeight: 700 }}>문의 창구</Typography>
           <FooterContacts />
         </Box>
-        <Box>{FAQ}</Box>
+        <Box sx={{ height: 'calc(var(--vh, 1vh) * 47)' }}>{FAQ}</Box>
       </Box>
       <HeaderWrapperM>
+        <Terms />
         <HeaderM />
       </HeaderWrapperM>
     </MobileContentWrapper>

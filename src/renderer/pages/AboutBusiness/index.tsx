@@ -1,58 +1,19 @@
-import React, { useMemo, useState } from 'react';
+import React from 'react';
 
-import { Close as CloseIcon } from '@mui/icons-material';
-import { Box, Modal, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { ErrorBoundary } from 'react-error-boundary';
 
 import { FooterContacts } from '@/renderer/containers/Footer/Contacts';
+import { Terms } from '@/renderer/containers/Footer/Terms';
 import logoImg from '@assets/png/LogoImg.png';
 import logoTypoImg from '@assets/png/logoTypo.png';
 import { ErrorFallback } from '@components';
-import { PersonalInfoUseTerm, ServiceUseTerm } from '@constants';
 import { HeaderM } from '@containers';
 import { HeaderWrapperM, MobileContentWrapper } from '@pages/SearchList/styled';
 
-import { ModalWrapper, TermTitleTypo, TitleTypo, TitleTypoWrapper, Typo08rem, TypoWrapper } from './styled';
+import { TitleTypo, Typo08rem, TypoWrapper } from './styled';
 
 export const AboutBusinessPage = () => {
-  const [isPersonalInfoOpen, setIsPersonalInfoOpen] = useState(false);
-  const [isServiceUseTermOpen, setIsServiceUseTermOpen] = useState(false);
-  const ServiceUseTermComponent = useMemo(
-    () => (
-      <Modal open={isServiceUseTermOpen} onClose={() => setIsServiceUseTermOpen(false)}>
-        <ModalWrapper>
-          <TitleTypoWrapper>
-            <TermTitleTypo>땅찾GO 서비스 이용약관</TermTitleTypo>
-            <CloseIcon onClick={() => setIsServiceUseTermOpen(false)} />
-          </TitleTypoWrapper>
-          <Typography>
-            <pre style={{ fontSize: '0.7rem', fontWeight: 400, fontFamily: 'inherit', textWrap: 'inherit' }}>
-              {ServiceUseTerm}
-            </pre>
-          </Typography>
-        </ModalWrapper>
-      </Modal>
-    ),
-    [isServiceUseTermOpen],
-  );
-  const PersonalInfoComponent = useMemo(
-    () => (
-      <Modal open={isPersonalInfoOpen} onClose={() => setIsPersonalInfoOpen(false)}>
-        <ModalWrapper>
-          <TitleTypoWrapper>
-            <TermTitleTypo>땅찾GO 개인정보 처리방침</TermTitleTypo>
-            <CloseIcon onClick={() => setIsPersonalInfoOpen(false)} />
-          </TitleTypoWrapper>
-          <Typography>
-            <pre style={{ fontSize: '0.7rem', fontWeight: 400, fontFamily: 'inherit', textWrap: 'inherit' }}>
-              {PersonalInfoUseTerm}
-            </pre>
-          </Typography>
-        </ModalWrapper>
-      </Modal>
-    ),
-    [isPersonalInfoOpen],
-  );
   return (
     <>
       <ErrorBoundary FallbackComponent={ErrorFallback}>
@@ -75,48 +36,9 @@ export const AboutBusinessPage = () => {
               <Typography sx={{ fontSize: '0.8rem', fontWeight: 600 }}>땅찾GO x 다시드림</Typography>
               <FooterContacts />
             </TypoWrapper>
-            <Box
-              sx={{
-                width: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                paddingTop: '10px',
-              }}
-            >
-              {ServiceUseTermComponent}
-              {PersonalInfoComponent}
-              <Typography sx={{ margin: '15px 0', fontSize: '1rem', fontWeight: 700 }}>
-                개인 정보 및 관련 약관
-              </Typography>
-              <Box sx={{ marginLeft: '10px' }}>
-                <Typo08rem
-                  sx={{
-                    border: '1px solid #bababa',
-                    padding: '10px',
-                    backgroundColor: '#fff1b4',
-                    '& .hover': { backgroundColor: '#f5d95b' },
-                  }}
-                  onClick={() => setIsPersonalInfoOpen(true)}
-                >
-                  땅찾GO 개인정보 처리방침 (자세히 보기)
-                </Typo08rem>
-              </Box>
-              <Box sx={{ marginLeft: '10px', marginTop: '10px' }}>
-                <Typo08rem
-                  sx={{
-                    border: '1px solid #bababa',
-                    padding: '10px',
-                    backgroundColor: '#fff1b4',
-                    '& .hover': { backgroundColor: '#f5d95b' },
-                  }}
-                  onClick={() => setIsServiceUseTermOpen(true)}
-                >
-                  땅찾GO 서비스 이용약관 (자세히 보기)
-                </Typo08rem>
-              </Box>
-            </Box>
           </Box>
           <HeaderWrapperM>
+            <Terms />
             <HeaderM />
           </HeaderWrapperM>
         </MobileContentWrapper>

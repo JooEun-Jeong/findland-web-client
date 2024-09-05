@@ -37,7 +37,7 @@ export const HeaderM = () => {
 
   return (
     <>
-      <HeaderWrapper sx={{ borderTop: '2px solid #f0f0f0', padding: '2%' }}>
+      <HeaderWrapper sx={{ borderTop: '2px solid #e5e5e5', padding: '2%' }}>
         <IconButton isMobile={isMobile} onClick={goHome}>
           <HomeIcon />홈
         </IconButton>

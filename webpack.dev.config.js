@@ -8,11 +8,11 @@ const commonConfig = require('./webpack.common.config.js');
 module.exports = merge(commonConfig, {
   mode: 'development',
   entry: [
-    'webpack-dev-server/client?http://localhost:40005', // bundle the client for webpack-dev-server and connect to the provided endpoint
+    'webpack-dev-server/client?http://localhost:40007', // bundle the client for webpack-dev-server and connect to the provided endpoint
     './src/index.tsx', // the entry point of our app
   ],
   devServer: {
-    port: 40005,
+    port: 40007,
     compress: true,
     open: true,
     historyApiFallback: {
@@ -21,7 +21,7 @@ module.exports = merge(commonConfig, {
       ],
     },
     client: {
-      webSocketURL: 'ws://localhost:40005/ws', // Update this if needed
+      webSocketURL: 'ws://localhost:40007/ws', // Update this if needed
     },
   },
   output: {

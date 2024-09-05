@@ -13,6 +13,7 @@ import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import DisplayGoogleAds from '@/renderer/components/GoogleAds';
+import { Terms } from '@/renderer/containers/Footer/Terms';
 import { useUserApi } from '@apis/hooks/useUserApi';
 import Des1Im from '@assets/png/FirstDes1.jpg';
 import Des2Im from '@assets/png/FirstDes2.jpg';
@@ -101,6 +102,7 @@ export const Login = () => {
             </Swiper>
           </>
           <LoginButton onClick={handleLogin}>카카오톡으로 간편 로그인</LoginButton>
+          <Terms />
           <div style={{ paddingTop: '5px', width: '100%' }}>
             <div
               className="grid place-content-center"

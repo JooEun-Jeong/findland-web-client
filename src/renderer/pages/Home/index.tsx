@@ -5,6 +5,7 @@ import { useRecoilValue } from 'recoil';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 import { ErrorBoundary } from 'react-error-boundary';
 
+import { Terms } from '@/renderer/containers/Footer/Terms';
 import { MainContent } from '@/renderer/containers/MainContent';
 import { SearchSwiper } from '@/renderer/containers/SearchSwiper';
 import { ErrorFallback } from '@components';
@@ -48,7 +49,10 @@ export const Home: React.FC = () => {
             }}
           >
             <MainContent />
-            <HeaderM />
+            <Box>
+              <Terms />
+              <HeaderM />
+            </Box>
           </Box>
         )}
       </>

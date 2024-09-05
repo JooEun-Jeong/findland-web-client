@@ -121,7 +121,6 @@ export const NoRenderBox = styled(Box)(() => ({
 
 export const HeaderWrapperM = styled(Box)(() => ({
   position: 'sticky',
-  borderTop: '1px solid #BBB',
 }));
 
 export const TableRootChecbox = styled(Checkbox)(() => ({
