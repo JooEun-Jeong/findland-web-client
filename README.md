@@ -25,9 +25,9 @@ yarn start  # start development server
 #### Use Tag to trigger Github Action  
 Thanks to 주안님!
 - **Dev 서버**  
-  - Check list
-    [ ] index.html에 script 태그에 `data-adbreak-test="on"`이 있는지 확인
-    [ ] package.json에 scripts에 `build`의 command가 `build:dev`의 command와 동일한지 확인
+  - Check list  
+    - [ ] index.html에 script 태그에 `data-adbreak-test="on"`이 있는지 확인  
+    - [ ] package.json에 scripts에 `build`의 command가 `build:dev`의 command와 동일한지 확인
   - If all are perfect,
     ```bash
     git tag dev-[anything]
@@ -36,9 +36,9 @@ Thanks to 주안님!
   > build 시간 대략 3분  
 
 - **Prod 서버**  
-  - Check list
-    [ ] index.html에 script 태그에 `data-adbreak-test="on"`가 없는지 확인
-    [ ] package.json에 scripts에 `build`의 command가 `build:prod`의 command와 동일한지 확인
+  - Check list  
+    - [ ] index.html에 script 태그에 `data-adbreak-test="on"`가 없는지 확인  
+    - [ ] package.json에 scripts에 `build`의 command가 `build:prod`의 command와 동일한지 확인
   - If all are perfect,
     ```bash
     git tag v[anything]
