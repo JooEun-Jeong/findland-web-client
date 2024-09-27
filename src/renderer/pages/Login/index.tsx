@@ -103,14 +103,14 @@ export const Login = () => {
           </>
           <LoginButton onClick={handleLogin}>카카오톡으로 간편 로그인</LoginButton>
           <Terms />
-          <div style={{ paddingTop: '5px', width: '100%' }}>
-            <div
-              className="grid place-content-center"
-              style={{ minHeight: '30px', width: '100%', border: '1px solid #BABABA' }}
-            >
-              <DisplayGoogleAds />
-            </div>
-          </div>
+          {/*<div style={{ paddingTop: '5px', width: '100%' }}>*/}
+          {/*  <div*/}
+          {/*    className="grid place-content-center"*/}
+          {/*    style={{ minHeight: '30px', width: '100%', border: '1px solid #BABABA' }}*/}
+          {/*  >*/}
+          {/*    <DisplayGoogleAds />*/}
+          {/*  </div>*/}
+          {/*</div>*/}
         </MainBox>
       ) : (
         <NotReady />
