@@ -333,7 +333,7 @@ export const MyPage = () => {
           <FindServiceButton onClick={handleOpen} disabled={isCheckBoxNoneSelected()}>
             토지 현재 위치 확인하기
           </FindServiceButton>
-          <FileDownloadButton onClick={handleDownloadClick}>
+          <FileDownloadButton disabled={paidLots.length === 0} onClick={handleDownloadClick}>
             <FileDownloadTypo>결제한 토지 정보</FileDownloadTypo>
             <FileDownloadTypo>다운로드</FileDownloadTypo>
           </FileDownloadButton>

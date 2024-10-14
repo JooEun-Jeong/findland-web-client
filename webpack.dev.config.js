@@ -20,9 +20,6 @@ module.exports = merge(commonConfig, {
         { from: /./, to: '/index.html' },
       ],
     },
-    client: {
-      webSocketURL: 'ws://localhost:40007/ws', // Update this if needed
-    },
   },
   output: {
     filename: '[name].[chunkhash].js',
