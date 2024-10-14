@@ -53,7 +53,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'FindLandGO!',
+      title: '땅찾GO',
       template: './public/index.html',
       favicon: './public/onlyLogo.png',
       // custom: `<script src="./runtime-env.js"></script>`,
