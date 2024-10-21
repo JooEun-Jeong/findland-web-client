@@ -10,7 +10,7 @@ import { GetJwtTokenRes, KakaoAccRes, LoginStatus, UserSignupReq } from '@interf
 import { accessTokenAtom, jwtTokenAtom, userDataAtom } from '@states/user';
 
 type UserApiInstance = {
-  login: () => Promise<void>;
+  login: () => Promise<boolean>;
   verifyUser: (kakaoCode: string) => Promise<LoginStatus>;
   logout: () => void;
   kakaoLogout: () => Promise<void>;
@@ -113,7 +113,11 @@ export const useUserApi = (): UserApiInstance => {
             .getLoginUrl({ redirectUri: window.origin + '/kakaoCallback' })
             .then(({ data }) => {
               console.log('Get login url: ' + JSON.stringify(data));
-              window.location.href = data.loginUrl;
+              if (data) {
+                window.location.href = data.loginUrl;
+                return true;
+              }
+              return false;
             }),
         verifyUser: verifyUser,
         logout: () => axiosAuth(instanceHeader).logout(),

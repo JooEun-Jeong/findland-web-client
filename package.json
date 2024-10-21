@@ -7,7 +7,7 @@
     "start": "cross-env NODE_ENV=development webpack server -c ./webpack.dev.config.js --mode development",
     "start:dev": "yarn run build:dev && npx serve -s dist -l 40007",
     "start:prod": "yarn run build:prod && npx serve -s dist -l 8082",
-    "build": "cross-env NODE_ENV=development webpack --mode development -c ./webpack.dev.config.js",
+    "build": "cross-env NODE_ENV=production webpack --mode production -c ./webpack.prod.config.js",
     "lint": "prettier --write \"src/**/*.{ts,tsx,js,jsx}\" && eslint --fix \"src/**/*.{ts,tsx,js,jsx}\"",
     "prepare": "husky",
     "build:dev": "cross-env NODE_ENV=development webpack --mode development -c ./webpack.dev.config.js",

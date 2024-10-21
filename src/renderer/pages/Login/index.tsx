@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import 'swiper/css';
 import 'swiper/css/autoplay';
@@ -20,7 +20,7 @@ import Des2Im from '@assets/png/FirstDes2.jpg';
 import Des3Im from '@assets/png/FirstDes3.jpg';
 import logoImg from '@assets/png/LogoImg.png';
 import logoTypoImg from '@assets/png/logoTypo.png';
-import { ErrorFallback } from '@components';
+import { Alert, ErrorFallback } from '@components';
 import { NotReady } from '@pages/NotReady';
 import { isMobileAtom } from '@states';
 import { accessTokenAtom, jwtTokenAtom } from '@states/user';
@@ -39,6 +39,7 @@ export const Login = () => {
   const accessToken = useRecoilValue(accessTokenAtom);
   const navigate = useNavigate();
   const isMobile = useRecoilValue(isMobileAtom);
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
 
   const handleLogin = useCallback(() => {
     if (jwtToken !== '' && accessToken !== '') {
@@ -48,7 +49,13 @@ export const Login = () => {
     } else {
       // accessToken이 만료된 경우
       // 처음부터 인가코드 받아서 로그인 진행해야됨.
-      userApi?.login();
+      if (userApi) {
+        userApi.login().then((data) => {
+          if (!data) {
+            setIsAlertOpen(true);
+          }
+        });
+      }
     }
   }, [accessToken, jwtToken, navigate, userApi]);
 
@@ -71,6 +78,19 @@ export const Login = () => {
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       {isMobile ? (
         <MainBox>
+          <Alert
+            isOpen={isAlertOpen}
+            setIsOpen={setIsAlertOpen}
+            message={{
+              header: '로그인 실패',
+              contents: [
+                '로그인 중 문제가 발생했습니다.',
+                '시크릿 모드가 아닌 환경에서 다시 로그인을 시도해주시거나 이메일로 문의 부탁드립니다.',
+              ],
+            }}
+            afterAction={() => navigate('login')}
+            afterActionName="로그인 화면으로 돌아가기"
+          />
           <LogoBox>
             <img src={logoImg} width="18%" style={{ marginBottom: '20px' }} />
             <img src={logoTypoImg} width="15%" />
