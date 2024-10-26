@@ -53,6 +53,8 @@ export const Login = () => {
         userApi.login().then((data) => {
           if (!data) {
             setIsAlertOpen(true);
+          } else {
+            setTimeout(() => navigate(`/findLand`), 1500); // 메인페이지로
           }
         });
       }
