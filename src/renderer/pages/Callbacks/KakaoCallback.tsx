@@ -59,10 +59,7 @@ export const KakaoCallback: React.FC = () => {
         setIsOpen={setIsAlertOpen}
         message={{
           header: '로그인 실패',
-          contents: [
-            '로그인 중 문제가 발생했습니다.',
-            '시크릿 모드가 아닌 환경에서 다시 로그인을 시도해주시거나 이메일로 문의 부탁드립니다.',
-          ],
+          contents: ['로그인 중 문제가 발생했습니다.', '다시 로그인을 시도해주시거나 이메일로 문의 부탁드립니다.'],
         }}
         afterAction={() => navigate('login')}
         afterActionName="로그인 화면으로 돌아가기"

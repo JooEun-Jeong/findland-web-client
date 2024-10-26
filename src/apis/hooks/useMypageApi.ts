@@ -34,7 +34,7 @@ export const UseMypageApi = (): UseMypageApi => {
             return landOwnersInfo;
           } catch (e) {
             console.error('Error: get paid land owners data', e);
-            return { landOwners: [], totalElement: 0 };
+            return { landOwners: [], totalElement: -1 };
           }
         },
         getOneLandownerWithName: async (page: number, size: number, name: string) => {
@@ -54,7 +54,7 @@ export const UseMypageApi = (): UseMypageApi => {
             return landOwnersInfo;
           } catch (e) {
             console.error(`Error: get ${name} data `, e);
-            return { landOwners: [], totalElement: 0 };
+            return { landOwners: [], totalElement: -1 };
           }
         },
       };

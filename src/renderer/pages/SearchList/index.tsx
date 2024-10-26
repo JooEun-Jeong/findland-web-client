@@ -13,7 +13,7 @@ import { UsePaymentApi } from '@apis/hooks/userPaymentApi';
 import { UseSearchApi } from '@apis/hooks/useSearchApi';
 import logoImg from '@assets/png/LogoImg.png';
 import logoTypoImg from '@assets/png/logoTypo.png';
-import { ErrorFallback, SearchButton, SearchIcon, SearchTextField } from '@components';
+import { Alert, ErrorFallback, SearchButton, SearchIcon, SearchTextField } from '@components';
 import { HeaderM, Loading, PaymentResult, PaymentResultMobile } from '@containers';
 import { LotRowData, ProductTransferReq } from '@interfaces';
 import { isMobileAtom } from '@states';
@@ -59,6 +59,9 @@ export const Search: React.FC = () => {
   const isMobile = useRecoilValue(isMobileAtom);
   const [lots, setLots] = useRecoilState<LotRowData>(lotsAtom);
 
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState<string[]>([]);
+  const [alertHeader, setAlertHeader] = useState<string>('');
   const [keyword, setKeyword] = useState(name || directName || '');
   const [lotCount, setLotCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -90,6 +93,15 @@ export const Search: React.FC = () => {
         setIsMore(true);
         if (!isMore && searchApi) {
           const searchResult = await searchApi.getLandOwners(keyword, page + 1, size);
+          if (searchResult.totalElement === -1) {
+            setIsAlertOpen(true);
+            setAlertMessage([
+              '데이터를 가져오는 중 문제가 발생했습니다.',
+              '새로 고침을 하고 다시 시도해보시거나',
+              '아래 문의 플랫폼을 통해 연락 부탁드립니다.',
+            ]);
+            setAlertHeader('데이터 가져오기 실패');
+          }
           const landOwners: LotRowData = searchResult.landOwners;
 
           fetchedParamsSet.current.add(paramsKey); // Add to fetched params set
@@ -186,6 +198,15 @@ export const Search: React.FC = () => {
     if (searchApi) {
       setIsLoading(true);
       const searchResult = await searchApi.getLandOwners(keyword, page, size);
+      if (searchResult.totalElement === -1) {
+        setIsAlertOpen(true);
+        setAlertMessage([
+          '데이터를 가져오는 중 문제가 발생했습니다.',
+          '새로 고침을 하고 다시 시도해보시거나',
+          '아래 문의 플랫폼을 통해 연락 부탁드립니다.',
+        ]);
+        setAlertHeader('데이터 가져오기 실패');
+      }
       fetchedParamsSet.current.clear();
       const landOwners: LotRowData = searchResult.landOwners;
       const totalAmount: number = searchResult.totalElement;
@@ -200,18 +221,28 @@ export const Search: React.FC = () => {
   const handlePayment = useCallback(
     async (bankAccountName: string) => {
       if (paymentApi) {
-        const productIds = checkBoxes
-          .filter((checkBox) => checkBox.checkBoxState && checkBox.purchaseStatus === 'NOT_PURCHASED')
-          .map((checkbox) => checkbox.id);
+        try {
+          const productIds = checkBoxes
+            .filter((checkBox) => checkBox.checkBoxState && checkBox.purchaseStatus === 'NOT_PURCHASED')
+            .map((checkbox) => checkbox.id);
 
-        const postData: ProductTransferReq = {
-          productIds,
-          bankAccountName,
-        };
-        await paymentApi.postProductTransfer(postData);
-        alert(`${lotCount}건의 필지 열람 서비스가 신청되었습니다.`);
-        // row 다시 세팅
-        window.location.reload();
+          const postData: ProductTransferReq = {
+            productIds,
+            bankAccountName,
+          };
+          await paymentApi.postProductTransfer(postData);
+          alert(`${lotCount}건의 필지 열람 서비스가 신청되었습니다.`);
+          // row 다시 세팅
+          window.location.reload();
+        } catch (e) {
+          setIsAlertOpen(true);
+          setAlertMessage([
+            '필지 열람을 신청하는 중 문제가 발생했습니다.',
+            '새로 고침을 하고 다시 시도해보시거나',
+            '아래 문의 플랫폼을 통해 연락 부탁드립니다.',
+          ]);
+          setAlertHeader('필지 열람 신청 실패');
+        }
       }
 
       setLotCount(0);
@@ -290,6 +321,16 @@ export const Search: React.FC = () => {
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <MobileContentWrapper>
         <Box sx={{ padding: '5% 3% 0 3%' }}>
+          <Alert
+            isOpen={isAlertOpen}
+            setIsOpen={setIsAlertOpen}
+            message={{
+              header: alertHeader,
+              contents: alertMessage,
+            }}
+            afterAction={() => setIsAlertOpen(false)}
+            afterActionName="닫기"
+          />
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <img src={logoImg} width="12%" style={{ marginRight: '20px' }} />
             <img src={logoTypoImg} width="15%" />

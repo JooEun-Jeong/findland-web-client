@@ -24,7 +24,7 @@ export const UseSearchApi = (): UseSearchApi => {
             return landOwnersInfo;
           } catch (e) {
             console.error('Error: get land owners data', e);
-            return { landOwners: [], totalElement: 0 };
+            return { landOwners: [], totalElement: -1 };
           }
         },
       };
