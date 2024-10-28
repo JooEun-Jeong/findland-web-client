@@ -111,6 +111,7 @@ export const MyPage = () => {
 
   const getAllPaidLots = useCallback(async () => {
     if (mypageApi) {
+      setIsLoading(true);
       const landOwnersInfo = await mypageApi.getAllPaidLots(page, size);
       if (landOwnersInfo.totalElement === -1) {
         setIsAlertOpen(true);
@@ -119,6 +120,7 @@ export const MyPage = () => {
       const newTotalElementAmount = landOwnersInfo.totalElement;
       setTotalAmount(newTotalElementAmount);
       setPaidLots(landOwners);
+      setIsLoading(false);
     }
   }, [mypageApi, page, setPaidLots]);
 
