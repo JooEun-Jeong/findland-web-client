@@ -54,20 +54,21 @@ export const MapServiceModal: React.FC<MapModalProps> = ({
   const userData = useRecoilValue(userDataAtom);
 
   const paymentApi = UsePaymentApi();
+  alert('selectedLotmapIds: ' + selectedLotMapIds);
 
   const handleServiceClick = useCallback(async () => {
     if (bankAccountName.length > 0) {
       if (paymentApi) {
         // 선택한 필지들의 이름만 파악
-        const selectedLandProductIds = _.filter(checkBoxes, (checkbox) => checkbox.checkBoxState).map(
-          (checkbox) => checkbox.id,
-        );
-        console.log('selectedProductIds', selectedLandProductIds);
-        const selectedNames = _.filter(paidLots, (item) => _.includes(selectedLandProductIds, item.id)).map(
-          (rowDatum) => rowDatum.koreanName,
-        );
-        const uniqueNames = _.uniq(selectedNames);
-        console.log(uniqueNames);
+        // const selectedLandProductIds = _.filter(checkBoxes, (checkbox) => checkbox.checkBoxState).map(
+        //   (checkbox) => checkbox.id,
+        // );
+        // console.log('selectedProductIds', selectedLandProductIds);
+        // const selectedNames = _.filter(paidLots, (item) => _.includes(selectedLandProductIds, item.id)).map(
+        //   (rowDatum) => rowDatum.koreanName,
+        // );
+        // const uniqueNames = _.uniq(selectedNames);
+        // console.log(uniqueNames);
 
         // 신청 보내기
         const postData: ProductTransferReq = {
@@ -84,16 +85,7 @@ export const MapServiceModal: React.FC<MapModalProps> = ({
     } else {
       setIsWrittenColor('2px solid #dd5515');
     }
-  }, [
-    bankAccountName,
-    checkBoxes,
-    handleClose,
-    paidLots,
-    paymentApi,
-    selectedLotCount,
-    selectedLotMapIds,
-    setLotCount,
-  ]);
+  }, [bankAccountName, checkBoxes, handleClose, paymentApi, selectedLotCount, selectedLotMapIds, setLotCount]);
 
   const Description = useMemo(
     () => (

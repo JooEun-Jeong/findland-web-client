@@ -112,7 +112,8 @@ export const SearchResultColmns = ({
       const isDisabled = isMypage
         ? !(
             selectedLot?.mapAnalysisPurchaseStatus === 'NOT_PURCHASED' ||
-            _.isUndefined(selectedLot.mapAnalysisPurchaseStatus)
+            _.isUndefined(selectedLot.mapAnalysisPurchaseStatus) ||
+            selectedLot.mapAnalysisProductId == undefined
           )
         : !(isUnpaid(selectedLot) && selectedLot.purchaseStatus === 'NOT_PURCHASED');
 

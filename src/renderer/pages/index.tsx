@@ -53,15 +53,15 @@ export const AppRoute: React.FC = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/kakaoCallback" element={<KakaoCallback />} />
           <Route element={<ProtectedRoute />}>
-            <Route path="/searchsw" element={<SearchSwiper />} />
-            <Route index path="/findLand" element={<Home />} />
+            <Route path="/search-sw" element={<SearchSwiper />} />
+            <Route index path="/home" element={<Home />} />
             <Route path="/search/:name" element={<Search />} />
-            <Route path="/myPage" element={<MyPage />} />
+            <Route path="/my-page" element={<MyPage />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/aboutBusniess" element={<AboutBusinessPage />} />
+            <Route path="/about-busniess" element={<AboutBusinessPage />} />
             <Route path="/admin" element={<Admin />} />
           </Route>
-          <Route path="*" element={<Navigate to={'/findLand'} />} />
+          <Route path="*" element={<Navigate to={'/home'} />} />
         </Routes>
       </ErrorBoundary>
     </React.Fragment>

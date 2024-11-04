@@ -50,7 +50,7 @@ export const Search: React.FC = () => {
   const paymentApi = UsePaymentApi();
 
   const { name } = useParams();
-  const size = 500;
+  const size = 20;
   const directName = _.isUndefined(name) && (location.state.keyword as string);
 
   const fetchedParamsSet = useRef(new Set<string>()); // Set to track fetched parameters

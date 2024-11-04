@@ -45,7 +45,7 @@ export const Login = () => {
     if (jwtToken !== '' && accessToken !== '') {
       // jwtToken도 정상이고 accessToken도 정상인 경우
 
-      setTimeout(() => navigate(`/findLand`), 1500); // 메인페이지로
+      setTimeout(() => navigate(`/home`), 1500); // 메인페이지로
     } else {
       // accessToken이 만료된 경우
       // 처음부터 인가코드 받아서 로그인 진행해야됨.
@@ -54,7 +54,7 @@ export const Login = () => {
           if (!data) {
             setIsAlertOpen(true);
           } else {
-            setTimeout(() => navigate(`/findLand`), 1500); // 메인페이지로
+            setTimeout(() => navigate(`/home`), 1500); // 메인페이지로
           }
         });
       }

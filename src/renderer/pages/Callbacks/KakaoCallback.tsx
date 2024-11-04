@@ -38,7 +38,7 @@ export const KakaoCallback: React.FC = () => {
         //   console.log('Going back two pages in the history');
         //   history.go(-2); // Go back two pages in the history
         // } else {
-        navigate('findLand'); // Default to findLand if no valid referrer
+        navigate('home');
         // }
       } else {
         setIsAlertOpen(true);

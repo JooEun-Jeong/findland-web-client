@@ -37,7 +37,7 @@ export const MyPage = () => {
   const isMobile = useRecoilValue(isMobileAtom);
 
   const mypageApi = UseMypageApi();
-  const size = 500;
+  const size = 20;
   const dataGridRef = useGridApiRef();
   const fetchedParamsSet = useRef(new Set<string>()); // Set to track fetched parameters
 
@@ -163,12 +163,18 @@ export const MyPage = () => {
   }, []);
 
   const handleOpen = useCallback(() => {
-    setIsOpenModal(true);
-    const selectedProductIds = _.map(checkBoxes, (checkBox) => (checkBox.checkBoxState === true ? checkBox.id : false));
-    const data = _.filter(paidLots, (item) => _.includes(selectedProductIds, item.id));
-    const selectedProductMapIds = _.compact(data.map((item) => item.mapAnalysisProductId));
-    setServiceIds(selectedProductMapIds);
-  }, [checkBoxes, paidLots]);
+    const selectedProductIds = checkBoxes.filter((checkBox) => checkBox.checkBoxState).map((checkBox) => checkBox.id);
+
+    if (selectedProductIds.length > 0) {
+      const data = _.filter(paidLots, (item) => _.includes(selectedProductIds, item.id));
+      const selectedProductMapIds = _.compact(data.map((item) => item.mapAnalysisProductId));
+      setServiceIds(selectedProductMapIds);
+      setIsOpenModal(true);
+    } else {
+      alert('지도서비스 신청 중 문제가 발생했습니다.');
+    }
+  }, [checkBoxes, paidLots, setServiceIds]);
+
   const handleClose = useCallback(() => setIsOpenModal(false), []);
 
   useEffect(() => {

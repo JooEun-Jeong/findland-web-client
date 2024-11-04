@@ -20,7 +20,7 @@ export const HeaderM = () => {
   }, [navigate]);
 
   const goMyPage = useCallback(() => {
-    navigate(`/myPage`);
+    navigate(`/my-page`);
   }, [navigate]);
 
   const goContact = useCallback(() => {
@@ -28,7 +28,7 @@ export const HeaderM = () => {
   }, [navigate]);
 
   const goAboutBusiness = useCallback(() => {
-    navigate(`/aboutBusniess`);
+    navigate(`/about-busniess`);
   }, [navigate]);
 
   const logout = useCallback(() => {
